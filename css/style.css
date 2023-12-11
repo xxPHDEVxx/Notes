@@ -1,3 +1,93 @@
-body {
-    background-color: red;
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
 }
+html,body{
+    display: grid;
+    height: 100%;
+    place-items: center;
+    background-color:#1e272e;
+}
+.main{
+    width: 450px;
+    height: 320px;
+    
+    border-radius: 10px;
+    border: 1px solid #57606f;
+
+
+}
+.main .title{
+    
+    color: #fff;
+    
+    border-bottom: 1px solid #57606f;
+    font-size: 25px;
+    font-weight: 500;
+    text-align: center;
+    margin: 20px;
+    
+    padding: 10px;
+
+}
+.main form{
+  padding: 0 20px 0 20px ;
+}
+.main form .inputbox{
+    height: 40px;
+  
+    margin-bottom: 15px;
+    position: relative;
+    
+}
+.main form .inputbox input{
+    height: 100%;
+    width: 100%;
+    outline: none;
+    background: #2c3e50;
+    padding-left: 60px;
+    border-radius: 10px;
+    border: 1px solid #57606f;
+}
+.main form .inputbox i{
+    position: absolute;
+    width: 47px;
+    height: 100%;
+    border: 1px solid #57606f;
+    border-radius: 10px 0 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.material-symbols-outlined {
+    color: white;
+    position: relative;
+}
+.main form .button input{
+    color: #fff;
+    padding-left: 0px;
+    background: #0652DD;
+    border: none;
+    cursor: pointer;
+}
+.main form .subscribe-link a{
+    color:#2d98da;
+    font-size: 19px;
+
+}
+.main form .subscribe-link{
+    text-align: center;
+    margin-top: 25px;
+}
+
+
+
+
+
+
+
+
+
