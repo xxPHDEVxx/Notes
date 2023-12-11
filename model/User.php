@@ -1,5 +1,6 @@
 <?php
 require_once "framework/Model.php";
+require_once "Note.php";
 
 class User extends Model {
     
@@ -9,7 +10,7 @@ class User extends Model {
    
 
     public static function get_user(int $user_id) : User|false {
-        $query = self::execute("SELECT * FROM Users where id = :id", ["id =>$user_id"]);
+        $query = self::execute("SELECT * FROM Users where id = :id", ["id" =>$user_id]);
         $data = $query->fetch(); 
         if($query->rowCount() == 0) {
             return false;
@@ -42,5 +43,8 @@ class User extends Model {
         return $results;
     }
 
+    public function get_notes() : array {
+        return Note::get_notes($this);
+    }
 
 }
