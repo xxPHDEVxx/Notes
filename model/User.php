@@ -9,7 +9,7 @@ class User extends Model {
     }
    
 
-    public static function get_user(int $user_id) : User|false {
+    public static function get_user_by_id(int $user_id) : User|false {
         $query = self::execute("SELECT * FROM Users where id = :id", ["id" =>$user_id]);
         $data = $query->fetch(); 
         if($query->rowCount() == 0) {
@@ -25,7 +25,7 @@ class User extends Model {
         if($this->id == NULL) {
             self::execute("INSERT INTO Users(mail,hashed_password,full_name,role) VALUES (:mail,:hashed_password,:full_name,:role)",
                         ["mail"=>$this->mail, "hashed_password"=>$this->hashed_password, "full_name"=>$this->full_name, "role"=>$this->role]);
-            $user = self::get_user(self::lastInsertId());
+            $user = self::get_user_by_id(self::lastInsertId());
             $this->id = $user->id;            
         }else
             self::execute("UPDATE Users SET mail=:mail, hashed_password=:hashed_password, full_name=:full_name, role=:role WHERE id=:id ",
