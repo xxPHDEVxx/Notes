@@ -16,23 +16,32 @@
     <div class="title">Sign in</div>
     <form action="main/login" method="post">
             <div class="inputbox">
-            <i class="material-symbols-outlined">person</i><input id="email" name="email" type="text" placeholder="Email">
+            <i class="material-symbols-outlined">person</i>
+            <input id="mail" name="mail" type="text" placeholder="Email" value="<?= $mail ?>">
             </div>
              <div class="inputbox">
-             <i class="material-symbols-outlined">key</i><input id="password" name="password" type="text" placeholder="password">
+             <i class="material-symbols-outlined">key</i>
+             <input id="password" name="password" type="text" placeholder="password" value="<?= $password ?>">
             </div>
+            <?php if (count($errors) != 0): ?>
+                <div class="errors"> 
+                    
+                    <ul>
+                        <?php foreach ($errors as $error): ?>
+                            <li><?= $error ?></li>
+                        <?php endforeach; ?>    
+                    </ul>  
+                </div> 
+            <?php endif; ?> 
+
+                    
             <div class="inputbox button">
                 <input type="submit" value="Login">
                 <div class="subscribe-link"><a href="">New here ? Click to subscribe !</a></div>
             </div>    
-    </form>             
+    </form> 
+              
             
-</div>
-        
-
-    
-
-
-    
-</body>
+     </div>
+  </body>
 </html>
