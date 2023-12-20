@@ -13,16 +13,24 @@
 </head>
 <body>
     <div class="container">
-    <div class="main" id ="login">
+    <div class="main" id ="signup">
     <div class="title">Sign in</div>
-    <form action="main/login" method="post">
+    <form action="main/signup" method="post">
+            <div class="inputbox text">
+            <i class="material-symbols-outlined">mail</i>
+            <input id="mail" name="mail" type="text" placeholder="Email" value="<?= $mail ?>">
+            </div>
             <div class="inputbox text">
             <i class="material-symbols-outlined">person</i>
-            <input id="mail" name="mail" type="text" placeholder="Email" value="<?= $mail ?>">
+            <input id="full_name" name="full_name" type="text" placeholder="Full Name" value="<?= $full_name ?>">
             </div>
              <div class="inputbox text">
              <i class="material-symbols-outlined">key</i>
-             <input id="password" name="password" type="text" placeholder="password" value="<?= $password ?>">
+             <input id="password" name="password" type="text" placeholder="Password" value="<?= $password ?>">
+            </div>
+            <div class="inputbox text">
+             <i class="material-symbols-outlined">key</i>
+             <input id="password" name="password" type="text" placeholder="Confirm your password" value="<?= $password_confirm ?>">
             </div>
             <?php if (count($errors) != 0): ?>
                 <div class="errors"> 
@@ -36,10 +44,12 @@
             <?php endif; ?> 
 
                     
-            <div class="inputbox button" id ="button_login">
-                <input type="submit" value="Login">
-                <div class="subscribe-link"><a href="">New here ? Click to subscribe !</a></div>
-            </div>    
+            <div class="inputbox button" a&>
+                <input type="submit" value="Sign Up" id="button_login">
+            </div> 
+            <div class="inputbox button" id ="cancel">
+                <input type="submit" value="Cancel">
+            </div>   
     </form> 
               
             

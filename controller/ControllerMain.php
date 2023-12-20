@@ -6,14 +6,14 @@ require_once "framework/Tools.php";
 
 class ControllerMain extends Controller {
     const UPLOAD_ERR_OK = 0;
-    public function index() : void {
+   public function index() : void {
        
-        if($this->user_logged()) {
-            $this->redirect("note", "index");
+        //if($this->user_logged()) {
+            //$this->redirect("note", "index");
             
-        } else {
-            $this->login();
-        }
+        //} else {
+            $this->signup();
+        //}
     }
 
 public function login() : void {
@@ -31,5 +31,31 @@ public function login() : void {
 }
     (new View("login"))->show(["mail" => $mail, "password" => $password, "errors" => $errors]);
 
+}
+public function signup() : void {
+    $mail = '';
+    $full_name = '';
+    $password = '';
+    $password_confirm = '';
+    $errors =[];
+
+    if (isset($_POST['mail']) && isset($_POST['full_name']) && isset($_POST['password']) && isset($_post['password_confirm'])) {
+        $mail = $_post['mail'];
+        $full_name = $_post['full_name'];
+        $password = $_post['password'];
+        $password_confirm = $_post['password_confirm'];
+
+        $user = new User($mail, Tools::my_hash($password), $full_name);
+        $errors = User::validate_unicity($mail);
+        $errors = array_merge($errors, $user->validate());
+        $errors = array_merge($errors, $user->validate_name());
+        $errors = array_merge($errors, User::validate_passwords($password, $password_confirm));
+
+        if(count($errors) == 0) {
+            $user->persist();
+            $this->log_user($user);
+        }
+    }
+    (new View("signup"))->show(["mail"=>$mail, "full_name"=>$full_name, "password" => $password, "password_confirm" => $password_confirm, "errors"=>$errors]);
 }
 }

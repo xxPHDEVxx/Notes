@@ -42,11 +42,11 @@ class User extends Model {
         return $results;
     }
 
-    public static function validate($mail) : array {
+    public function validate() : array {
         $errors = [];
-        if (!strlen($mail) > 0) {
+        if (!strlen($this->mail) > 0) {
             $errors[] = "Mail is requiered.";
-        } if (!(strlen(preg_match("/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/", $mail)))){
+        } if (!(preg_match("/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/", $this->mail))){
             $errors[] = "Email must have a valid structure.";
         }
         return $errors;
@@ -93,6 +93,16 @@ class User extends Model {
         }
         return $errors;
     }
+    public function validate_name() : array {
+        $errors = [];
+        if (!strlen($this->full_name) > 0) {
+            $errors[] = "Full Name is required.";
+        } if(!(strlen($this->full_name) >= 3)){
+            $errors[] = "Full Name must have mutch than 3 char";
+        }
+        return $errors;
+    }
+    
 
 
 }
