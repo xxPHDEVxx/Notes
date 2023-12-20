@@ -12,7 +12,7 @@ class ControllerMain extends Controller {
             $this->redirect("note", "index");
             
         } else {
-        (new View("login"))->show();
+            $this->login();
         }
     }
 

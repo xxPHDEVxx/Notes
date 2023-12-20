@@ -12,14 +12,15 @@
     <link href="css/style.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
+    <div class="container">
     <div class="main">
     <div class="title">Sign in</div>
     <form action="main/login" method="post">
-            <div class="inputbox">
+            <div class="inputbox text">
             <i class="material-symbols-outlined">person</i>
             <input id="mail" name="mail" type="text" placeholder="Email" value="<?= $mail ?>">
             </div>
-             <div class="inputbox">
+             <div class="inputbox text">
              <i class="material-symbols-outlined">key</i>
              <input id="password" name="password" type="text" placeholder="password" value="<?= $password ?>">
             </div>
@@ -43,5 +44,6 @@
               
             
      </div>
+    </div>
   </body>
 </html>
