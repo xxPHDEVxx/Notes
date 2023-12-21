@@ -36,7 +36,7 @@
             <?php endif; ?> 
 
                     
-            <div class="inputbox button" id ="button_login">
+            <div class="inputbox button login">
                 <input type="submit" value="Login">
                 <div class="subscribe-link"><a href="">New here ? Click to subscribe !</a></div>
             </div>    

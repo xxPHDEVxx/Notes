@@ -5,14 +5,14 @@
 }
 body{
    
-   background-color:#1e272e; 
+   background-color: #1e272e; 
    overflow: hidden;
   
 }
 .container{
     max-width: 500px;
     padding: 0 20px;
-    margin: 170px auto;
+    margin: 110px auto;
 
 }
 .main{
@@ -24,7 +24,7 @@ body{
     height: 370px;
 }
 #signup{
-    height: 480px;
+    height: 470px;
 }
 .main .title{
     
@@ -54,11 +54,14 @@ body{
     height: 100%;
     width: 100%;
     outline: none;
+    border-radius: 10px;
+ }
+.main form .text input{
+    border: 1.5px solid #57606f;
     background: #2c3e50;
     padding-left: 60px;
-    border-radius: 10px;
-    border: 1.5px solid #57606f;
-    
+    color: white;
+    font-size: 17px;
 }
 
 .main form .inputbox i{
@@ -80,19 +83,12 @@ body{
     position: relative;
 }
 .main form .button input{
-  
     padding-left: 0px;
-   
-    
     cursor: pointer;
     font-size: 17px;
     font-weight: 500;
-   
 }
-.main form .text input{
-    color: white;
-    font-size: 17px;
-}
+
 .main form .subscribe-link a{
     color:#70a1ff;
     font-size: 19px;
@@ -110,11 +106,15 @@ body{
 .errors li{
    list-style-type: none; 
 }
-#cancel{
-    
+.main form .cancel input{
+    background-color: #1e272e; ;
     border: 1px solid red;
+    color: red;
+    font-size: 18px;
+    font-weight: 300;
+   
 }
-#button_login {
+.main form .login input{
     background-color: #0652DD;
     border: none;
     color: #fff;

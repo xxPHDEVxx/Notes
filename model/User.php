@@ -37,7 +37,7 @@ class User extends Model {
         $data = $query->fetchAll();
         $results = [];
         foreach ($data as $row) {
-            $result[] = new User($row["mail"], $row["hashed_password"], $row["full_name"], $row["role"]);
+            $results[] = new User($row["mail"], $row["hashed_password"], $row["full_name"], $row["role"]);
         }
         return $results;
     }
