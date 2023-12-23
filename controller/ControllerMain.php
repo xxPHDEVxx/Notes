@@ -10,7 +10,6 @@ class ControllerMain extends Controller {
        
         if($this->user_logged()) {
             $this->redirect("note", "index");
-            
         } else {
             $this->login();
         }
