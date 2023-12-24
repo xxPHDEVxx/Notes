@@ -40,7 +40,7 @@ public function signup() : void {
     $password_confirm = '';
     $errors =[];
 
-    if (isset($_POST['mail']) && isset($_POST['full_name']) && isset($_POST['password']) && isset($_post['password_confirm'])) {
+    if(isset($_POST['mail']) && isset($_POST['full_name']) && isset($_POST['password']) && isset($_post['password_confirm'])) {
         $mail = $_post['mail'];
         $full_name = $_post['full_name'];
         $password = $_post['password'];
@@ -53,7 +53,7 @@ public function signup() : void {
         $errors = array_merge($errors, User::validate_passwords($password, $password_confirm));
 
         if(count($errors) == 0) {
-            $user->persist();
+            $user = $user->persist();
             $this->log_user($user);
         }
     }

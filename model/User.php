@@ -18,13 +18,23 @@ class User extends Model {
         }
         
     }
+    public static function get_user_by_id(int $user_id) : User|false {
+        $query = self::execute("SELECT * FROM Users where id = :id", ["id" =>$user_id]);
+        $data = $query->fetch(); 
+        if($query->rowCount() == 0) {
+            return false;
+        }else {
+            return new User($data["mail"], $data["hashed_password"], $data["full_name"], $data["role"], $data["id"]);
+        }
+        
+    }
   
 
      public function persist() : User {
         if($this->id == NULL) {
             self::execute("INSERT INTO Users(mail,hashed_password,full_name,role) VALUES (:mail,:hashed_password,:full_name,:role)",
                         ["mail"=>$this->mail, "hashed_password"=>$this->hashed_password, "full_name"=>$this->full_name, "role"=>$this->role]);
-            $user = self::get_user_by_mail($this->mail);
+            $user = self::get_user_by_id(self::lastInsertId());
             $this->id = $user->id;            
         }else
             self::execute("UPDATE Users SET mail=:mail, hashed_password=:hashed_password, full_name=:full_name, role=:role WHERE id=:id ",
@@ -72,7 +82,8 @@ class User extends Model {
         $errors = [];
         if (strlen($password) < 8) {
             $errors[] = "Password length must be up 8 char.";
-        } if (!((preg_match("/[A-Z]/", $password)) && preg_match("/\d/", $password) && preg_match("/['\";:,.\/?!\\-]/", $password))) {
+        } 
+        if (!((preg_match("/[A-Z]/", $password)) && preg_match("/\d/", $password) && preg_match("/['\";:,.\/?!\\-]/", $password))) {
             $errors[] = "Password must contain one uppercase letter, one number and punctuation mark.";
         }
         return $errors;
@@ -102,7 +113,4 @@ class User extends Model {
         }
         return $errors;
     }
-    
-
-
-}
+    }
