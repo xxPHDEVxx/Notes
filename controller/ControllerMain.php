@@ -7,11 +7,10 @@ require_once "framework/Tools.php";
 class ControllerMain extends Controller {
     const UPLOAD_ERR_OK = 0;
     public function index() : void {
-       
-        if($this->user_logged()) {
-            $this->redirect("note", "index");
+       if($this->user_logged()) {
+            (new View("archives"))->show(["archives"=>$this->get_user_or_false()->get_archives()]);//$this->redirect("note", "index");
         } else {
-            $this->login();
+           $this->login();
         }
     }
 

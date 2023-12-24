@@ -113,5 +113,37 @@ class User extends Model {
         return Note::get_notes($this);
     }
 
+    
+  /*  public static function get_archives(int $owner) : array{
+        $archives = [];
+        $query = self::execute("select id, title from notes where owner = :ownerid and archived = 1", ["ownerid" => $owner]);
+        $archives = $query->fetchAll();
+        foreach($archives as $row) {
+            $data = self::execute("select content from text_notes where id = :row", ["row" => $row["id"]]);
+
+        }
+        return array_($archives, $data->fetchAll());
+
+    }
+*/
+
+    public function get_archives(): array {
+        $archives = [];
+        $query = self::execute("SELECT id, title FROM notes WHERE owner = :ownerid AND archived = 1", ["ownerid" => $this->id]);
+        $archives = $query->fetchAll();
+    
+        foreach ($archives as &$row) {
+            $dataQuery = self::execute("SELECT content FROM text_notes WHERE id = :note_id", ["note_id" => $row["id"]]);
+            $content = $dataQuery->fetchColumn(); 
+            if($content === null) {
+                $dataQuery = self::execute("SELECT content FROM checklist_note_items WHERE id = :note_id", ["note_id" => $row["checklist_note"]]);
+                $content = $dataQuery->fetchColumn();
+            }
+            $row["content"] = $content;
+        }
+        return $archives;
+    }
+    
+
 
 }

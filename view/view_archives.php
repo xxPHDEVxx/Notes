@@ -17,10 +17,17 @@
         <h1>My archives</h1>
         <h2>Archives</h2>
         <div class="note_archivee">
-            <div class="note_title">Note archivée</div>
-            <div class="note_content"></div>
+            <?php if (count($archives) != 0): ?>
+                <?php foreach ($archives as $archive): ?>
+                    <div class="note_title"><?=$archive["title"]?></div>
+                    <div class="note_content"><?= $archive["content"]?></div>
+                    
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </div>
+  
+
 
 </body>
 </html>
