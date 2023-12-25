@@ -10,10 +10,10 @@ class Note extends Model
         public String $title,
         public User $owner,
         public string $created_at,
-        public ?string $edited_at = NULL,
+        public int $weight,
         public bool $pinned,
         public bool $archived,
-        public int $weight
+        public ?string $edited_at = NULL
     ) {
     }
 
@@ -74,6 +74,11 @@ class Note extends Model
             //on ne modifie jamais les messages : pas de "UPDATE" SQL.
             throw new Exception("Not Implemented.");
         }
+    }
+
+    
+    public function archive() : void {
+        self::execute("UPDATE notes SET archived = :val WHERE id = :id" , ["val" => 1, "id" =>$this->note_id]);
     }
 
 }

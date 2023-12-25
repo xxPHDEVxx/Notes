@@ -113,5 +113,4 @@ class User extends Model {
         return Note::get_notes($this);
     }
 
-
 }
