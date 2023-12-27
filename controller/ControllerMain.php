@@ -9,7 +9,6 @@ class ControllerMain extends Controller {
    public function index() : void {
        
         if($this->user_logged()) {
-            var_dump($this->get_user_or_false());
             $this->redirect("note", "index");
          } else {
             $this->signup();
@@ -40,11 +39,11 @@ public function signup() : void {
     $password_confirm = '';
     $errors =[];
 
-    if(isset($_POST['mail']) && isset($_POST['full_name']) && isset($_POST['password']) && isset($_post['password_confirm'])) {
-        $mail = $_post['mail'];
-        $full_name = $_post['full_name'];
-        $password = $_post['password'];
-        $password_confirm = $_post['password_confirm'];
+    if(isset($_POST['mail']) && isset($_POST['full_name']) && isset($_POST['password']) && isset($_POST['password_confirm'])) {
+        $mail = $_POST['mail'];
+        $full_name = $_POST['full_name'];
+        $password = $_POST['password'];
+        $password_confirm = $_POST['password_confirm'];
 
         $user = new User($mail, Tools::my_hash($password), $full_name);
         $errors = User::validate_unicity($mail);
@@ -53,7 +52,7 @@ public function signup() : void {
         $errors = array_merge($errors, User::validate_passwords($password, $password_confirm));
 
         if(count($errors) == 0) {
-            $user = $user->persist();
+            $user->persist();
             $this->log_user($user);
         }
     }

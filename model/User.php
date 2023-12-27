@@ -31,16 +31,19 @@ class User extends Model {
   
 
      public function persist() : User {
-        if($this->id == NULL) {
-            self::execute("INSERT INTO Users(mail,hashed_password,full_name,role) VALUES (:mail,:hashed_password,:full_name,:role)",
-                        ["mail"=>$this->mail, "hashed_password"=>$this->hashed_password, "full_name"=>$this->full_name, "role"=>$this->role]);
-            $user = self::get_user_by_id(self::lastInsertId());
-            $this->id = $user->id;            
-        }else
+        if(self::get_user_by_mail($this->mail)) {
             self::execute("UPDATE Users SET mail=:mail, hashed_password=:hashed_password, full_name=:full_name, role=:role WHERE id=:id ",
-                       ["mail"=>$this->mail, "hashed_password"=>$this->hashed_password, "full_name"=>$this->full_name, "role"=>$this->role]);
+                       ["mail"=>$this->mail, "hashed_password"=>$this->hashed_password, "full_name"=>$this->full_name, "role"=>$this->role]);            
+        }else {
+            self::execute("INSERT INTO Users(mail,hashed_password,full_name,role) VALUES (:mail,:hashed_password,:full_name,:role)",
+            ["mail"=>$this->mail, "hashed_password"=>$this->hashed_password, "full_name"=>$this->full_name, "role"=>$this->role]);
+            $user = self::get_user_by_id(self::lastInsertId());
+            $this->id = $user->id;
+        }
         return $this;
     }
+
+
 
     public static function get_users() : array {
         $query = self::execute("SELECT * FROM Users", []);
@@ -83,7 +86,7 @@ class User extends Model {
         if (strlen($password) < 8) {
             $errors[] = "Password length must be up 8 char.";
         } 
-        if (!((preg_match("/[A-Z]/", $password)) && preg_match("/\d/", $password) && preg_match("/['\";:,.\/?!\\-]/", $password))) {
+        if (!((preg_match("/[A-Z]/", $password)) && !preg_match("/\d/", $password) && !preg_match("/['\";:,.\/?!\\-]/", $password))) {
             $errors[] = "Password must contain one uppercase letter, one number and punctuation mark.";
         }
         return $errors;

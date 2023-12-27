@@ -47,9 +47,9 @@
             <div class="inputbox button login" >
                 <input type="submit" value="Signup">
             </div>
-            <div class="inputbox button cancel" >
-                <input type="submit" value="cancel">
-            </div> 
+          <!--  <div class="inputbox button cancel" >
+                <input type="button" value="cancel">
+            </div> -->
              
     </form> 
               

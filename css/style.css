@@ -101,7 +101,7 @@ body{
 .errors {
     color: red;
     font-weight: 300;
-    font-size: 18px;
+    font-size: 15px;
    }
 .errors li{
    list-style-type: none; 
