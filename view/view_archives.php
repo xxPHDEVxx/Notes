@@ -13,20 +13,29 @@
 </head>
 <body>
     
-    <div class="my_archives">
-        <h1>My archives</h1>
-        <h2>Archives</h2>
-        <div class="note_archivee">
+<h1>My archives</h1>
+
+       
+<h2>Archives</h2> 
+        < <div class="my-archives">
+      
             <?php if (count($archives) != 0): ?>
                 <?php foreach ($archives as $archive): ?>
-                    <div class="note_title"><?=$archive["title"]?></div>
-                    <div class="note_content"><?= $archive["content"]?></div>
                     
+                    <div class="note-archivee">
+                        <div class="note-title"><?=$archive["title"]?></div>
+                        <a class="link-note-archivee" href="#">
+                        <div class="note-content">
+                            <div class="content"><?= $archive["content"]?></div>
+                        </div> 
+                        </a>   
+                    </div>
+                
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
-    </div>
-  
+        
+<?php (new View("menu"))->show(["names"=>$names]); ?>
 
 
 </body>
