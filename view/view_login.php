@@ -13,32 +13,33 @@
 </head>
 <body>
     <div class="container">
-    <div class="main" id ="login">
+    <div class="main">
     <div class="title">Sign in</div>
     <form action="main/login" method="post">
-            <div class="inputbox text">
+        <div class="inputbox text">
             <i class="material-symbols-outlined">person</i>
             <input id="mail" name="mail" type="text" placeholder="Email" value="<?= $mail ?>">
-            </div>
-             <div class="inputbox text">
-             <i class="material-symbols-outlined">key</i>
-             <input id="password" name="password" type="text" placeholder="password" value="<?= $password ?>">
-            </div>
-            <?php if (count($errors) != 0): ?>
-                <div class="errors"> 
-                    
+        </div>
+        <div class="inputbox text">
+            <i class="material-symbols-outlined">key</i>
+            <input id="password" name="password" type="password" placeholder="password" value="<?= $password ?>">
+        </div>
+
+
+        <?php if (count($errors) != 0): ?>
+            <div class="errors"> 
                     <ul>
                         <?php foreach ($errors as $error): ?>
                             <li><?= $error ?></li>
                         <?php endforeach; ?>    
                     </ul>  
-                </div> 
-            <?php endif; ?> 
+            </div> 
+        <?php endif; ?> 
 
                     
             <div class="inputbox button login">
                 <input type="submit" value="Login">
-                <div class="subscribe-link"><a href="">New here ? Click to subscribe !</a></div>
+                <div class="subscribe-link"><a href="">New here ? Click here to subscribe !</a></div>
             </div>    
     </form> 
               

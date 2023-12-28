@@ -13,7 +13,7 @@
 </head>
 <body>
     <div class="container">
-    <div class="main" id ="signup">
+    <div class="main signup">
     <div class="title">Sign Up</div>
     <form action="main/signup" method="post">
             <div class="inputbox text">
@@ -32,7 +32,18 @@
              <i class="material-symbols-outlined">key</i>
              <input id="password_confirm" name="password_confirm" type="password" placeholder="Confirm your password" value="<?= $password_confirm ?>">
             </div>
-            <?php if (count($errors) != 0): ?>
+         
+
+                    
+            <div class="inputbox button login" >
+                <input type="submit" value="Sign Up">
+            </div>
+            <div class="inputbox button cancel" >
+                <input type="button" value="Cancel" onclick="window.location.href='main/login';">
+            </div> 
+             
+    </form> 
+    <?php if (count($errors) != 0): ?>
                 <div class="errors"> 
                     
                     <ul>
@@ -42,19 +53,10 @@
                     </ul>  
                 </div> 
             <?php endif; ?> 
-
-                    
-            <div class="inputbox button login" >
-                <input type="submit" value="Signup">
-            </div>
-          <!--  <div class="inputbox button cancel" >
-                <input type="button" value="cancel">
-            </div> -->
-             
-    </form> 
               
             
      </div>
     </div>
+
   </body>
 </html>

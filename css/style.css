@@ -5,75 +5,84 @@
 }
 body{
    
-   background-color: #1e272e; 
+   background-color:#23252a;/*#1e272e; */
    overflow: hidden;
-  
 }
 .container{
     max-width: 500px;
     padding: 0 20px;
-    margin: 110px auto;
-
+    margin: 170px auto;
 }
+
 .main{
    width: 100%;
+   height: 370px;
    border-radius: 10px;
-   border: 1.5px solid #57606f;
+   border: 1.5px solid #48505f;
 }
-#login {
-    height: 370px;
-}
-#signup{
+.signup {
     height: 470px;
-}
-.main .title{
     
+}
+
+
+.main .title{
     color: #fff;
-    height: 65px;
-    border-bottom: 1.5px solid #57606f;
+    height: 60px;
+    border-bottom: 1.5px solid #48505f;
     font-size: 25px;
     font-weight: 500;
     text-align: center;
     margin: 20px;
-    
-   
-
 }
+
 .main form{
   padding: 0 15px 0 15px ;
 }
+
 .main form .inputbox{
 
     height: 45px;
-  
     margin-bottom: 17px;
     position: relative;
-    
 }
+
 .main form .inputbox input{
-    height: 100%;
-    width: 100%;
     outline: none;
-    border-radius: 10px;
- }
-.main form .text input{
-    border: 1.5px solid #57606f;
-    background: #2c3e50;
-    padding-left: 60px;
+ 
+    background: #2d3442;
+    padding-left: 20px;
     color: white;
     font-size: 17px;
+    height: 100%;
+ }
+ .text input{
+    margin-left: 15%;
+    width: 85%;
+    border-radius:0 7px 7px 0;
+    border: 1.5px solid #48505f;
 }
+ input:focus {
+    border: 1.5px solid lightblue;
+    /*border-color: rgb(46, 46, 204);*/
+    box-shadow: 0 0 10px 2px rgba(62, 117, 205, 0.953); 
+   
+}
+
+  
+
 
 .main form .inputbox i{
     position: absolute;
-    width: 47px;
+    width: 15%;
     height: 100%;
-    border: 1.5px solid #57606f;
-    border-radius: 10px 0 0 10px;
+    border: 1.5px solid #48505f;
+    border-radius: 7px 0 0 7px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background:#353b48;
+    background:#2f323a;
+    
     
 }
 
@@ -87,6 +96,8 @@ body{
     cursor: pointer;
     font-size: 17px;
     font-weight: 500;
+    width: 100%;
+    border-radius: 7px;
 }
 
 .main form .subscribe-link a{
@@ -107,7 +118,7 @@ body{
    list-style-type: none; 
 }
 .main form .cancel input{
-    background-color: #1e272e; ;
+    background-color: #23252a;/*#1e272e;*/
     border: 1px solid red;
     color: red;
     font-size: 18px;
