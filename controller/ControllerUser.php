@@ -14,6 +14,8 @@ class ControllerUser extends Controller {
         $full_names = $this->shared_by();
         (new View("archives"))->show(["archives"=>$archives, "names"=>$full_names]);
     }
+
+
     
     public function shared_by() : array {
         $user = $this->get_user_or_redirect();

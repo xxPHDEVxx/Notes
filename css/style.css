@@ -9,7 +9,7 @@ body, html{
    height: 100%;
    margin: 0;
    padding: 0;
-   background-color: #252729;
+   background-color:#202325;/*#252729;*/
    overflow: hidden;
   
 }
@@ -122,61 +122,101 @@ h1{
 }
 h2{
     color: white;
- 
-    
-    
-   position: fixed;
+    position: fixed;
     font-size: 15px;
     font-weight: 500;
     top: 70px;
-    left: 20px;
-    
-    
+    left: 10px;
 }
 
 .my-archives {
     display: flex;
     flex-wrap: wrap;
-    margin: 10px;
-    position: fixed;
-    top: 90px;
-    right: 1px;
-    left: 1px;
+    margin: 5px;
+    position:fixed;
+    top: 85px;
 }
 .note-archivee{
    
-    border:1.5px solid  #57606f;
+    border:1.5px solid  #43464c;
     color: white;
     border-radius: 5px;
-    width: calc(50% - 20px);
-    background: #252729;
-    margin: 5px 10px 10px 10px   
+    width: 188px;
+    background:#202325;
+    margin: 3px;  
 }
 .link-note-archivee{
     text-decoration: none;
     color:inherit;
-
 }
 .note-archivee .note-title{
     font-size: 18px;
-    border-bottom: 1.5px solid #57606f;
+    border-bottom: 1.5px solid #43464c;;
     border-top-right-radius:5px ;
     border-top-left-radius: 5px;
     padding:3px 10px;
-    background: #353b48;
-
-    
+    background: #292c30;
 }
 .note-archivee .note-content{
-    padding: 15px;
+    padding: 20px;
+    font-weight: 350;
+    font-size: 15px;
 }
-
-.note-archivee .note-content .content {
-    display:-webkit-box;
+.content_text {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+    overflow: hidden;
+    position: relative;
+    
+}
+.check_item{
+    display: block;
+    max-height: 5em;
+    line-height: 1.7em;
     overflow: hidden;
 }
+.content_check::after{
+    content: '...';
+    position:relative;
+}
+
+.li_checked_item, .li_unchecked_item {
+    width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.li_checked_item, .li_unchecked_item{
+    list-style: none;
+  }
+
+  .li_unchecked_item::before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-right: 3px;
+    border: 1.5px solid rgb(75, 75, 73);
+    background: rgb(50, 50, 48);
+    border-radius: 3px;
+    
+  }
+  .li_checked_item::before {
+    content: '✓';
+    text-align: center;
+    line-height: 14px;
+    font-weight: 1000;
+    font-size: 15px;
+    color:  rgb(50, 50, 48);;
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-right: 3px;
+    background:rgb(115, 115, 108);
+    border-radius: 3px;
+  }
 
    
   
@@ -257,6 +297,8 @@ h2{
     text-decoration: none;
     padding: 10px;
   }
+
+
   
 
 
