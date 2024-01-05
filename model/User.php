@@ -32,6 +32,11 @@ class User extends Model {
         }
         
     }
+
+    public function get_full_name() : String {
+        return $this->full_name;
+        
+    }
   
 
      public function persist() : User {
@@ -113,5 +118,62 @@ class User extends Model {
         return Note::get_notes($this);
     }
 
+    
+  /*  public static function get_archives(int $owner) : array{
+        $archives = [];
+        $query = self::execute("select id, title from notes where owner = :ownerid and archived = 1", ["ownerid" => $owner]);
+        $archives = $query->fetchAll();
+        foreach($archives as $row) {
+            $data = self::execute("select content from text_notes where id = :row", ["row" => $row["id"]]);
 
+        }
+        return array_($archives, $data->fetchAll());
+
+    }
+*/
+
+    public function get_archives(): array {
+        $archives = [];
+        $query = self::execute("SELECT id, title FROM notes WHERE owner = :ownerid AND archived = 1 ORDER BY -weight" , ["ownerid" => $this->id]);
+        $archives = $query->fetchAll();
+        $content_checklist = [];
+       foreach ($archives as &$row) {
+            $dataQuery = self::execute("SELECT content FROM text_notes WHERE id = :note_id", ["note_id" => $row["id"]]);
+            $content = $dataQuery->fetchColumn(); 
+          
+            if(!$content) {
+                $dataQuery = self::execute("SELECT content, checked FROM checklist_note_items WHERE checklist_note = :note_id ", ["note_id" => $row["id"]]);
+                $content_checklist = $dataQuery->fetchAll();
+            }
+            $row["content"] = $content;
+            $row["content_checklist"] = $content_checklist;
+        }
+        return $archives;
+    }
+    
+    public static function get_text_note(int $id) : String {
+        $dataQuery = self::execute("SELECT content FROM text_notes WHERE id = :note_id", ["note_id" => $id]);
+        $content = $dataQuery->fetchColumn(); 
+        return $content;
+    }
+
+    public static function get_checklist_note(int $id) : array {
+        $content = [];
+        $dataQuery = self::execute("SELECT content FROM checklist_note_items WHERE checklist_note = :note_id ", ["note_id" => $id]);
+        $content[] = $dataQuery->fetchAll();
+        return $content;
+    }
+     
+    public function get_shared_note(): array {
+        $shared = [];
+        $query = self::execute("SELECT note from note_shares WHERE user = :userid" , ['userid'=>$this->id]);
+        $shared_note_id = $query->fetchAll(PDO::FETCH_COLUMN);
+        foreach ($shared_note_id as $note_id) {
+           $note = Note::get_note($note_id);
+            $shared[] = $note;
+
+        }
+        return $shared;
+    }
+ 
 }

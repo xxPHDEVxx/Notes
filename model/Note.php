@@ -8,12 +8,12 @@ class Note extends Model
     public function __construct(
         public int $note_id,
         public String $title,
-        public User $owner,
+        public int $owner,
         public string $created_at,
-        public ?string $edited_at = NULL,
         public bool $pinned,
         public bool $archived,
-        public int $weight
+        public int $weight,
+        public ?string $edited_at = NULL
     ) {
     }
 
@@ -30,12 +30,12 @@ class Note extends Model
     }
 
     public static function get_note(int $note_id) : Note |false {
-        $query = self::execute("select * from Notes where note_id = :id", ["id" => $note_id]);
+        $query = self::execute("select * from Notes where id = :id", ["id" => $note_id]);
         $data = $query->fetch(); 
         if($query->rowCount() == 0) {
             return false;
         }else {
-            return new Note($data['note_id'], $data['title'] , User::get_user_by_id($data['owner']), $data['created_at'], $data['edited_at'], $data['pinned'], $data['archived'], $data['weight']);
+            return new Note($data['id'], $data['title'] , $data['owner'], $data['created_at'],$data['pinned'], $data['archived'], $data['weight'],$data['edited_at']);
         }
 
     }
@@ -59,7 +59,7 @@ class Note extends Model
             if(empty($errors)){
                 self::execute('INSERT INTO Notes (title, owner, pinned, archived, weight) VALUES (:author,:recipient,:body,:private)', 
                                ['tilte' => $this->title,
-                                'owner' => $this->owner->id,
+                                'owner' => $this->owner,
                                 'pinned' => $this->pinned? 1 : 0,
                                 'archived' => $this->archived? 1 : 0,
                                 'weight' => $this->weight,

@@ -4,15 +4,14 @@ require_once "framework/View.php";
 require_once "model/User.php";
 require_once "framework/Tools.php";
 
+
 class ControllerMain extends Controller {
     const UPLOAD_ERR_OK = 0;
     public function index() : void {
-       
-        if($this->user_logged()) {
-            $this->redirect("note", "index");
-            
+       if($this->user_logged()) {
+            $this->redirect("user", "my_archives");
         } else {
-            $this->login();
+           $this->login();
         }
     }
 
@@ -32,4 +31,7 @@ public function login() : void {
     (new View("login"))->show(["mail" => $mail, "password" => $password, "errors" => $errors]);
 
 }
+
+
+
 }

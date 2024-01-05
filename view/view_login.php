@@ -41,6 +41,7 @@
                 <div class="subscribe-link"><a href="">New here ? Click to subscribe !</a></div>
             </div>    
     </form> 
+  
               
             
      </div>
