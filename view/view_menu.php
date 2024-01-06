@@ -13,23 +13,19 @@
      <link href="css/style.css" rel="stylesheet" type="text/css"/>
  </head>
  <body> 
-
-  <div class="menu">
-
-    <input type="checkbox" id="hamburger">
-    <label id="hamburger-logo" for="hamburger"> <label id="burger-title">NoteApp</label> </label>
-
-    <nav>
-      <a href="#">My notes</a>
-      <a href="user/my_archives">My archives</a>
-      <?php if($names != null ): ?>
-        <?php foreach ($names as $name): ?>
-         <a href="#">Shared by <?= $name ?></a>
-        <?php endforeach; ?>
-      <?php endif; ?>
-      <a href="#">Settings</a>
-    </nav>
-
-  </div>
+    <div class="menu">
+      <input type="checkbox" id="hamburger">
+      <label id="hamburger-logo" for="hamburger"><label id="burger-title">NoteApp</label></label>
+      <nav>
+        <a href="#">My notes</a>
+        <a href="user/my_archives">My archives</a>
+        <?php if($sharers!= null ): ?>
+          <?php foreach ($sharers as $user): ?>
+            <a href="user/get_shared_by/<?=$user->id?>">Shared by <?= $user->full_name?></a>
+          <?php endforeach; ?>
+        <?php endif; ?>
+        <a href="#">Settings</a>
+      </nav>
+    </div>
   </body>
  </html>

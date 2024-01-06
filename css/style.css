@@ -1,15 +1,9 @@
 
-/**{
-    margin:0;
-    padding:0;
-    box-sizing: border-box;
-}*/
-
 body, html{
    height: 100%;
    margin: 0;
    padding: 0;
-   background-color:#202325;/*#252729;*/
+   background-color: #202325;/*#252729;*/
    overflow: hidden;
   
 }
@@ -34,9 +28,6 @@ body, html{
     font-weight: 500;
     text-align: center;
     margin: 20px;
-    
-   
-
 }
 .main form{
   padding: 0 15px 0 15px ;
@@ -44,7 +35,6 @@ body, html{
 .main form .inputbox{
 
     height: 45px;
-  
     margin-bottom: 17px;
     position: relative;
     
@@ -110,7 +100,7 @@ body, html{
    list-style-type: none; 
 }
 
-/* My archives */
+/* My archives + view-shared-note*/
 
 h1{
     position: absolute;
@@ -129,14 +119,15 @@ h2{
     left: 10px;
 }
 
-.my-archives {
+.my-archives{
     display: flex;
     flex-wrap: wrap;
     margin: 5px;
     position:fixed;
     top: 85px;
+  
 }
-.note-archivee{
+.note-archivee, .shared-note{
    
     border:1.5px solid  #43464c;
     color: white;
@@ -145,11 +136,11 @@ h2{
     background:#202325;
     margin: 3px;  
 }
-.link-note-archivee{
+.link-note-archivee, .shared-note-link{
     text-decoration: none;
     color:inherit;
 }
-.note-archivee .note-title{
+.note-title{
     font-size: 18px;
     border-bottom: 1.5px solid #43464c;;
     border-top-right-radius:5px ;
@@ -157,7 +148,7 @@ h2{
     padding:3px 10px;
     background: #292c30;
 }
-.note-archivee .note-content{
+.note-content{
     padding: 20px;
     font-weight: 350;
     font-size: 15px;
@@ -187,10 +178,6 @@ h2{
     overflow: hidden;
     text-overflow: ellipsis;
 }
-
-.li_checked_item, .li_unchecked_item{
-    list-style: none;
-  }
 
   .li_unchecked_item::before {
     content: '';
@@ -235,13 +222,11 @@ h2{
   
   #hamburger-logo{
     cursor: pointer;
-    background-color: #252729;
+    background-color:#202325; /*#252729;*/
     width: 200px;
     display: block;
     color: darkgrey;
-    /* Pour que le menu hamburger s'affiche toujours */
     text-align: right;
-    /* Pour que le menu hamburger soit "rangé" par défaut */
     transform: translateX(-120px);
     padding:10px;
 }
@@ -261,7 +246,7 @@ h2{
 }
 
 #hamburger:checked ~ #hamburger-logo {
-    background-color: #2f3542;
+    background-color:#292c30;
 }
   
 #burger-title{
@@ -276,7 +261,7 @@ h2{
   nav {
     display: flex;
     flex-direction: column;
-    background:#2f3542;
+    background:#292c30;
     overflow: hidden;
     width: 200px;
     height: 100%;
@@ -297,6 +282,23 @@ h2{
     text-decoration: none;
     padding: 10px;
   }
+
+  /* View_shared_by*/
+.shared_reader, .shared_editor {
+    display: flex;
+    flex-wrap: wrap;
+   
+}
+
+.shared_title {
+   color: white;
+   margin: 5px;
+}
+.shared_by {
+    margin: 5px;
+    position:fixed;
+    top: 70px;
+}
 
 
   
