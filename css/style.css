@@ -1,3 +1,188 @@
-body {
-    background-color: #212426;
+/* view notes */
+.view_card {
+    margin: 15% 5%;
 }
+.title-notes {
+    color: white;
+}
+.view_card .card {
+    width: 200px; 
+    max-height: 250px; 
+    margin: 5px;
+}
+
+
+/**{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+}*/
+
+body, html{
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #252729;
+   
+ }
+
+ /* My archives */
+ 
+ h1{
+     position: absolute;
+     top:2%;
+     right: 5%;
+     color: white;
+     font-size: 18px;
+     font-weight: 500;
+ }
+ h2{
+     color: white;
+  
+     
+     
+    position: fixed;
+     font-size: 15px;
+     font-weight: 500;
+     top: 70px;
+     left: 20px;
+     
+     
+ }
+ 
+ .my-archives {
+     display: flex;
+     flex-wrap: wrap;
+     margin: 10px;
+     position: fixed;
+     top: 90px;
+     right: 1px;
+     left: 1px;
+ }
+ .note-archivee{
+    
+     border:1.5px solid  #57606f;
+     color: white;
+     border-radius: 5px;
+     width: calc(50% - 20px);
+     background: #252729;
+     margin: 5px 10px 10px 10px   
+ }
+ .link-note-archivee{
+     text-decoration: none;
+     color:inherit;
+ 
+ }
+ .note-archivee .note-title{
+     font-size: 18px;
+     border-bottom: 1.5px solid #57606f;
+     border-top-right-radius:5px ;
+     border-top-left-radius: 5px;
+     padding:3px 10px;
+     background: #353b48;
+ 
+     
+ }
+ .note-archivee .note-content{
+     padding: 15px;
+ }
+ 
+ .note-archivee .note-content .content {
+     display:-webkit-box;
+     -webkit-box-orient: vertical;
+     -webkit-line-clamp: 2;
+     overflow: hidden;
+ }
+ 
+    
+   
+     
+ 
+ 
+  /*  menu burger */ 
+   .menu {
+     position: fixed;
+     height: 100%;
+     top: 0;
+     z-index: 2;
+ }
+   #hamburger {
+     display: none;
+   }
+   
+   #hamburger-logo{
+     cursor: pointer;
+     background-color: #252729;
+     width: 200px;
+     display: block;
+     color: darkgrey;
+     /* Pour que le menu hamburger s'affiche toujours */
+     text-align: right;
+     /* Pour que le menu hamburger soit "rangé" par défaut */
+     transform: translateX(-120px);
+     padding:10px;
+ }
+ 
+   #hamburger-logo::before{
+     content: '☰' ;
+     border: 0.5px solid  darkgray;
+     padding: 3px 12px 5px 12px;
+     border-radius: 5px;
+     font-size: 25px;
+     line-height: 1; display: inline-block;
+    }
+ 
+   #hamburger:checked ~ #hamburger-logo::before{
+     content: '✕';
+     border: none;
+ }
+ 
+ #hamburger:checked ~ #hamburger-logo {
+     background-color: #2f3542;
+ }
+   
+ #burger-title{
+     color:#f39c12;
+     font-weight: 600;
+     font-size: 20px;
+     position: absolute;
+     top: 10px;
+     left: 10px;
+  }
+ 
+   nav {
+     display: flex;
+     flex-direction: column;
+     background:#2f3542;
+     overflow: hidden;
+     width: 200px;
+     height: 100%;
+     transform: translateX(-200px);
+   }
+   
+   #hamburger-logo, nav {
+     transition: 0.1s;
+   }
+   
+   #hamburger:checked ~ #hamburger-logo,
+   #hamburger:checked ~ nav {
+     transform: translate(0);
+   }
+   
+   nav a {
+     color: white;
+     text-decoration: none;
+     padding: 10px;
+   }
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
