@@ -10,10 +10,52 @@
     <link href="css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-    <?php include('view/menu.html'); ?>
-    <div class="container">
+    <?php include('view/view_menu.php'); ?>
+    <div class="view_card container">
+        <h6 class="title-notes">Pinned</h6>
         <div class="row">
-            
+
+            <?php foreach ($notes_pinned as $value) { ?>
+
+                <div class="card text-bg-secondary">
+                <div class="card-header">
+                    <?=$value['title'] ?>
+                </div>
+                <div class="card-body">
+                    <p class="card-text"><?php
+                    if ($value['content'] != null) {
+                      echo substr($value['content'],0,70) ."...";  
+                    }  else {
+                        echo "" ; }?></p>
+                </div>
+                <div class="card-footer">
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+                </div>
+           <?php } ?> 
+        </div>
+    </div>
+    <div class="view_card container">
+        <h6 class="title-notes">Others</h6>
+        <div class="row">
+            <?php foreach ($notes_unpinned as $value) { ?>
+
+                <div class="card text-bg-secondary">
+                <div class="card-header">
+                    <?=$value['title'] ?>
+                </div>
+                <div class="card-body">
+                    <p class="card-text"><?php
+                    if ($value['content'] != null) {
+                      echo substr($value['content'],0,70) ."...";  
+                    }  else {
+                        echo "" ; }?></p>
+                </div>
+                <div class="card-footer">
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+                </div>
+           <?php } ?> 
         </div>
     </div>
 
