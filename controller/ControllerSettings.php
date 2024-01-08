@@ -1,6 +1,7 @@
 <?php
 
 require_once "framework/Controller.php";
+require_once "framework/View.php";
 
 class ControllerMain extends Controller {
     
@@ -9,7 +10,9 @@ class ControllerMain extends Controller {
     }
 
     public function index() : void {
-        $this->index();
+        (new View("index"))->show();
     }
 }
+
+
 
