@@ -20,7 +20,6 @@ class User extends Model {
         }
         
     }
-
     public static function get_user_by_id(int $user_id) : User|false {
         $query = self::execute("SELECT * FROM Users where id = :id", ["id" =>$user_id]);
 
@@ -33,41 +32,42 @@ class User extends Model {
         
     }
 
-    public function get_full_name() : String {
-        return $this->full_name;
-        
-    }
   
 
      public function persist() : User {
-        if($this->id == NULL) {
-            self::execute("INSERT INTO Users(mail,hashed_password,full_name,role) VALUES (:mail,:hashed_password,:full_name,:role)",
-                        ["mail"=>$this->mail, "hashed_password"=>$this->hashed_password, "full_name"=>$this->full_name, "role"=>$this->role]);
-            $user = self::get_user_by_id(self::lastInsertId());
-            $this->id = $user->id;            
-        }else
+        if(self::get_user_by_mail($this->mail)) {
+
             self::execute("UPDATE Users SET mail=:mail, hashed_password=:hashed_password, full_name=:full_name, role=:role WHERE id=:id ",
-                       ["mail"=>$this->mail, "hashed_password"=>$this->hashed_password, "full_name"=>$this->full_name, "role"=>$this->role]);
+                       ["mail"=>$this->mail, "hashed_password"=>$this->hashed_password, "full_name"=>$this->full_name, "role"=>$this->role]);            
+        }else {
+            self::execute("INSERT INTO Users(mail,hashed_password,full_name,role) VALUES (:mail,:hashed_password,:full_name,:role)",
+            ["mail"=>$this->mail, "hashed_password"=>$this->hashed_password, "full_name"=>$this->full_name, "role"=>$this->role]);
+            $user = self::get_user_by_id(self::lastInsertId());
+            $this->id = $user->id;
+        }
         return $this;
     }
+
+
 
     public static function get_users() : array {
         $query = self::execute("SELECT * FROM Users", []);
         $data = $query->fetchAll();
         $results = [];
         foreach ($data as $row) {
-            $result[] = new User($row["mail"], $row["hashed_password"], $row["full_name"], $row["role"]);
+            $results[] = new User($row["mail"], $row["hashed_password"], $row["full_name"], $row["role"]);
         }
         return $results;
     }
 
 
-    public static function validate($mail) : array {
+    public function validate() : array {
+
         $errors = [];
-        if (!strlen($mail) > 0) {
-            $errors[] = "Mail is requiered.";
-        } if (!(strlen(preg_match("/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/", $mail)))){
-            $errors[] = "Email must have a valid structure.";
+        if (!strlen($this->mail) > 0) {
+            $errors[] = "⚠Mail is requiered.";
+        } if (!(preg_match("/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/", $this->mail))){
+            $errors[] = "⚠Email must have a valid structure.";
         }
         return $errors;
     }
@@ -81,19 +81,20 @@ class User extends Model {
         $user = User::get_user_by_mail($mail);
         if($user) {
             if(!self::check_password($password, $user->hashed_password)) {
-                $errors[] = "Wrong password.please try again.";
+                $errors[] = "⚠Wrong password.please try again.";
             }
         }else {
-            $errors[] = "Can't find the user. Please sign up.";
+            $errors[] = "⚠Can't find the user. Please sign up.";
         }
         return $errors;
     }
     private static function validate_password(string $password) : array {
         $errors = [];
         if (strlen($password) < 8) {
-            $errors[] = "Password length must be up 8 char.";
-        } if (!((preg_match("/[A-Z]/", $password)) && preg_match("/\d/", $password) && preg_match("/['\";:,.\/?!\\-]/", $password))) {
-            $errors[] = "Password must contain one uppercase letter, one number and punctuation mark.";
+            $errors[] = "⚠Password length must be up 8 char.";
+        } 
+        if (!((preg_match("/[A-Z]/", $password)) && preg_match("/\d/", $password) && preg_match("/['\";:,.\/?!\\-]/", $password))) {
+            $errors[] = "⚠Password must contain one uppercase letter, one number and punctuation mark.";
         }
         return $errors;
 
@@ -101,7 +102,7 @@ class User extends Model {
     public static function validate_passwords(string $password, string $password_confirm) : array {
         $errors = User::validate_password($password);
         if ($password != $password_confirm) {
-            $errors[] = "You have to enter twice the same password.";
+            $errors[] = "⚠You have to enter twice the same password.";
         }
         return $errors;
     }
@@ -109,10 +110,21 @@ class User extends Model {
         $errors = [];
         $user = self::get_user_by_mail($mail);
         if ($user) {
-            $errors[] = "This user already exists.";
+            $errors[] = "⚠This user already exists.";
         }
         return $errors;
     }
+
+    public function validate_name() : array {
+        $errors = [];
+        if (!strlen($this->full_name) > 0) {
+            $errors[] = "⚠Full Name is required.";
+        } if(!(strlen($this->full_name) >= 3)){
+            $errors[] = "⚠Full Name must have mutch than 3 char";
+        }
+        return $errors;
+    }
+
 
     public function get_notes() : array {
         return Note::get_notes($this);
@@ -132,7 +144,7 @@ class User extends Model {
         return Note::get_shared_note($this);
     }
 
-     
+ 
    
 
 
@@ -141,3 +153,5 @@ class User extends Model {
 
  
 }
+   
+

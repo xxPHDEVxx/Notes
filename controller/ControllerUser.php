@@ -5,6 +5,7 @@ require_once 'framework/Controller.php';
 
 class ControllerUser extends Controller {
     public function index() : void {
+
     }
 
     public function my_archives() : void {
@@ -31,6 +32,9 @@ class ControllerUser extends Controller {
         }
         return $sharers;
         
+
+       
+
     }
 
     public function get_shared_by() : void {
