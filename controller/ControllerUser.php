@@ -5,13 +5,12 @@ require_once 'framework/Controller.php';
 
 class ControllerUser extends Controller {
     public function index() : void {
-        
     }
 
     public function my_archives() : void {
         $user = $this->get_user_or_redirect();
         $archives = $user->get_archives();
-        (new View("archives"))->show(["user"=>$user,"archives"=>$archives, "sharers"=>$this->shared_by()]);
+        (new View("archives"))->show(["archives"=>$archives, "sharers"=>$this->shared_by()]);
     }
 
 
@@ -42,21 +41,16 @@ class ControllerUser extends Controller {
         if (isset($_GET["param1"]) && $_GET["param1"] !== "") {
             $shared_by = $_GET["param1"];
             $shared_by_name = User::get_user_by_id($shared_by)->full_name;
-        
             $shared_notes_by = $user->get_shared_by($shared_by);
-        
             foreach($shared_notes_by as $shared) {
                 if($shared["editor"] == 1)
                     $shared_notes_as_editor[] = $shared;
                 else 
                     $shared_notes_as_reader[] = $shared;
             }
-        
-          
         }
         (new View("shared_notes"))->show(["shared_by_name"=>$shared_by_name, "shared_notes_as_editor" =>$shared_notes_as_editor,
         "shared_notes_as_reader" =>$shared_notes_as_reader,"sharers"=>$this->shared_by()]);
-
     }
   
 

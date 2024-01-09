@@ -29,9 +29,9 @@
                                         <div class="check_item">
                                             <?php foreach($shared["content_checklist"] as $checklist_item): ?>
                                                <?php if(!$checklist_item['checked']): ?>
-                                                    <div class="li_unchecked_item"><?= $checklist_item['content']?></div>   
+                                                    <div class="unchecked_item"><?= $checklist_item['content']?></div>   
                                                <?php else:?>
-                                                     <div class="li_checked_item"><?=$checklist_item['content']?></div> 
+                                                     <div class="checked_item"><?=$checklist_item['content']?></div> 
                                                <?php endif; ?>
                                             <?php endforeach; ?> 
                                         </div>
@@ -59,9 +59,9 @@
                                     <div class="check_item">
                                         <?php foreach($shared["content_checklist"] as $checklist_item): ?>
                                             <?php if(!$checklist_item['checked']): ?>
-                                                <div class="li_unchecked_item"><?= $checklist_item['content']?></div>   
+                                                <div class="unchecked_item"><?= $checklist_item['content']?></div>   
                                             <?php else:?>
-                                                <div class="li_checked_item"><?=$checklist_item['content']?></div> 
+                                                <div class="checked_item"><?=$checklist_item['content']?></div> 
                                             <?php endif; ?>
                                         <?php endforeach; ?> 
                                     </div>

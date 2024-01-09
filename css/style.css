@@ -4,22 +4,22 @@ body, html{
    margin: 0;
    padding: 0;
    background-color: #202325;/*#252729;*/
-   overflow: hidden;
+   
   
 }
 /* login et signup */
-.container{
+.container_login_signup{
     max-width: 500px;
     padding: 0 20px;
     margin: 170px auto;
 }
-.main{
+.main_login_signup{
    width: 100%;
    height: 370px;
    border-radius: 10px;
    border: 1.5px solid #57606f;
 }
-.main .title{
+.main_login_signup .title{
     
     color: #fff;
     height: 65px;
@@ -29,17 +29,17 @@ body, html{
     text-align: center;
     margin: 20px;
 }
-.main form{
+.main_login_signup form{
   padding: 0 15px 0 15px ;
 }
-.main form .inputbox{
+.main_login_signup form .inputbox{
 
     height: 45px;
     margin-bottom: 17px;
     position: relative;
     
 }
-.main form .inputbox input{
+.main_login_signup form .inputbox input{
     height: 100%;
     width: 100%;
     outline: none;
@@ -50,7 +50,7 @@ body, html{
     
 }
 
-.main form .inputbox i{
+.main_login_signup form .inputbox i{
     position: absolute;
     width: 47px;
     height: 100%;
@@ -68,7 +68,7 @@ body, html{
     color: white;
     position: relative;
 }
-.main form .button input{
+.main_login_signup form .button input{
     color: #fff;
     padding-left: 0px;
     background: #0652DD;
@@ -78,16 +78,16 @@ body, html{
     font-weight: 500;
     transition: all 0.3s ease;
 }
-.main form .text input{
+.main_login_signup form .text input{
     color: white;
     font-size: 17px;
 }
-.main form .subscribe-link a{
+.main_login_signup form .subscribe-link a{
     color:#70a1ff;
     font-size: 19px;
 
 }
-.main form .subscribe-link{
+.main_login_signup form .subscribe-link{
     text-align: center;
     margin-top: 25px;
 }
@@ -112,7 +112,7 @@ h1{
 }
 h2{
     color: white;
-    position: fixed;
+    position: absolute;
     font-size: 15px;
     font-weight: 500;
     top: 70px;
@@ -123,7 +123,7 @@ h2{
     display: flex;
     flex-wrap: wrap;
     margin: 5px;
-    position:fixed;
+    position:absolute;
     top: 85px;
   
 }
@@ -172,14 +172,14 @@ h2{
     position:relative;
 }
 
-.li_checked_item, .li_unchecked_item {
+.checked_item, .unchecked_item {
     width: 120px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-  .li_unchecked_item::before {
+  .unchecked_item::before {
     content: '';
     display: inline-block;
     width: 14px;
@@ -190,8 +190,8 @@ h2{
     border-radius: 3px;
     
   }
-  .li_checked_item::before {
-    content: '✓';
+  .checked_item::before {
+    content:'✓';
     text-align: center;
     line-height: 14px;
     font-weight: 1000;
@@ -212,7 +212,7 @@ h2{
 
  /*  menu burger */ 
   .menu {
-    position: fixed;
+    position: absolute;
     height: 100%;
     top: 0;
 }
@@ -232,11 +232,11 @@ h2{
 }
 
   #hamburger-logo::before{
-    content: '☰' ;
+    content:'☰' ;
     border: 0.5px solid  darkgray;
     padding: 3px 12px 5px 12px;
     border-radius: 5px;
-    font-size: 25px;
+    font-size: 23px;
     line-height: 1; display: inline-block;
    }
 
@@ -296,7 +296,7 @@ h2{
 }
 .shared_by {
     margin: 5px;
-    position:fixed;
+    position: absolute;
     top: 70px;
 }
 

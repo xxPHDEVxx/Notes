@@ -12,8 +12,8 @@
     <link href="css/style.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
-    <div class="container">
-    <div class="main">
+    <div class="container_login_signup">
+    <div class="main_login_signup">
     <div class="title">Sign in</div>
     <form action="main/login" method="post">
             <div class="inputbox text">
