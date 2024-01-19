@@ -130,6 +130,7 @@ class User extends Model {
         return Note::get_notes($this);
     }
 
+
     public function get_archives() : array{
         return Note::get_archives($this);
         
@@ -154,4 +155,6 @@ class User extends Model {
  
 }
    
+
+
 

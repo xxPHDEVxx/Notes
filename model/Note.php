@@ -149,6 +149,9 @@ class Note extends Model
         return $shared;
     }
 
-    
+    public function archive() : void {
+        self::execute("UPDATE notes SET archived = :val WHERE id = :id" , ["val" => 1, "id" =>$this->note_id]);
+    }
+
 
 }
