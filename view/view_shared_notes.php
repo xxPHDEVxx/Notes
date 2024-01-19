@@ -20,7 +20,7 @@
             <?php foreach ($shared_notes_as_editor as $shared): ?>    
                 <div class="shared-note">
                     <div class="note-title"><?=$shared["title"]?></div>
-                    <a class="shared-note-link" href="#">
+                    <a class="shared-note-link" href="note/open_note/<?=$shared["id"]?>">
                         <div class="note-content">
                             <?php if($shared["content"]): ?>
                                 <div class="content_text"><?= $shared["content"]?></div>
@@ -50,7 +50,7 @@
             <?php foreach ($shared_notes_as_reader as $shared): ?>    
                 <div class="shared-note">
                     <div class="note-title"><?=$shared["title"]?></div>
-                    <a class="shared-note-link" href="#">
+                    <a class="shared-note-link" href="note/open_note/<?=$shared["id"]?>">
                         <div class="note-content">
                             <?php if($shared["content"]): ?>
                                 <div class="content_text"><?= $shared["content"]?></div>

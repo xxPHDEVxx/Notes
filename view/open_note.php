@@ -18,9 +18,12 @@
         <a class="lien_liste_note" href="#"><span class="material-symbols-outlined">arrow_back_ios</span></a> 
         <?php if($archived == 1):?>
             <a class="delete" href="#"><span class="material-symbols-outlined" id ="delete_icon">delete_forever</span></a>
-            <a class="archived_unarchived" href="#"><span class="material-symbols-outlined">unarchive</span></span></a>
+            <a class="archived_unarchived" href="note/unarchive/<?=$note_id?>"><span class="material-symbols-outlined">unarchive</span></a>
            
         <?php endif; ?>
+        <?php if($isShared): ?>
+            <a class="isShared" href="#"><span class="material-symbols-outlined">edit</span></a>
+        <?php endif; ?>    
      
     </div>
     <div class ="dates">Created <?=$created?> Edited <?=$edited?>

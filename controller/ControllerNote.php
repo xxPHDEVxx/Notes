@@ -46,13 +46,36 @@ class ControllerNote extends Controller {
 
     }
 
-    public function open_note(){
+    public function open_note() : void{
         if(isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
-            $note = $_GET["param1"];
-            $archived = Note::isArchived($note);
+            $note_id = $_GET["param1"];
+            $note = Note::get_note($note_id);
+            $archived = $note->isArchived();
+            $isShared = $note->isShared();
+
         }
-        (new View("open_text_note"))->show(["created"=>$this->get_created_time($note), "edited"=>$this->get_edited_time($note)
-                                            , "archived" =>$archived]);
+        (new View("open_text_note"))->show(["note_id"=>$note_id,"created"=>$this->get_created_time($note_id), "edited"=>$this->get_edited_time($note_id)
+                                            , "archived" =>$archived, "isShared"=>$isShared]);
+    }
+
+    public function archive() : void {
+        if(isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
+            $note_id = $_GET["param1"];
+            $note = Note::get_note($note_id);
+            $note->archive();
+            $this->redirect();
+        }
+
+    }
+    
+    public function unarchive() : void {
+        if(isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
+            $note_id = $_GET["param1"];
+            $note = Note::get_note($note_id);
+            $note->unarchive();
+            $this->redirect();
+        }
+
     }
 
 }
