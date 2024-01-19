@@ -18,8 +18,9 @@
         <?php if (count($archives) != 0): ?>
             <?php foreach ($archives as $archive): ?>    
                 <div class="note-archivee">
+                <a class="link-note-archivee" href="Note/open_note/<?=$archive["id"]?>">
                     <div class="note-title"><?=$archive["title"]?></div>
-                    <a class="link-note-archivee" href="#">
+                              
                         <div class="note-content">
                             <?php if($archive["content"]): ?>
                                 <div class="content_text"><?= $archive["content"]?></div>

@@ -28,6 +28,25 @@ class Note extends Model
         return $notes;
 
     }
+    public static function get_created_at(int $id) : String {
+        $query = self::execute("SELECT created_at from notes WHERE id = :id", ["id" => $id]);
+        $data = $query->fetchColumn();
+        
+        return $data;
+        
+    }
+    public static function get_edited_at(int $id) : String {
+        $query = self::execute("SELECT edited_at from notes WHERE id = :id", ["id" => $id]);
+        $data = $query->fetchColumn();
+        
+        return $data;
+        
+    }
+    public static function isArchived(int $id) : int{
+        $query = self::execute("SELECT archived FROM notes WHERE id = :id", ["id" => $id]);
+        $data = $query->fetchColumn();
+        return $data;
+    }
 
     public static function get_note(int $note_id) : Note |false {
         $query = self::execute("select * from Notes where id = :id", ["id" => $note_id]);
