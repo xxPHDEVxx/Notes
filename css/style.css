@@ -3,7 +3,7 @@ body, html{
    height: 100%;
    margin: 0;
    padding: 0;
-   background-color: #202325;/*#252729;#23252a;/*#1e272e; */
+   background-color:yellow; #202325;/*#252729;#23252a;/*#1e272e; */
 
 
 }
@@ -314,6 +314,10 @@ h2{
     width: 200px;
     height: 100%;
     transform: translateX(-200px);
+  }
+  nav a:hover{
+    background-color:#43464c;
+    
   }
   
   #hamburger-logo, nav {

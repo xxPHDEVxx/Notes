@@ -31,10 +31,6 @@ class ControllerUser extends Controller {
             $sharers[] = $user;
         }
         return $sharers;
-        
-
-       
-
     }
 
     public function get_shared_by() : void {

@@ -16,69 +16,21 @@
     <?php if (count($shared_notes_as_editor) != 0): ?>
         <div class="shared_title">Notes shared to you by <?=$shared_by_name?> as editor</div>
         <div class="shared_editor">
-
-            <?php foreach ($shared_notes_as_editor as $shared): ?>    
-                <div class="shared-note">
-                    <div class="note-title"><?=$shared["title"]?></div>
-                    <a class="shared-note-link" href="note/open_note/<?=$shared["id"]?>">
-                        <div class="note-content">
-                            <?php if($shared["content"]): ?>
-                                <div class="content_text"><?= $shared["content"]?></div>
-                            <?php elseif($shared['content_checklist']):?>
-                                    <div class="content_check">
-                                        <div class="check_item">
-                                            <?php foreach($shared["content_checklist"] as $checklist_item): ?>
-                                               <?php if(!$checklist_item['checked']): ?>
-                                                    <div class="unchecked_item"><?= $checklist_item['content']?></div>   
-                                               <?php else:?>
-                                                     <div class="checked_item"><?=$checklist_item['content']?></div> 
-                                               <?php endif; ?>
-                                            <?php endforeach; ?> 
-                                        </div>
-                                    </div>
-                            <?php endif; ?>
-                        </div>  
-                    </a>   
-                </div>
+            <?php foreach ($shared_notes_as_editor as $note_item): ?> 
+                <?php include("note_in_list.php") ?>   
             <?php endforeach; ?>
         </div>
     <?php endif; ?>
     <?php if (count($shared_notes_as_reader) != 0): ?>
         <div class="shared_title">Notes shared to you by <?=$shared_by_name?> as reader</div>
         <div class="shared_reader">
-
-            <?php foreach ($shared_notes_as_reader as $shared): ?>    
-                <div class="shared-note">
-                    <div class="note-title"><?=$shared["title"]?></div>
-                    <a class="shared-note-link" href="note/open_note/<?=$shared["id"]?>">
-                        <div class="note-content">
-                            <?php if($shared["content"]): ?>
-                                <div class="content_text"><?= $shared["content"]?></div>
-                            <?php elseif($shared['content_checklist']):?>
-                                <div class="content_check">
-                                    <div class="check_item">
-                                        <?php foreach($shared["content_checklist"] as $checklist_item): ?>
-                                            <?php if(!$checklist_item['checked']): ?>
-                                                <div class="unchecked_item"><?= $checklist_item['content']?></div>   
-                                            <?php else:?>
-                                                <div class="checked_item"><?=$checklist_item['content']?></div> 
-                                            <?php endif; ?>
-                                        <?php endforeach; ?> 
-                                    </div>
-                                </div>
-                            <?php endif; ?>
-                        </div>  
-                    </a>   
-                </div>
+            <?php foreach ($shared_notes_as_reader as $note_item): ?>
+                <?php include("note_in_list.php") ?>    
+             
             <?php endforeach; ?>
         </div>
     <?php endif; ?>
 </div>
-
-       
-
-     
-        
 <?php (new View("menu"))->show(["sharers"=>$sharers]); ?>
 
 

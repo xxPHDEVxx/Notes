@@ -16,30 +16,8 @@
     <h2>Archives</h2> 
     <div class="my-archives">
         <?php if (count($archives) != 0): ?>
-            <?php foreach ($archives as $archive): ?>    
-                <div class="note-archivee">
-                <a class="link-note-archivee" href="Note/open_note/<?=$archive["id"]?>">
-                    <div class="note-title"><?=$archive["title"]?></div>
-                              
-                        <div class="note-content">
-                            <?php if($archive["content"]): ?>
-                                <div class="content_text"><?= $archive["content"]?></div>
-                            <?php elseif($archive['content_checklist']):?>
-                                <div class="content_check">
-                                    <div class="check_item">
-                                        <?php foreach($archive["content_checklist"] as $checklist_item): ?>
-                                            <?php if(!$checklist_item['checked']): ?>
-                                                <div class="unchecked_item"><?= $checklist_item['content']?></div>   
-                                            <?php else:?>
-                                                <div class="checked_item"><?=$checklist_item['content']?></div> 
-                                            <?php endif; ?>
-                                        <?php endforeach; ?> 
-                                    </div>
-                                </div>
-                            <?php endif; ?>
-                        </div>  
-                    </a>   
-                </div>
+            <?php foreach ($archives as $note_item): ?>    
+                <?php include("note_in_list.php") ?>
             <?php endforeach; ?>
         <?php endif; ?>
     </div>

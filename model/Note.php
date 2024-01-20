@@ -99,8 +99,6 @@ class Note extends Model
             throw new Exception("Not Implemented.");
         }
     }
-
-    
     public static function get_archives(User $user): array {
         $archives = [];
         $query = self::execute("SELECT id, title FROM notes WHERE owner = :ownerid AND archived = 1 ORDER BY -weight" , ["ownerid" => $user->id]);
@@ -138,9 +136,7 @@ class Note extends Model
              $row["content_checklist"] = $content_checklist;
             }
         return $shared_by;
-
-        
-    }
+}
 
     public static function get_shared_note(User $user): array {
         $shared = [];
