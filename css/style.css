@@ -3,7 +3,7 @@ body, html{
    height: 100%;
    margin: 0;
    padding: 0;
-   background-color:yellow; #202325;/*#252729;#23252a;/*#1e272e; */
+   background-color: #202325;/*#252729;#23252a;/*#1e272e; */
 
 
 }
@@ -351,41 +351,75 @@ h2{
     position: absolute;
     top: 70px;
 }
+/*barre open note*/
 #delete_icon {
     color: red;
+    position: absolute;
+    top: 15px;
+    right: 60px; 
 }
 
+.back {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+}
+.unarchive {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+}
+.archive {
+    position: absolute;
+    top: 15px;
+    right: 60px;
+}
+
+.isShared{
+    position: absolute;
+    top: 15px;
+    right: 20px;
+}
+.pinned {
+    position: absolute;
+    top: 15px;
+    right: 100px;
+}
+.share {
+    position: absolute;
+    top: 15px;
+    right: 140px;
+}
+/* informations communes de text note et checklist note dans open note*/
 body .dates {
     position: absolute;
     top: 60px;
-    left: 20px;
+    left: 15px;
     font-style: italic;
     color:lightgray;
     font-weight: 350;
 
 }
-
-.lien_liste_note {
+.title_note {
     position: absolute;
-    top: 10px;
-    left: 20px;
+    top: 120px;
+    left: 10px;
+    color: lightgray;
+    width: 93%;
+    margin: 5px;
+    padding: 7px 7px 7px 10px;
+    border: 1.5px solid #53575e;
+    background-color: #383c44;
+    border-radius: 7px;
 }
-.archived_unarchived {
+.title_note_title{
+    color: white;
     position: absolute;
-    top: 10px;
-    right: 20px;
+    top: 100px;
+    left: 10px;
+    margin-left: 5px ;
+    
 }
-.delete {
-    position: absolute;
-    top: 10px;
-    right: 60px; 
-}
-.isShared{
-    position: absolute;
-    top:10px;
-    right: 60px;
-}
-
 
   
 

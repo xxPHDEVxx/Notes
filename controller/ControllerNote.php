@@ -50,13 +50,15 @@ class ControllerNote extends Controller {
         if(isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
             $note = Note::get_note($note_id);
-            $archived = $note->isArchived();
-            $isShared = $note->isShared();
+            $user_id = $this->get_user_or_redirect()->id;
+            $archived = $note->in_My_archives($user_id);
+            $isShared = $note->isShared($user_id);
 
         }
-        (new View("open_text_note"))->show(["note_id"=>$note_id,"created"=>$this->get_created_time($note_id), "edited"=>$this->get_edited_time($note_id)
+        (new View("open_text_note"))->show(["note"=>$note,"note_id"=>$note_id,"created"=>$this->get_created_time($note_id), "edited"=>$this->get_edited_time($note_id)
                                             , "archived" =>$archived, "isShared"=>$isShared]);
     }
+   
 
     public function archive() : void {
         if(isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {

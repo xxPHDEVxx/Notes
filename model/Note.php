@@ -42,15 +42,15 @@ class Note extends Model
         return $data;
         
     }
-    public function isArchived() : int{
-        $query = self::execute("SELECT archived FROM notes WHERE id = :id", ["id" => $this->note_id]);
-        $data = $query->fetchColumn();
-        return $data;
-    }
-    public function isShared() : bool {
-        $query = self::execute("SELECT * FROM note_shares WHERE note = :id", ["id" => $this->note_id]);
+    public function isShared(int $userid) : bool {
+        $query = self::execute("SELECT * FROM note_shares WHERE note = :id and user =:userid", ["id" => $this->note_id, "userid"=>$userid]);
         $data = $query->fetchAll();
         return count($data) !== 0;
+    }
+    public function in_my_archives(int $userid) : int {
+        $query = self::execute("SELECT archived FROM notes WHERE owner = :userid and id = :id", ["userid"=> $userid, "id"=>$this->note_id]);
+        $data = $query->fetchColumn();
+        return $data;
     }
 
     public static function get_note(int $note_id) : Note |false {
