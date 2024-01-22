@@ -14,7 +14,7 @@
 </head>
 <body>
    
-    <div classe="barre">
+    <div class="barre">
        
         <a class="back" href="#"><span class="material-symbols-outlined">arrow_back_ios</span></a> 
         <?php if($archived == 1):?>
