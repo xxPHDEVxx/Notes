@@ -7,6 +7,9 @@ body, html{
 
 
 }
+body {
+    overflow-x: hidden;
+}
 /* login et signup */
 .container_login_signup{
     max-width: 500px;
@@ -174,6 +177,9 @@ h2{
     position:absolute;
     top: 85px;
   
+    margin-left: 0;
+    transition: margin-left 0.3s;
+    position: relative;
 }
 .note-archivee, .shared-note{
    
@@ -260,13 +266,14 @@ h2{
 
  /*  menu burger */ 
   .menu {
-    position: absolute;
+    position:fixed;
     height: 100%;
     top: 0;
+    visibility: hidden;
 }
   #hamburger {
     display: none;
-  }
+}
   
   #hamburger-logo{
     cursor: pointer;
@@ -277,6 +284,10 @@ h2{
     text-align: right;
     transform: translateX(-120px);
     padding:10px;
+    
+   
+
+ 
 }
 
   #hamburger-logo::before{
@@ -285,7 +296,10 @@ h2{
     padding: 3px 12px 5px 12px;
     border-radius: 5px;
     font-size: 23px;
-    line-height: 1; display: inline-block;
+    line-height: 1; 
+    display: inline-block;
+    visibility: visible;
+
    }
 
   #hamburger:checked ~ #hamburger-logo::before{
@@ -304,9 +318,9 @@ h2{
     position: absolute;
     top: 10px;
     left: 10px;
- }
+}
 
-  nav {
+nav {
     display: flex;
     flex-direction: column;
     background:#292c30;
@@ -314,19 +328,20 @@ h2{
     width: 200px;
     height: 100%;
     transform: translateX(-200px);
-  }
-  nav a:hover{
+   }
+nav a:hover{
     background-color:#43464c;
     
   }
   
   #hamburger-logo, nav {
-    transition: 0.1s;
+    transition: 0.2s;
   }
   
   #hamburger:checked ~ #hamburger-logo,
   #hamburger:checked ~ nav {
     transform: translate(0);
+    visibility: visible;
   }
   
   nav a {
@@ -334,6 +349,13 @@ h2{
     text-decoration: none;
     padding: 10px;
   }
+
+
+
+
+
+  
+
 
   /* View_shared_by*/
 .shared_reader, .shared_editor {
@@ -420,6 +442,18 @@ body .dates {
     margin-left: 5px ;
     
 }
+/*open_text_note*/
+.body {
+    color : white;
+    border: 1.5px solid #2f323a;
+    margin: 20px;
+    position: absolute;
+    top: 150px;
+    padding: 20px;
+    width: 93%;
+    border-radius: 5PX;
+}
+
 
   
 

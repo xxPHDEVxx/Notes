@@ -1,13 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <base href="<?= $web_root ?>"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-    <link href="css/style.css" rel="stylesheet" type="text/css"/>
-</head>
-<body>
+
    <div class="note-archivee">
         <a class="link-note-archivee" href="Note/open_note/<?=$note_item["id"]?>">
             <div class="note-title"><?=$note_item["title"]?></div>
@@ -36,5 +27,3 @@
    
 
 
-</body>
-</html>

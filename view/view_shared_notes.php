@@ -31,7 +31,7 @@
         </div>
     <?php endif; ?>
 </div>
-<?php (new View("menu"))->show(["sharers"=>$sharers]); ?>
+<?php include("view_menu.php"); //(new View("menu"))->show(["sharers"=>$sharers]); ?>
 
 
 </body>

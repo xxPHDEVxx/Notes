@@ -15,7 +15,11 @@ class ControllerNote extends Controller {
     }
     public function get_edited_time(int $note_id) : String {
         $edited_date = Note::get_edited_at($note_id);
-        return $this->get_elapsed_time($edited_date);
+        if($edited_date != null) {
+            return $this->get_elapsed_time($edited_date);
+        } else{
+            return false;
+        }   
     }
 
     public function get_elapsed_time(String $date) : String {
@@ -53,10 +57,11 @@ class ControllerNote extends Controller {
             $user_id = $this->get_user_or_redirect()->id;
             $archived = $note->in_My_archives($user_id);
             $isShared = $note->isShared($user_id);
+            $body = $note->get_text_note($note_id);
 
         }
         (new View("open_text_note"))->show(["note"=>$note,"note_id"=>$note_id,"created"=>$this->get_created_time($note_id), "edited"=>$this->get_edited_time($note_id)
-                                            , "archived" =>$archived, "isShared"=>$isShared]);
+                                            , "archived" =>$archived, "isShared"=>$isShared, "note_body_text" => $body]);
     }
    
 
@@ -66,9 +71,9 @@ class ControllerNote extends Controller {
             $note = Note::get_note($note_id);
             $note->archive();
             $this->redirect();
-        }
 
     }
+}
     
     public function unarchive() : void {
         if(isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
@@ -79,5 +84,7 @@ class ControllerNote extends Controller {
         }
 
     }
+
+   
 
 }

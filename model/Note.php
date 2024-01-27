@@ -35,7 +35,7 @@ class Note extends Model
         return $data;
         
     }
-    public static function get_edited_at(int $id) : String {
+    public static function get_edited_at(int $id) : String | null {
         $query = self::execute("SELECT edited_at from notes WHERE id = :id", ["id" => $id]);
         $data = $query->fetchColumn();
         
@@ -156,6 +156,18 @@ class Note extends Model
 
     public function unarchive() : void {
         self::execute("UPDATE notes SET archived = :val WHERE id = :id" , ["val" => 0, "id" =>$this->note_id]);
+    }
+    public static function get_text_note(int $id) : String {
+        $dataQuery = self::execute("SELECT content FROM text_notes WHERE id = :note_id", ["note_id" => $id]);
+        $content = $dataQuery->fetchColumn(); 
+        return $content;
+    }
+
+    public static function get_checklist_note(int $id) : array {
+        $content = [];
+        $dataQuery = self::execute("SELECT content FROM checklist_note_items WHERE checklist_note = :note_id ", ["note_id" => $id]);
+        $content[] = $dataQuery->fetchAll();
+        return $content;
     }
 
 
