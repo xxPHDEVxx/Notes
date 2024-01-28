@@ -348,6 +348,24 @@ h2{
     top: 70px;
 }
 
+/* settings*/
+
+.menu_settings {
+    position: absolute;
+    top: 80px;
+    left: 200px;
+}
+
+.menu_settings a {
+    color: white;
+    display: block;
+    position: relative;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    margin: 2em;
+}
+
 
   
 
