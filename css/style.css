@@ -368,9 +368,16 @@ h2{
 
 /* edit_profile */
 
-#edit_form {
+.edit_form {
     position : absolute;
-    top: 100px;
+    top: 120px;
+}
+
+.form-label {
+    color: white;
+   
+    font-size: 15px;
+    font-weight: 300;
 }
 
 

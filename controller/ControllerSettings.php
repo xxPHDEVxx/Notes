@@ -21,6 +21,12 @@ class ControllerSettings extends Controller
         (new View("edit_profile"))->show(["user" => $user]);
     }
 
+    public function change_password(): void
+    {
+        $user = User::get_user_by_id(2);
+        (new View("change_password"))->show(["user" => $user]);
+    }
+
     public function index(): void
     {
         (new View("index"))->show();

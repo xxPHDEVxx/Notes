@@ -20,7 +20,7 @@
     </div>
     <div class="menu_settings">
         <a href="settings/edit_profile"><i class="fas fa-pen"></i>Edit Profile</a>
-        <a href="view_changePassword"><i class="fas fa-key"></i>Change password</a>
+        <a href="settings/change_password"><i class="fas fa-key"></i>Change password</a>
         <a href="view_login"><i class="fas fa-door-open"></i>Logout</a>
     </div>
 

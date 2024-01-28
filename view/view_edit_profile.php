@@ -16,7 +16,7 @@
     </div>
     <div class="container mt-5">
         <h2>Edit Profile</h2>
-        <form id="edit_form" action="update_profile.php" method="post">
+        <form class ="edit_form" action="update_profile.php" method="post">
             <div class="mb-3">
                 <label for="email" class="form-label">Mail</label>
                 <input type="email" class="form-control" id="email" name="email" value="<?= $user->mail ?>" required>
