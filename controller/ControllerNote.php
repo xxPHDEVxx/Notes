@@ -13,14 +13,11 @@ class ControllerNote extends Controller {
         return $this->get_elapsed_time($created_date);
       
     }
-    public function get_edited_time(int $note_id) : String {
+    public function get_edited_time(int $note_id) : String | bool {
         $edited_date = Note::get_edited_at($note_id);
-        if($edited_date != null) {
-            return $this->get_elapsed_time($edited_date);
-        } else{
-            return false;
-        }   
-    }
+        return $edited_date != null ? $this->get_elapsed_time($edited_date) : false;
+    }   
+
 
     public function get_elapsed_time(String $date) : String {
             $localDateNow = new DateTime();

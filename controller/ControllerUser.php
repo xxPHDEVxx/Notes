@@ -11,7 +11,7 @@ class ControllerUser extends Controller {
     public function my_archives() : void {
         $user = $this->get_user_or_redirect();
         $archives = $user->get_archives();
-        (new View("archives"))->show(["archives"=>$archives, "sharers"=>$this->shared_by()]);
+        (new View("archives"))->show(["currentPage"=> "my_archives","archives"=>$archives, "sharers"=>$this->shared_by()]);
     }
 
 
@@ -33,6 +33,10 @@ class ControllerUser extends Controller {
         return $sharers;
     }
 
+    public function my_notes() {
+        $currenrPage = "my_notes";
+    }
+
     public function get_shared_by() : void {
         $shared_notes_by = [];
         $shared_notes_as_editor = [];
@@ -49,7 +53,7 @@ class ControllerUser extends Controller {
                     $shared_notes_as_reader[] = $shared;
             }
         }
-        (new View("shared_notes"))->show(["shared_by_name"=>$shared_by_name, "shared_notes_as_editor" =>$shared_notes_as_editor,
+        (new View("shared_notes"))->show(["currentPage" => $shared_by_name, "shared_by_name"=>$shared_by_name, "shared_notes_as_editor" =>$shared_notes_as_editor,
         "shared_notes_as_reader" =>$shared_notes_as_reader,"sharers"=>$this->shared_by()]);
     }
   

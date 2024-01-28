@@ -5,10 +5,6 @@ body, html{
    padding: 0;
    background-color: #202325;/*#252729;#23252a;/*#1e272e; */
 
-
-}
-body {
-    overflow-x: hidden;
 }
 /* login et signup */
 .container_login_signup{
@@ -155,8 +151,8 @@ body {
 
 h1{
     position: absolute;
-    top:2%;
-    right: 5%;
+    top:20px;
+    right: 30px;
     color: white;
     font-size: 18px;
     font-weight: 500;
@@ -176,10 +172,8 @@ h2{
     margin: 5px;
     position:absolute;
     top: 85px;
-  
+    left: 5px;
     margin-left: 0;
-    transition: margin-left 0.3s;
-    position: relative;
 }
 .note-archivee, .shared-note{
    
@@ -191,7 +185,7 @@ h2{
     margin: 3px;  
 }
 .link-note-archivee, .shared-note-link{
-    text-decoration: none;
+   text-decoration: none;
     color:inherit;
 }
 .note-title{
@@ -270,6 +264,9 @@ h2{
     height: 100%;
     top: 0;
     visibility: hidden;
+    z-index: 2;
+    
+    
 }
   #hamburger {
     display: none;
@@ -284,10 +281,6 @@ h2{
     text-align: right;
     transform: translateX(-120px);
     padding:10px;
-    
-   
-
- 
 }
 
   #hamburger-logo::before{
@@ -299,12 +292,14 @@ h2{
     line-height: 1; 
     display: inline-block;
     visibility: visible;
+    margin-right: 15px;
 
-   }
+}
 
   #hamburger:checked ~ #hamburger-logo::before{
     content: '✕';
     border: none;
+    margin-right: 0;
 }
 
 #hamburger:checked ~ #hamburger-logo {
@@ -342,6 +337,7 @@ nav a:hover{
   #hamburger:checked ~ nav {
     transform: translate(0);
     visibility: visible;
+    
   }
   
   nav a {
@@ -349,6 +345,31 @@ nav a:hover{
     text-decoration: none;
     padding: 10px;
   }
+.active {
+    color : white;
+
+}
+.not_active {
+    color : gray;
+}
+#hamburger:checked ~ .menu-overlay {
+    display:block;
+    visibility: visible;
+    
+}
+.menu-overlay {
+    
+    position: fixed;
+    top:0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    pointer-events: none;
+    
+    
+}
+
 
 
 
@@ -361,6 +382,8 @@ nav a:hover{
 .shared_reader, .shared_editor {
     display: flex;
     flex-wrap: wrap;
+    
+    
    
 }
 
@@ -372,7 +395,11 @@ nav a:hover{
     margin: 5px;
     position: absolute;
     top: 70px;
+    left: 5px;
+    margin-left: 0;
+    
 }
+
 /*barre open note*/
 #delete_icon {
     color: red;

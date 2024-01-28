@@ -1,4 +1,6 @@
- 
+
+<body>
+   
     <div class="barre">
        
         <a class="back" href="#"><span class="material-symbols-outlined">arrow_back_ios</span></a> 
@@ -17,7 +19,7 @@
         <?php endif; ?>    
      
     </div>
-    <div class ="dates">Created <?=$created?> <?=($edited ? 'Edited' : 'Not edited yet') ?></div>
+    <div class ="dates">Created <?=$created?><?=($edited ? " Edited ". $edited : " Not edited yet") ?></div>
     <div class="title_note_title">Title</div>
-    <div class="title_note"> <?=$note->title?> </div>
+    <div class="title_note"> <?=$note->title?></div>
   

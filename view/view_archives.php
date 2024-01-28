@@ -12,9 +12,7 @@
     <link href="css/style.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
-  
-
-
+<?php include("menu.php"); ?>
     <h1>My archives</h1>
     <h2>Archives</h2> 
     <div class="my-archives">
@@ -24,14 +22,7 @@
                 <?php include("note_in_list.php") ?>
             <?php endforeach; ?>
         <?php endif; ?>
-        <?php include("view_menu.php"); ?>
-     
+    
     </div>
- 
-   
-   
- 
-
-
 </body>
 </html>
