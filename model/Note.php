@@ -42,8 +42,14 @@ class Note extends Model
         return $data;
         
     }
-    public function isShared(int $userid) : bool {
-        $query = self::execute("SELECT * FROM note_shares WHERE note = :id and user =:userid", ["id" => $this->note_id, "userid"=>$userid]);
+    public function isShared_as_editor(int $userid) : bool {
+        $query = self::execute("SELECT * FROM note_shares WHERE note = :id and user =:userid and editor = 1", ["id" => $this->note_id, "userid"=>$userid]);
+        $data = $query->fetchAll();
+        return count($data) !== 0;
+    }
+
+    public function isShared_as_reader(int $userid) : bool {
+        $query = self::execute("SELECT * FROM note_shares WHERE note = :id and user =:userid and editor = 0", ["id" => $this->note_id, "userid"=>$userid]);
         $data = $query->fetchAll();
         return count($data) !== 0;
     }

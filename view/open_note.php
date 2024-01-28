@@ -3,15 +3,15 @@
    
     <div class="barre">
        
-        <a class="back" href="#"><span class="material-symbols-outlined">arrow_back_ios</span></a> 
+        <a class="back" href=""><span class="material-symbols-outlined">arrow_back_ios</span></a> 
         <?php if($archived == 1):?>
             <a class="delete" href="#"><span class="material-symbols-outlined" id ="delete_icon">delete_forever</span></a>
             <a class="unarchive" href="note/unarchive/<?=$note_id?>"><span class="material-symbols-outlined">unarchive</span></a>
            
         
-        <?php elseif($isShared): ?>
+        <?php elseif($isShared_as_editor): ?>
             <a class="isShared" href="#"><span class="material-symbols-outlined">edit</span></a>
-        <?php else:?>
+        <?php elseif($archived == 0 && $isShared_as_editor && $isShared_as_reader == 0):?>
             <a class="share" href="#"><span class="material-symbols-outlined">share</span>
             <a class="pinned" href="#"><span class="material-symbols-outlined">push_pin</span>
             <a class="archive" href="note/archive/<?=$note_id?>"><span class="material-symbols-outlined">archive</span></a>
