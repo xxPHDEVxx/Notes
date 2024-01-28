@@ -14,14 +14,16 @@
     
 </head>
 <body>
+    
     <?php include("open_note.php"); ?>
-    <div class="text-note-body">
-        <div class="body">
+    <div class="text_note_title">Text</div>
+   
+        <div class="text_body">
         <?=$note_body_text; ?> 
 
-    </div>
-    </div>
+    
+    
  
-  
+    </div>
 </body>
 </html>

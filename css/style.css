@@ -1,5 +1,5 @@
 
-body, html{
+body{
    height: 100%;
    margin: 0;
    padding: 0;
@@ -167,7 +167,7 @@ h2{
 }
 
 .my-archives{
-    display: flex;
+    display:flex;
     flex-wrap: wrap;
     margin: 5px;
     position:absolute;
@@ -455,11 +455,12 @@ body .dates {
     left: 10px;
     color: lightgray;
     width: 93%;
-    margin: 5px;
+    margin: 7px;
     padding: 7px 7px 7px 10px;
-    border: 1.5px solid #53575e;
+    border: 1.7px solid #53575e;
     background-color: #383c44;
     border-radius: 7px;
+    
 }
 .title_note_title{
     color: white;
@@ -467,19 +468,40 @@ body .dates {
     top: 100px;
     left: 10px;
     margin-left: 5px ;
+    font-size: 18px;
     
 }
 /*open_text_note*/
-.body {
-    color : white;
-    border: 1.5px solid #2f323a;
+.text_body {
+    color : lightgray;
+  
     margin: 20px;
     position: absolute;
-    top: 150px;
+    top: 190px;
+    left: 10px;
     padding: 20px;
     width: 93%;
-    border-radius: 5PX;
+
+    border-radius: 7PX;
+    border: 1.7px solid #53575e;
+    background-color: #383c44;
+    margin: 5px;
+
 }
+
+.text_note_title {
+    position: relative;
+    top: 170px;
+    left: 20px;
+    color: white;
+    font-size: 18px;
+
+    
+    
+}
+
+
+
 
 
   
