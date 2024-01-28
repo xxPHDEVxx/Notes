@@ -348,7 +348,7 @@ h2{
     top: 70px;
 }
 
-/* settings*/
+/* settings */
 
 .menu_settings {
     position: absolute;
@@ -365,6 +365,14 @@ h2{
     text-decoration: none;
     margin: 2em;
 }
+
+/* edit_profile */
+
+#edit_form {
+    position : absolute;
+    top: 100px;
+}
+
 
 
   
