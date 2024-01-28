@@ -10,11 +10,14 @@
 </head>
 <body>
     <div class = "title">Settings</div>
-    <div>Hey <?= $user['name'] ?> !</div>
-    <div class = "menu">
+    <div>Hey <?= $user->full_name ?> !</div>
+    <div class = "menu_settings">
         <a href="view_editProfile">Edit Profile</a>
         <a href="view_changePassword">Change password</a>
         <a href="view_login">Logout</a>
     </div>
+
+    <?php (new View("menu"))->show(); ?>
+
 </body>
 </html>
