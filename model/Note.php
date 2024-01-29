@@ -3,52 +3,69 @@
 require_once "framework/Model.php";
 require_once "User.php";
 require_once "TextNote.php";
+require_once "ChecklistNote.php";
 
-// enum TypeNote {
-//     case TextNote;
-//     case CheckListNote;
-// }
+enum TypeNote {
+    const TN = "TextNote";
+    const CLN = "ChecklistNote";
+}
 
 
-abstract class Note extends Model
+ class Note extends Model
 {
-    public function __construct(
-        public String $title,
-        public User $owner,
-        public string $created_at,
-        public bool $pinned,
-        public bool $archived,
-        public int $weight,
-        public ?string $edited_at = NULL,
-        public ?int $note_id = NULL,
-        
+    public String $title;
+    public int $owner;
+    public string $created_at;
+    public bool $pinned;
+    public bool $archived;
+    public int $weight;
+    public ?string $edited_at = NULL;
+    public ?int $note_id = NULL;
+
+    public function __construct( $initial_title, $initial_owner, $initial_created_at, $initial_pinned, $initial_archived, $initial_weight, $initial_edited_at, $initial_note_id
     ) {
+        $this->title = $initial_title ;
+        $this->owner = $initial_owner;
+        $this->created_at= $initial_created_at; 
+        $this->pinned = $initial_pinned;
+        $this->archived = $initial_archived;
+        $this->weight = $initial_weight ;
+        $this->edited_at = $initial_edited_at; 
+        $this->note_id = $initial_note_id;
+    
     }
 
     public static function get_notes(User $user) : array {
 
-        $notes = [];
-        $query = self::execute("SELECT id, title FROM notes WHERE owner = :ownerid AND archived = 0 ORDER BY -weight" , ["ownerid" => $user->id]);
-        $archives = $query->fetchAll();
-        $content_checklist = [];
-       foreach ($archives as &$row) {
-            $dataQuery = self::execute("SELECT content FROM text_notes WHERE id = :note_id", ["note_id" => $row["id"]]);
-            $content = $dataQuery->fetchColumn(); 
-          
-            if(!$content) {
-                $dataQuery = self::execute("SELECT content, checked FROM checklist_note_items WHERE checklist_note = :note_id ", ["note_id" => $row["id"]]);
-                $content_checklist = $dataQuery->fetchAll();
-            }
-            $row["content"] = $content;
-            $row["content_checklist"] = $content_checklist;
+        $query = self::execute("SELECT * FROM notes WHERE owner = :ownerid AND archived = 0 ORDER BY weight" , ["ownerid" => $user->id]);
+        $data = $query->fetchAll();
+        $all_notes = [];
+        foreach ($data as $row) {
+            $all_notes[] = new Note($row['title'],$row['owner'],$row['created_at'], $row['pinned'], $row['archived'], $row['weight'], $row['edited_at'],$row['id'] );
         }
-        return $notes;
-        // $query = self::execute("select id, title from Notes where owner = :id", ["id"=>$user->id]);
-        // $data = $query->fetchAll();
-        // $notes = [];
-        // return $notes;
-    }
+        
+        $notes = [];
 
+       foreach ($all_notes as $note) {
+            $query_cln = self::execute("SELECT id from checklist_notes where id = :id ", ["id" => $note->note_id]);
+            if ($query_cln->rowCount() == 0) {
+                $query_text = self::execute("SELECT content FROM text_notes WHERE id = :note_id", ["note_id" => $note->note_id]);
+                $data_text = $query_text->fetchColumn();         
+                $notes[] = new TextNote($note->note_id, $note->title,$data_text); 
+                    } else {
+                $notes[]= self::get_checklist_note($note->title,$note->note_id);
+            }
+            
+         }
+        return $notes;
+    }
+    
+
+    public static function get_checklist_note(string $title,int $id) : ChecklistNote {
+        $content = new ChecklistNote($title,$id); 
+
+        return $content;
+    }
 
     public static function get_notes_pinned(User $user) : array {
         $query = self::execute("select n.id, n.title, t.content 
@@ -111,9 +128,9 @@ abstract class Note extends Model
         if($this->note_id == NULL) {
             $errors = $this->validate();
             if(empty($errors)){
-                self::execute('INSERT INTO Notes (title, owner, pinned, archived, weight) VALUES (:author,:recipient,:body,:private)', 
-                               ['tilte' => $this->title,
-                                'owner' => $this->owner->id,
+                self::execute('INSERT INTO Notes (title, owner, pinned, archived, weight) VALUES (:title, :owner,:pinned,:archived,:weight)', 
+                               ['title' => $this->title,
+                                'owner' => $this->owner,
                                 'pinned' => $this->pinned? 1 : 0,
                                 'archived' => $this->archived? 1 : 0,
                                 'weight' => $this->weight,
