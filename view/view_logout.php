@@ -28,7 +28,7 @@
         <p>Are you sure you want to logout ?</p>
         <form id="logout_form" action="main/logout" method="post">
             <input type="hidden" name="logout" value="1">
-            <button type="submit" class="btn btn-danger">Logout</button>
+            <input type="submit" class="btn btn-danger">Logout</button>
         </form>
     </div>
 
