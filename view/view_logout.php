@@ -22,9 +22,18 @@
         <a href="settings/edit_profile"><i class="fas fa-pen"></i>Edit Profile</a>
         <a href="settings/change_password"><i class="fas fa-key"></i>Change password</a>
         <a href="main/logout"><i class="fas fa-door-open"></i>Logout</a>
+    </div> 
+
+    <div class="logout">
+        <p>Are you sure you want to logout ?</p>
+        <form id="logout_form" action="main/logout" method="post">
+            <input type="hidden" name="logout" value="1">
+            <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
     </div>
 
     <?php (new View("menu"))->show(); ?>
+
 </body>
 
 </html>

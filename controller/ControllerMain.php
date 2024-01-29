@@ -33,6 +33,19 @@ public function login() : void {
 
 }
 
+public function logout() : void {
+    $user = User :: get_user_by_id(2);
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+        if (isset($_POST['logout'])){
+            $this->logout();
+        }
+    }
+
+    (new View("logout"))->show(["user" => $user]);
+
+}
+
 
 
 public function signup() : void {
