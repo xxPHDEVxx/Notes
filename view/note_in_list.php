@@ -1,6 +1,5 @@
 
-   <div class="note-archivee">
-        <a class="link-note-archivee" href="Note/open_note/<?=$note_item["id"]?>">
+ 
             <div class="note-title"><?=$note_item["title"]?></div>
                 <div class="note-content">
                     <?php if($note_item["content"]): ?>
@@ -19,8 +18,7 @@
                         </div>
                     <?php endif; ?>
                 </div>  
-        </a>   
-    </div>
+        
         
     
     

@@ -18,8 +18,12 @@
     <div class="my-archives">
         <?php if (count($archives) != 0): ?>
          
-            <?php foreach ($archives as $note_item): ?>    
-                <?php include("note_in_list.php") ?>
+            <?php foreach ($archives as $note_item): ?> 
+                <div class="note-archivee">
+                    <a class="link-note-archivee" href="Note/open_note/<?=$note_item["id"]?>">   
+                        <?php include("note_in_list.php") ?>
+                    </a>
+                </div>
             <?php endforeach; ?>
         <?php endif; ?>
     

@@ -21,7 +21,7 @@ class ControllerUser extends Controller {
         $shared = $user->get_shared_note();
         $ids = [];
         foreach($shared as $shared_note) {
-            $id = $shared_note->owner;
+          $id = $shared_note->owner;
             $ids[]= $id;
         }
         $idsUnique = array_unique($ids);
@@ -33,9 +33,6 @@ class ControllerUser extends Controller {
         return $sharers;
     }
 
-    public function my_notes() {
-        $currenrPage = "my_notes";
-    }
 
     public function get_shared_by() : void {
         $shared_notes_by = [];

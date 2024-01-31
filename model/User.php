@@ -126,9 +126,9 @@ class User extends Model {
     }
 
 
-    public function get_notes() : array {
+   /* public function get_notes() : array {
         return Note::get_notes($this);
-    }
+    }*/
 
 
     public function get_archives() : array{

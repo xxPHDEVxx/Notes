@@ -19,7 +19,11 @@
             <div class="shared_title">Notes shared to you by <?=$shared_by_name?> as editor</div>
             <div class="shared_editor">
                 <?php foreach ($shared_notes_as_editor as $note_item): ?> 
-                    <?php include("note_in_list.php") ?>   
+                    <div class="note-archivee">
+                        <a class="link-note-archivee" href="Note/open_note/<?=$note_item["id"]?>">
+                            <?php include("note_in_list.php") ?>
+                        </a>
+                    </div>       
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
@@ -27,7 +31,11 @@
             <div class="shared_title">Notes shared to you by <?=$shared_by_name?> as reader</div>
             <div class="shared_reader">
                 <?php foreach ($shared_notes_as_reader as $note_item): ?>
-                    <?php include("note_in_list.php") ?>    
+                    <div class="note-archivee">
+                        <a class="link-note-archivee" href="Note/open_note/<?=$note_item["id"]?>">
+                            <?php include("note_in_list.php") ?> 
+                        </a>
+                    </div>       
                 
                 <?php endforeach; ?>
             </div>

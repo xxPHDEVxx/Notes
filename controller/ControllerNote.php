@@ -54,7 +54,7 @@ class ControllerNote extends Controller {
             $user_id = $this->get_user_or_redirect()->id;
             $archived = $note->in_My_archives($user_id);
             $isShared_as_editor = $note->isShared_as_editor($user_id);
-            $body = $note->get_text_note($note_id);
+            $body = TextNote::get_text_content($note_id);
 
         }
         (new View("open_text_note"))->show(["note"=>$note,"note_id"=>$note_id,"created"=>$this->get_created_time($note_id), "edited"=>$this->get_edited_time($note_id)
