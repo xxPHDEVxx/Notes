@@ -1,13 +1,14 @@
 <?php
 require_once "framework/Model.php";
 require_once "User.php";
+require_once "CheckListNoteItem.php";
 
 class CheckListNote extends Note {
 
 
     
-    public function get_items() : array {
-        return CheckListNoteItem::get_items($this->note_id);
+    public static function get_items(int $id) : array {
+        return CheckListNoteItem::get_items($id);
     }
 
     public function get_type() : string {

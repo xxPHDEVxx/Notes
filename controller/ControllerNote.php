@@ -47,7 +47,7 @@ class ControllerNote extends Controller {
 
     }
 
-    public function open_note() : void{
+    public function open_text_note() : void{
         if(isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
             $note = Note::get_note($note_id);
@@ -60,6 +60,32 @@ class ControllerNote extends Controller {
         (new View("open_text_note"))->show(["note"=>$note,"note_id"=>$note_id,"created"=>$this->get_created_time($note_id), "edited"=>$this->get_edited_time($note_id)
                                             , "archived" =>$archived, "isShared_as_editor"=>$isShared_as_editor, "note_body_text" => $body]);
     }
+    public function open_checklist_note() : void{
+        if(isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
+            $note_id = $_GET["param1"];
+            $note = Note::get_note($note_id);
+            $user_id = $this->get_user_or_redirect()->id;
+            $archived = $note->in_My_archives($user_id);
+            $isShared_as_editor = $note->isShared_as_editor($user_id);
+            $body = TextNote::get_text_content($note_id);
+
+        }
+        (new View("open_checklist_note"))->show(["note"=>$note,"note_id"=>$note_id,"created"=>$this->get_created_time($note_id), "edited"=>$this->get_edited_time($note_id)
+                                            , "archived" =>$archived, "isShared_as_editor"=>$isShared_as_editor, "note_body_text" => $body]);
+    }
+    public function open_note() : void{
+        if(isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
+            $note_id = $_GET["param1"];
+            $note = Note::get_note($note_id);
+            $user_id = $this->get_user_or_redirect()->id;
+            $archived = $note->in_My_archives($user_id);
+            $isShared_as_editor = $note->isShared_as_editor($user_id);
+            $body = $note->get_type() == "TextNote" ? TextNote::get_text_content($note_id) : CheckListNote::get_items($note_id);
+
+        }
+         ($note->get_type() == "TextNote" ? new View("open_checklist_note") : new View("open_checklist_note"))->show(["note"=>$note,"note_id"=>$note_id,"created"=>$this->get_created_time($note_id), "edited"=>$this->get_edited_time($note_id)
+                                            , "archived" =>$archived, "isShared_as_editor"=>$isShared_as_editor, "note_body_text" => $body]);
+    }
    
 
     public function archive() : void {
@@ -68,8 +94,7 @@ class ControllerNote extends Controller {
             $note = Note::get_note($note_id);
             $note->archive();
             $this->redirect();
-
-    }
+}
 }
     
     public function unarchive() : void {
@@ -80,6 +105,23 @@ class ControllerNote extends Controller {
             $this->redirect();
         }
 
+    }
+    public function update_checked() : void {
+    // if( isset($_POST["param1"]) && isset($_POST["param1"]) !== "" && isset($_POST["checklist_item"])){
+      if(isset($_POST["check"])){
+            $checklist_item_id = $_POST["check"];
+            $note_id = CheckListNoteItem::get_checklist_note($checklist_item_id);
+            $checked = true;
+            CheckListNoteItem::update_checked($checklist_item_id, $checked);
+    
+      }elseif(isset($_POST["uncheck"])){
+        $checklist_item_id = $_POST["uncheck"];
+        $note_id = CheckListNoteItem::get_checklist_note($checklist_item_id);
+        $checked = false;
+        CheckListNoteItem::update_checked($checklist_item_id, $checked);
+      }
+      $this->redirect("note", "open_note/$note_id");
+        
     }
 
    

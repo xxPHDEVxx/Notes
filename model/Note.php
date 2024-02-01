@@ -23,6 +23,7 @@ abstract class Note extends Model
         public ?string $edited_at = NULL
     ) {
     }
+    public abstract function get_type();
 
 
     public static function get_created_at(int $id) : String {
@@ -62,16 +63,7 @@ abstract class Note extends Model
         return count($data) !== 0 ? TextNote::get_note($note_id) : CheckListNote::get_note($note_id);
 
    }
-    
-       /* $query = self::execute("select * from Notes where id = :id", ["id" => $note_id]);
-        $data = $query->fetch(); 
-        if($query->rowCount() == 0) {
-            return false;
-        }else {
-            return new Note($data['id'], $data['title'] , $data['owner'], $data['created_at'],$data['pinned'], $data['archived'], $data['weight'],$data['edited_at']);
-        }
 
-    }*/
 
     public function delete(User $initiator) : Note |false {
         if($this->owner == $initiator) {
@@ -118,7 +110,7 @@ abstract class Note extends Model
             $content = $dataQuery->fetchColumn(); 
           
             if(!$content) {
-                $dataQuery = self::execute("SELECT content, checked FROM checklist_note_items WHERE checklist_note = :note_id ", ["note_id" => $row["id"]]);
+                $dataQuery = self::execute("SELECT content, checked FROM checklist_note_items WHERE checklist_note = :note_id order by checked, id ", ["note_id" => $row["id"]]);
                 $content_checklist = $dataQuery->fetchAll();
             }
             $row["content"] = $content;
@@ -168,17 +160,6 @@ abstract class Note extends Model
     public function unarchive() : void {
         self::execute("UPDATE notes SET archived = :val WHERE id = :id" , ["val" => 0, "id" =>$this->note_id]);
     }
-   /* public static function get_text_note(int $id) : String {
-        $dataQuery = self::execute("SELECT content FROM text_notes WHERE id = :note_id", ["note_id" => $id]);
-        $content = $dataQuery->fetchColumn(); 
-        return $content;
-    }*/
-
-    public static function get_checklist_note(int $id) : array {
-        $content = [];
-        $dataQuery = self::execute("SELECT content FROM checklist_note_items WHERE checklist_note = :note_id ", ["note_id" => $id]);
-        $content[] = $dataQuery->fetchAll();
-        return $content;
-    }
+   
 
 }
