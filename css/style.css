@@ -1,22 +1,5 @@
-/* view notes */
-.view_card {
-    margin: 15% 5%;
-}
-.title-notes {
-    color: white;
-}
-.view_card .card {
-    width: 200px; 
-    max-height: 250px; 
-    margin: 5px;
-}
 
 
-/**{
-    margin:0;
-    padding:0;
-    box-sizing: border-box;
-}*/
 
 body, html{
     height: 100%;
@@ -47,7 +30,7 @@ body, html{
      
  }
  
- .view_notes{
+ .my-archives{
     display:flex;
     flex-wrap: wrap;
     margin: 5px;
@@ -57,7 +40,6 @@ body, html{
     margin-left: 0;
 }
 .note-archivee{
- 
   border:1.5px solid  #43464c;
   color: white;
   border-radius: 5px;
@@ -131,6 +113,46 @@ body, html{
   background:rgb(115, 115, 108);
   border-radius: 3px;
 } 
+
+
+
+/* view notes */
+.title-empty {
+  color: white;
+  font-style: italic;
+}
+
+.view_notes{
+
+  display:flex;
+  flex-wrap: wrap;
+  margin: 0 10%;
+}
+.title-note {
+  color: white;
+  margin: 10% 0 0 7%;
+}
+
+.card-footer {
+  border:1.5px solid  #43464c;
+  color: white;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.note{
+  border:1.5px solid  #43464c;
+  color: white;
+  border-radius: 5px;
+  width: 210px;
+  height: 230px;
+  background:#202325;
+  margin: 3px;  
+  position: relative;
+}
   /*  menu burger */ 
    .menu {
      position: fixed;
