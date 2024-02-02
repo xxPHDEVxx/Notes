@@ -17,22 +17,22 @@
 </head>
 <body>
     <?php include("open_note.php"); ?>
-    <div class="body_title">Items</div>
+    <div class="note_body_title">Items</div>
    
-   <div class="checklist_body">
+   <div class="note_body_checklist">
  
    <?php foreach($note_body_text as $row): ?>
     
     <?php if($row['checked']): ?>
       
-        <form action="note/update_checked" method="post">
+        <form class="check_form" action="note/update_checked" method="post">
        
         <input type="text" name="uncheck"  value="<?=$row["id"]?>" hidden>
         <input class="material-symbols-outlined" id="check_submit" type="submit" value='check_box'>
 
         
         
-        <label for="uncheck"> <?=$row["content"]?></label>
+        <label class="check_label" for="uncheck"> <?=$row["content"]?></label>
         
     </form>
     
@@ -40,13 +40,13 @@
     <?php else: ?>
         
         
-        <form action="note/update_checked" method="post">
+        <form class="check_form" action="note/update_checked" method="post">
         
         <input type="text" name="check"  value="<?=$row["id"]?>" hidden>
         <input class="material-symbols-outlined" id="check_submit" type="submit" value= "check_box_outline_blank" >
         
         
-        <label  for="check"> <?=$row["content"]?></label>
+        <label class="uncheck_label" for="check"> <?=$row["content"]?></label>
         </form>
         
      

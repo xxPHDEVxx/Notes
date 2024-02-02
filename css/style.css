@@ -399,51 +399,57 @@ nav a:hover{
     margin-left: 0;
     
 }
-
+/*partie commune entre checklist_note et text_note dans open_note :
 /*barre open note*/
+.barre {
+    position: relative;
+    left: 3%;
+    width: 94%;
+
+}
 #delete_icon {
     color: red;
     position: absolute;
     top: 15px;
-    right: 60px; 
+    right: 40px; 
 }
 
 .back {
     position: absolute;
     top: 15px;
-    left: 20px;
+    
 }
 .unarchive {
     position: absolute;
     top: 15px;
-    right: 20px;
+    right: 0;
 }
 .archive {
     position: absolute;
     top: 15px;
-    right: 60px;
+    right: 40px;
 }
 
 .isShared{
     position: absolute;
     top: 15px;
-    right: 20px;
+    right: 0;
 }
 .pinned {
     position: absolute;
     top: 15px;
-    right: 100px;
+    right: 80px;
 }
 .share {
     position: absolute;
     top: 15px;
-    right: 140px;
+    right: 120px;
 }
-/* informations communes de text note et checklist note dans open note*/
-body .dates {
+/* Partie title et dates */
+.dates {
     position: absolute;
     top: 60px;
-    left: 15px;
+    left: 3%;
     font-style: italic;
     color:lightgray;
     font-weight: 350;
@@ -451,60 +457,84 @@ body .dates {
 }
 .title_note {
     position: absolute;
-    top: 120px;
-    left: 10px;
+    top: 125px;
+    left: 3%;
     color: lightgray;
-    width: 93%;
-    margin: 7px;
+    width: 94%;
     padding: 7px 7px 7px 10px;
-    border: 1.7px solid #53575e;
+    border: 1.7px solid  #494c51;    /*#53575e;*/
     background-color: #383c44;
     border-radius: 7px;
+    
     
 }
 .title_note_title{
     color: white;
     position: absolute;
     top: 100px;
-    left: 10px;
-    margin-left: 5px ;
+    left: 3.5%;
     font-size: 18px;
     
 }
+.note_body_title {
+    position: relative;
+    top: 170px;
+    left: 3.5%;
+    color: white;
+    font-size: 18px;
+}
 /*open_text_note*/
-.text_body {
-    color : lightgray;
-  
-    margin: 20px;
-    position: absolute;
-    top: 190px;
-    left: 10px;
-    padding: 20px;
-    width: 93%;
 
+.note_body_text {
+    color : lightgray;
+    position: absolute;
+    top: 200px;
+    left: 3%;
+    padding: 15px;
+    width: 94%;
     border-radius: 7PX;
     border: 1.7px solid #53575e;
     background-color: #383c44;
-    margin: 5px;
-
+    
 }
+/*open_checklist_note*/
 
-.body_title {
+.note_body_checklist {
+    color : lightgray;
+    position: absolute;
+    top: 200px;
+    left: 3%;
+    width: 94%;
+    
+}
+#check_submit {
+    background:  #0962ea;
+    border-radius: 5px 0 0 5px;
+    border: 1.7px solid #0962ea;          /*rgb(44, 44, 238);*/
+    position: absolute;
+    width: 14%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    color: #fff;
+}
+.check_label, .uncheck_label {
+    border-radius: 0 7px 7px 0;
+    border: 1.6px solid #494c51;
+    border-left: none;
+    background-color: #383c44;
+    padding: 7px;
+    margin-left: 14%;
+    width: 86%;
+}
+.check_form{
+    margin-bottom: 10px;
     position: relative;
-    top: 170px;
-    left: 20px;
-    color: white;
-    font-size: 18px;
-
-    
     
 }
-
-
-
-
-
-
+.check_label {
+    text-decoration:line-through;
+}
 
 
 
