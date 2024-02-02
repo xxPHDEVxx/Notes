@@ -43,15 +43,12 @@ class User extends Model {
         return $results;
     }
 
-    public function get_notes() : array {
-        return Note::get_notes($this);
-    }
     public function get_notes_pinned() : array {
         return Note::get_notes_pinned($this);
     }
-
     public function get_notes_unpinned() : array {
         return Note::get_notes_unpinned($this);
     }
+
 
 }

@@ -13,14 +13,14 @@ enum TypeNote {
 
  class Note extends Model
 {
-    public String $title;
-    public int $owner;
-    public string $created_at;
-    public bool $pinned;
-    public bool $archived;
-    public int $weight;
-    public ?string $edited_at = NULL;
-    public ?int $note_id = NULL;
+    private String $title;
+    private int $owner;
+    private string $created_at;
+    private bool $pinned;
+    private bool $archived;
+    private int $weight;
+    private ?string $edited_at = NULL;
+    private ?int $note_id = NULL;
 
     public function __construct( $initial_title, $initial_owner, $initial_created_at, $initial_pinned, $initial_archived, $initial_weight, $initial_edited_at, $initial_note_id
     ) {
@@ -35,25 +35,29 @@ enum TypeNote {
     
     }
 
-    public static function get_notes(User $user) : array {
 
-        $query = self::execute("SELECT * FROM notes WHERE owner = :ownerid AND archived = 0 ORDER BY weight" , ["ownerid" => $user->id]);
+    public static function get_notes(User $user, bool $pinned) : array {
+        $pinnedCondition = $pinned ? '1' : '0';
+
+        $query = self::execute("SELECT * FROM notes WHERE owner = :ownerid AND archived = 0 AND pinned = :pinned ORDER BY -weight" , ["ownerid" => $user->id, "pinned" => $pinnedCondition]);
         $data = $query->fetchAll();
         $all_notes = [];
+
         foreach ($data as $row) {
             $all_notes[] = new Note($row['title'],$row['owner'],$row['created_at'], $row['pinned'], $row['archived'], $row['weight'], $row['edited_at'],$row['id'] );
         }
-        
+
         $notes = [];
 
-       foreach ($all_notes as $note) {
+        
+        foreach ($all_notes as $note) {
             $query_cln = self::execute("SELECT id from checklist_notes where id = :id ", ["id" => $note->note_id]);
             if ($query_cln->rowCount() == 0) {
                 $query_text = self::execute("SELECT content FROM text_notes WHERE id = :note_id", ["note_id" => $note->note_id]);
                 $data_text = $query_text->fetchColumn();         
-                $notes[] = new TextNote($note->note_id, $note->title,$data_text); 
+                $notes[] = new TextNote($note,$note->note_id,$data_text); 
                     } else {
-                $notes[]= self::get_checklist_note($note->title,$note->note_id);
+                $notes[]= self::get_checklist_note($note,$note->note_id);
             }
             
          }
@@ -61,41 +65,18 @@ enum TypeNote {
     }
     
 
-    public static function get_checklist_note(string $title,int $id) : ChecklistNote {
-        $content = new ChecklistNote($title,$id); 
+    public static function get_checklist_note(Note $note,int $id) : ChecklistNote {
+        $content = new ChecklistNote($note,$id); 
 
         return $content;
     }
 
     public static function get_notes_pinned(User $user) : array {
-        $query = self::execute("select n.id, n.title, t.content 
-        from Notes n 
-        JOIN text_notes t ON n.id = t.id 
-        where owner = :id and pinned = :pin and archived = :arch 
-        order by weight", ["id" => $user->id, "pin" => 1, "arch"=>0]);
-        $data = $query->fetchAll();
-
-        return $data;
-
+        return self::get_notes($user, true);
     }
 
     public static function get_notes_unpinned(User $user) : array {
-        $query = self::execute("select n.title, t.content from Notes n JOIN text_notes t ON n.id = t.id where owner = :id and pinned = :pin and archived = :arch order by weight", ["id" => $user->id, "pin" => 0, "arch"=>0]);
-        $data = $query->fetchAll();
-
-        return $data;
-
-    }
-
-    public static function get_notes_archived(User $user) : array {
-        $query = self::execute("select * from Notes where owner = :id and archived = :arch order by weight", ["id" => $user->id, "arch"=> 1]);
-        $data = $query->fetchAll();
-        $notes = [];
-        foreach ($data as $row) {
-            $notes[] = new Note($row['id'], $row['title'] , User::get_user_by_id($row['owner']), $row['created_at'], $row['edited_at'], $row['pinned'], $row['archived'], $row['weight']);
-        }
-        return $notes;
-
+        return self::get_notes($user, false);
     }
 
     public static function get_note_by_id(int $note_id) : Note |false {
@@ -104,10 +85,76 @@ enum TypeNote {
         if($query->rowCount() == 0) {
             return false;
         }else {
-            return new Note($data['note_id'], $data['title'] , User::get_user_by_id($data['owner']), $data['created_at'], $data['edited_at'], $data['pinned'], $data['archived'], $data['weight']);
+            return new Note($data['note_id'], $data['title'] , $data['owner'], $data['created_at'], $data['edited_at'], $data['pinned'], $data['archived'], $data['weight']);
         }
 
     }
+
+    public function getTitle() : string {
+        return $this->title;
+    }
+
+    public function setTitle(string $title) : void {
+        $this->title = $title;
+    }
+
+    public function  getOwner() {
+        return $this->owner;
+    }
+
+    public function setOwner(int $owner) {
+        $this->owner = $owner;
+    }
+
+    public function  getCreated_at() : string {
+        return $this->created_at;
+    }
+
+    public function  setCreated_at(String $created_at): void {
+        $this->created_at = $created_at;
+    }
+
+    public function isPinned() : bool {
+        return $this->pinned;
+    }
+
+    public function setPinned(bool $pinned) : void {
+        $this->pinned = $pinned;
+    }
+
+    public function  isArchived() : bool {
+        return $this->archived;
+    }
+
+    public function  setArchived(bool $archived) : void {
+        $this->archived = $archived;
+    }
+
+    public function  getWeight() : int {
+        return $this->weight;
+    }
+
+    public function  setWeight(int $weight) : void {
+        $this->weight = $weight;
+    }
+
+    public function  getEdited_at() : string {
+        return $this->edited_at;
+    }
+
+    public function setEdited_at(string $edited_at) : void {
+        $this->edited_at = $edited_at;
+    }
+
+    public function  getNote_id() : int {
+        return $this->note_id;
+    }
+
+    public function  setNote_id(int $note_id) : void {
+        $this->note_id = $note_id;
+    }
+
+
 
 
 
@@ -147,4 +194,23 @@ enum TypeNote {
         }
     }
 
+    public function get_title(): string {
+        return $this->title;
+    }
+    public function isMax(int $id): int {
+        $query = self::execute("SELECT id, MAX(weight) from notes where id = :note_id group by id" , ["note_id" => $id]);
+        $data = $query->fetch();
+        return $data['id'];
+    }
+    public function max_weight(int $id) : float {
+        $query = self::execute("SELECT MAX(weight) from notes where owner = :id group by owner" , ["id" => $id]);
+        $data = $query->fetch();
+        return $data['MAX(weight)'];
+    }
+
+    public function min_weight(int $id) : float {
+        $query = self::execute("SELECT MIN(weight) from notes where owner = :id group by owner" , ["id" => $id]);
+        $data = $query->fetch();
+        return $data['MIN(weight)'];
+    }
 }

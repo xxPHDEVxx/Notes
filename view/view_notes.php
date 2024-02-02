@@ -14,28 +14,27 @@
 <body>
     <?php include('view/menu.php'); ?>
     <h1>My notes</h1>
-    <h2>Notes</h2> 
+    <p class="title-note">Pinned</p> 
     <div class="view_notes">
-
         <?php if (count($notes) != 0) : ?>
-            <?php foreach ($notes as $archive) : ?>
-                <div class="note-archivee">
-                    <div class="note-title"><?= $archive->title; ?></div>
+
+            <?php for ($i=0; $i < count($notes); $i++) { 
+                if ($notes[$i]->get_infos()->isPinned()) : ?>
+                <div class="note">
+                    <p class="note-title"><?= $notes[$i]->get_infos()->get_title(); ?></p>
                     <a class="link-note-archivee" href="#">
                         <div class="note-content">
-
-                            <?php if ($archive->get_type() == "TextNote") : ?>
+                            <?php if ($notes[$i]->get_type() == "TextNote") : ?>
                                 <div class="content_text">
 
-                                    <?= $archive->content ?>
+                                    <?= $notes[$i]->content ?>
 
                                 </div>
 
                             <?php else : ?>
-
                                 <div class="content_check">
                                     <div class="check_item">
-                                        <?php foreach ($archive->get_items() as $checklist_item) : ?>
+                                        <?php foreach ($notes[$i]->get_items() as $checklist_item) : ?>
 
                                             <?php if (!$checklist_item->checked) : ?>
                                                 <div class="unchecked_item"><?= $checklist_item->content ?></div>
@@ -54,9 +53,87 @@
                         </div>
 
                     </a>
-                </div>
+                    <div class="card-footer">
+                    <?php if ($i > 0) : ?>
+                    <form>
+                            <input type="number" value='<?=$notes[$i]->get_infos()->getNote_id() ?>' hidden>
+                            <span><<</span>
+                        </form>
+                        <?php endif; ?>
+                    <?php if ($i < count($notes)) : ?>
+                        <form>
+                            <input type="number" value='<?=$notes[$i]->get_infos()->getNote_id() ?>' hidden>
+                            <span>>><span>
+                        </form>
+                        <?php endif; ?>
+                    </div>
+                </div>                
+               <?php endif;            ?>
+               <?php }             ?>
 
-            <?php endforeach; ?>
+        
+            </div>
+            <p class="title-note">Others</p> 
+            <div class="view_notes">
+
+            <?php for ($i=0; $i < count($notes); $i++) { 
+                if (!$notes[$i]->get_infos()->isPinned()) : ?>
+                <div class="note">
+                    <p class="note-title"><?= $notes[$i]->get_infos()->get_title() ;  ?></p>
+                    <a class="link-note-archivee" href="#">
+                        <div class="note-content">
+                            <?php if ($notes[$i]->get_type() == "TextNote") : ?>
+                                <div class="content_text">
+
+                                    <?= $notes[$i]->content ?>
+
+                                </div>
+
+                            <?php else : ?>
+                                <div class="content_check">
+                                    <div class="check_item">
+                                        <?php foreach ($notes[$i]->get_items() as $checklist_item) : ?>
+
+                                            <?php if (!$checklist_item->checked) : ?>
+                                                <div class="unchecked_item"><?= $checklist_item->content ?></div>
+                                            <?php else : ?>
+                                                <div class="checked_item"><?= $checklist_item->content ?></div>
+                                            <?php endif; ?>
+
+                                        <?php endforeach; ?>
+
+                                    </div>
+                                </div>
+
+                            <?php endif; ?>
+
+
+                        </div>
+
+                    </a>
+                    <div class="card-footer">
+                    <?php if ($i > 0) : ?>
+                    <form>
+                            <input type="number" value='<?=$notes[$i]->get_infos()->getNote_id() ?>' hidden>
+                            <span><<</span>
+                        </form>
+                        <?php endif; ?>
+                    <?php if ($i < count($notes)) : ?>
+                        <form>
+                            <input type="number" value='<?=$notes[$i]->get_infos()->getNote_id() ?>' hidden>
+                            <span>>><span>
+                        </form>
+                        <?php endif; ?>
+                    </div>
+                </div>                
+               <?php endif;            ?>
+               <?php }             ?>
+
+
+
+               </div>
+        <?php else: ?>
+            <p class="title-empty">Your notes are empty</p>
         <?php endif; ?>
     </div>
 

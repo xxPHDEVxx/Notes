@@ -9,7 +9,7 @@ class ChecklistNote extends Note
 {
     public function __construct(
     
-        public string $title,
+        private Note $note,
         public int $id
 
     ) {
@@ -23,6 +23,9 @@ class ChecklistNote extends Note
 
     public function get_type() : string {
         return TypeNote::CLN;
+    }
+    public function get_infos() : Note {
+        return $this->note;
     }
 
 }

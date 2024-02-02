@@ -7,8 +7,8 @@ require_once "User.php";
 class TextNote extends Note
 {
     public function __construct(
+        private Note $note,
         public int $id,
-        public string $title, 
         public ?string $content = NULL,
 
     ) {
@@ -18,4 +18,7 @@ class TextNote extends Note
         return TypeNote::TN;
     }
 
+    public function get_infos() : Note {
+        return $this->note;
+    }
 }
