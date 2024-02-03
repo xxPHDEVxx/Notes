@@ -24,7 +24,8 @@
         <a href="main/logout"><i class="fas fa-door-open"></i>Logout</a>
     </div>
 
-    <?php (new View("menu"))->show(); ?>
+    <?php (new View("menu"))->show(["sharers"=>$sharers]); ?>
+
 </body>
 
 </html>

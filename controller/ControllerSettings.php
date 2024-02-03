@@ -7,10 +7,9 @@ require_once "model/User.php";
 class ControllerSettings extends Controller
 {
 
-    // à modifier par user courant avant remise
     public function settings(): void
     {
-        $user = User::get_user_by_id(2);
+        $user = $this->get_user_or_redirect();
 
         (new View("settings"))->show(["user" => $user]);
     }
