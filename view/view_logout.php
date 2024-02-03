@@ -26,14 +26,14 @@
 
     <div class="logout">
         <p>Are you sure you want to logout ?</p>
-        <form id="logout_form" action="main/logout" method="post">
-            <input type="hidden" name="logout" value="1">
-            <button type="submit" value="no">No</button>
-            <button type="button" value="logout" class="btn btn-danger">Logout</button>
+        <form id="logout_form" action="" method="post">
+            <input type="submit" name="logout" value="Logout" class="btn btn-danger">
+            <input type="submit" name="no" value="No" class="btn btn-secondary">
         </form>
     </div>
 
-    <?php (new View("menu"))->show(); ?>
+    <?php (new View("menu"))->show(["sharers"=>$sharers]); ?>
+
 
 </body>
 
