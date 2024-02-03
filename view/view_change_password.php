@@ -16,7 +16,7 @@
     </div>
     <div class="container mt-5">
         <h2>Change Password</h2>
-        <form class="edit_form" action="update_password.php" method="post">
+        <form class="edit_form" action="settings/change_password" method="post">
             <div class="mb-3">
                 <label for="currentPassword" class="form-label">Current Password</label>
                 <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
