@@ -24,7 +24,7 @@
             <a href="user/get_shared_by/<?=$user->id?>">Shared by <?= $user->full_name?></a>
           <?php endforeach; ?>
         <?php endif; ?>
-        <a href="#">Settings</a>
+        <a href="Settings/settings">Settings</a>
       </nav>
     </div>
   </body>
