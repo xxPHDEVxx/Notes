@@ -56,6 +56,11 @@ abstract class Note extends Model
         $data = $query->fetchColumn();
         return $data;
     }
+    public function is_pinned(int $userid) : int {
+        $query = self::execute("SELECT pinned FROM notes WHERE owner = :userid and id = :id", ["userid"=> $userid, "id"=>$this->note_id]);
+        $data = $query->fetchColumn();
+        return $data;
+    }
 
    public static function get_note(int $note_id) : Note|false {
         $query = self::execute("SELECT content FROM text_notes where id = :id", ["id" =>$note_id]);
@@ -143,7 +148,6 @@ abstract class Note extends Model
         $shared = [];
         $query = self::execute("SELECT note from note_shares WHERE user = :userid" , ['userid'=>$user->id]);
         $shared_note_id = $query->fetchAll(PDO::FETCH_COLUMN);
-        var_dump($shared_note_id);
         foreach ($shared_note_id as $note_id) {
            $note = Note::get_note($note_id);
         
@@ -159,6 +163,12 @@ abstract class Note extends Model
 
     public function unarchive() : void {
         self::execute("UPDATE notes SET archived = :val WHERE id = :id" , ["val" => 0, "id" =>$this->note_id]);
+    }
+    public function pin() : void {
+        self::execute("UPDATE notes SET pinned = :val WHERE id = :id" , ["val" => 1, "id" =>$this->note_id]);
+    }
+    public function unpin() : void {
+        self::execute("UPDATE notes SET pinned = :val WHERE id = :id" , ["val" => 0, "id" =>$this->note_id]);
     }
    
 

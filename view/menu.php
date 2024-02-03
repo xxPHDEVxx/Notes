@@ -12,7 +12,7 @@
               <a href="user/get_shared_by/<?=$user->id?>" class="<?=($currentPage == $user->full_name) ? 'active' : 'not_active' ?> )">Shared by <?= $user->full_name?></a>
             <?php endforeach; ?>
           <?php endif; ?>
-          <a href="" class= "not_active" >Settings</a>
+          <a href="openNote/index/22" class= "not_active" >Settings</a>
         </nav>
 
     </div>
