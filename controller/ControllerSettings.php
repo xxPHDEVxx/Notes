@@ -23,7 +23,7 @@ class ControllerSettings extends Controller
 
     public function change_password(): void
     {
-        $user = User::get_user_by_id(2);
+        $user = $this->get_user_or_redirect();
         (new View("change_password"))->show(["user" => $user]);
     }
 

@@ -144,6 +144,32 @@ class User extends Model {
         return Note::get_shared_note($this);
     }
 
+    public function setPassword($newPassword) {
+        // Hachez le mot de passe avant de le stocker
+        $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
+        $this->hashed_password = $hashedPassword;
+    }
+
+    public function getHashedPassword() {
+        return $this->hashed_password;
+    }
+
+    public function updatePassword($newPassword) {
+        // Définir le nouveau mot de passe
+        $this->setPassword($newPassword);
+
+        // Mettez à jour le mot de passe dans la base de données
+        $sql = "UPDATE users SET password = :password WHERE id = :id";
+        $params = array(':password' => $this->getHashedPassword(), ':id' => $this->id);
+
+        try {
+            $stmt = parent::execute($sql, $params);
+            echo "Mot de passe mis à jour avec succès!";
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de la mise à jour du mot de passe : " . $e->getMessage());
+        }
+    }
+
  
    
 
