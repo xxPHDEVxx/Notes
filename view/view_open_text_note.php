@@ -19,7 +19,7 @@
     <div class="note_body_title">Text</div>
    
         <div class="note_body_text">
-        <?=$note_body_text; ?> 
+        <?=$note_body; ?> 
 
     
     

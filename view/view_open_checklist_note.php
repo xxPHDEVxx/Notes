@@ -21,7 +21,7 @@
    
    <div class="note_body_checklist">
  
-   <?php foreach($note_body_text as $row): ?>
+   <?php foreach($note_body as $row): ?>
     
     <?php if($row['checked']): ?>
       

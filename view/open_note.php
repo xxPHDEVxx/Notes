@@ -2,7 +2,7 @@
    
     <div class="barre">
        
-        <a class="back" href=""><span class="material-symbols-outlined">arrow_back_ios</span></a> 
+        <a class="back" href="<?=$back?>"><span class="material-symbols-outlined">arrow_back_ios</span></a> 
         <?php if($archived == 1):?>
             <a class="delete" href="#"><span class="material-symbols-outlined" id ="delete_icon">delete_forever</span></a>
             <a class="unarchive" href="note/unarchive/<?=$note_id?>"><span class="material-symbols-outlined">unarchive</span></a>

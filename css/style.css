@@ -402,47 +402,38 @@ nav a:hover{
 /*partie commune entre checklist_note et text_note dans open_note :
 /*barre open note*/
 .barre {
-    position: relative;
+    position: absolute;
     left: 3%;
     width: 94%;
+    top: 30px;
 
 }
 #delete_icon {
     color: red;
     position: absolute;
-    top: 15px;
     right: 40px; 
 }
 
-.back {
-    position: absolute;
-    top: 15px;
-    
-}
+
 .unarchive {
     position: absolute;
-    top: 15px;
     right: 0;
 }
 .archive {
     position: absolute;
-    top: 15px;
     right: 40px;
 }
 
 .isShared{
     position: absolute;
-    top: 15px;
     right: 0;
 }
 .pinned {
     position: absolute;
-    top: 15px;
     right: 80px;
 }
 .share {
     position: absolute;
-    top: 15px;
     right: 120px;
 }
 /* Partie title et dates */
@@ -477,7 +468,7 @@ nav a:hover{
     
 }
 .note_body_title {
-    position: relative;
+    position: absolute;
     top: 170px;
     left: 3.5%;
     color: white;

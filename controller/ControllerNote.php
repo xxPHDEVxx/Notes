@@ -81,10 +81,11 @@ class ControllerNote extends Controller {
             $archived = $note->in_My_archives($user_id);
             $isShared_as_editor = $note->isShared_as_editor($user_id);
             $body = $note->get_type() == "TextNote" ? TextNote::get_text_content($note_id) : CheckListNote::get_items($note_id);
-
+            $_SESSION['previous_page'] = $_SERVER['HTTP_REFERER'];
+            $back = $_SESSION['previous_page'];
         }
          ($note->get_type() == "TextNote" ? new View("open_text_note") : new View("open_checklist_note"))->show(["note"=>$note,"note_id"=>$note_id,"created"=>$this->get_created_time($note_id), "edited"=>$this->get_edited_time($note_id)
-                                            , "archived" =>$archived, "isShared_as_editor"=>$isShared_as_editor, "note_body_text" => $body]);
+                                            , "archived" =>$archived, "isShared_as_editor"=>$isShared_as_editor, "note_body" => $body, "back"=>$back]);
     }
    
 
