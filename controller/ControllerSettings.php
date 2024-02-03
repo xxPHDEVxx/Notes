@@ -10,14 +10,24 @@ class ControllerSettings extends Controller
     // à modifier par user courant avant remise
     public function settings(): void
     {
-        $user = User::get_user_by_id(2);
+        $user = $this->get_user_or_redirect();
 
         (new View("settings"))->show(["user" => $user]);
     }
 
+    // ajouter error et validations
     public function edit_profile(): void
     {
-        $user = User::get_user_by_id(2);
+        $user = $this->get_user_or_redirect();
+
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $newEmail = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+            $newFullName = filter_input(INPUT_POST, 'fullName', FILTER_SANITIZE_STRING);
+
+            $user->updateProfile($newEmail, $newFullName);
+            $this->redirect("settings", "edit_profile");
+        }
+
         (new View("edit_profile"))->show(["user" => $user]);
     }
 
