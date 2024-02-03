@@ -33,7 +33,7 @@
         </form>
     </div>
 
-    <?php (new View("menu"))->show(); ?>
+    <?php (new View("menu"))->show(["sharers"=>$sharers]); ?>
 
 </body>
 
