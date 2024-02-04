@@ -145,7 +145,6 @@ class User extends Model {
     }
 
     public function setPassword($newPassword) {
-        // Hachez le mot de passe avant de le stocker
         $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
         $this->hashed_password = $hashedPassword;
     }
@@ -159,8 +158,8 @@ class User extends Model {
         $this->setPassword($newPassword);
 
         // Mettez à jour le mot de passe dans la base de données
-        $sql = "UPDATE users SET password = :password WHERE id = :id";
-        $params = array(':password' => $this->getHashedPassword(), ':id' => $this->id);
+        $sql = "UPDATE users SET hashed_password = :hashed_password WHERE id = :id";
+        $params = array(':hashed_password' => $this->getHashedPassword(), ':id' => $this->id);
 
         try {
             $stmt = parent::execute($sql, $params);

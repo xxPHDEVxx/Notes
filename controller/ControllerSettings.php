@@ -42,7 +42,7 @@ class ControllerSettings extends Controller
 
                 try {
                     $user->setPassword($newPassword);
-                    $user->persist();
+                    $user->updatePassword($newPassword);
                 } catch (Exception $e) {
                     $errors[] = "Erreur lors de la mise à jour du mot de passe : " . $e->getMessage();
                 }

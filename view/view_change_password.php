@@ -32,6 +32,14 @@
             <button type="submit" class="btn btn-primary">Change Password</button>
         </form>
     </div>
+    
+     <?php if (!empty($errors)) : ?>
+            <div class="alert alert-danger" role="alert">
+                <?php foreach ($errors as $error) : ?>
+                    <p><?= $error ?></p>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
 
     <?php (new View("menu"))->show(["sharers"=>$sharers]); ?>
 
