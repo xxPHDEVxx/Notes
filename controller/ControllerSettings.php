@@ -19,14 +19,30 @@ class ControllerSettings extends Controller
     public function edit_profile(): void
     {
         $user = $this->get_user_or_redirect();
-        $sharers = "";
+        $successMessage = null;
+        $errors[] = [];
+        $sharers = NULL;
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $newEmail = Tools::sanitize($_POST['email']);
             $newFullName = Tools::sanitize($_POST['fullName']);
 
-            $user->updateProfile($newFullName, $newEmail);
-            $this->redirect("settings", "edit_profile");
+            $errors = User::validateEdit($newEmail, $newFullName);
+
+   
+                if (empty($errors)) {
+
+                    try {
+                        $user->updateProfile($newFullName, $newEmail);
+                        $successMessage = "Profile updated !";
+                    } catch (Exception $e) {
+                        $errors[] = "Error updating profile : " . $e->getMessage();
+                    }
+                } else {
+                    $errors = array_merge($errors);
+                }
+            (new View("edit_profile"))->show(["user" => $user, "successMessage" => $successMessage, "errors" => $errors, "sharers" => $sharers]);
+
         }
 
         (new View("edit_profile"))->show(["user" => $user, "sharers" => $sharers]);
@@ -66,7 +82,9 @@ class ControllerSettings extends Controller
                 }
             }
             (new View("change_password"))->show(["user" => $user, "successMessage" => $successMessage, "errors" => $errors, "sharers" => $sharers]);
-        } else {(new View("change_password"))->show(["user" => $user, "sharers" => $sharers]);}
+        } else {
+            (new View("change_password"))->show(["user" => $user, "sharers" => $sharers]);
+        }
     }
 
 
