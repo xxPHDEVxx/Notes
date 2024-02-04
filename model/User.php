@@ -143,9 +143,9 @@ class User extends Model {
 
     public function updateProfile(string $newFullName, string $newMail): void
 {
-    $this->full_name = $newFullName;
     $this->mail = $newMail;
-
+    $this->full_name = $newFullName;
+    
     $sql = "UPDATE users SET full_name = :full_name, mail = :mail WHERE id = :id";
     $params = [':full_name' => $newFullName, ':mail' => $newMail, ':id' => $this->id];
 
