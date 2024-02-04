@@ -50,7 +50,7 @@ enum TypeNote {
     }
 
     public function setOwner(User $owner) {
-        $this->owner = $owner;
+        $this->owner = $owner->id;
     }
 
     public function  getCreated_at() : string {

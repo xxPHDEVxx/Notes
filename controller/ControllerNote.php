@@ -42,8 +42,18 @@ class ControllerNote extends Controller {
             throw new Exception("Missing ID");
         }
     }
-    public function share_note() {
+    public function shares() {
+        $errors = "";
         $user = $this->get_user_or_redirect();
-        (new View("share"))->show();
+        // $note_id = filter_var($_GET['param1'], FILTER_VALIDATE_INT);
+        // if ($note_id === false) {
+        //     $errors = "invalid note";
+        // } else {
+        //     $note = Note::get_note_by_id($note_id);
+        // }
+
+        $all_users = User::get_users();
+        
+        (new View("share"))->show(["all_users" => $all_users, "user" => $user]);
     }
 }

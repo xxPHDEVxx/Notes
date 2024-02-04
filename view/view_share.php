@@ -13,10 +13,32 @@
 
 <body>
     <h3>Shares :</h3>
+    <div class="container">
+        <p class="share-empty">This note is not shared yet</p>
+        <form>
+            <div class="input-group">
+                    <select class="form-select" aria-label="Default select example">
+                        <option selected>-- User --</option>
+                        <?php 
+                        foreach( $all_users as $other):
+                            if ($other->id != $user->id) :?>
+                                
+                                <option value="1"><?= $other->full_name?></option>
+                            <?php endif;?>
+                        <?php endforeach;?>
+                    </select>
+                    <select class="form-select" aria-label="Default select example">
+                        <option selected>-- Permission --</option>
+                        <option value="1">Reader</option>
+                        <option value="2">Editor</option>
+                    </select>
+                    <button class="btn btn-primary">+</button>
+            </div>  
+        </form>
+    </div>
         <?php // if () :  ?>
 
         <?php //else: ?>
-            <p class="share-empty">This note is not shared yet</p>
         <?php //endif; ?>
 
 </body>
