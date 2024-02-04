@@ -81,7 +81,7 @@ class User extends Model {
         $user = User::get_user_by_mail($mail);
         if($user) {
             if(!self::check_password($password, $user->hashed_password)) {
-                $errors[] = "⚠Wrong password.please try again.";
+                $errors[] = "⚠Wrong password. Please try again.";
             }
         }else {
             $errors[] = "⚠Can't find the user. Please sign up.";
@@ -133,7 +133,7 @@ class User extends Model {
     public function get_shared_note() : array {
         return Note::get_shared_note($this);
     }
-    
+ 
     public function get_notes_pinned() : array {
         return Note::get_notes_pinned($this);
     }
@@ -142,7 +142,28 @@ class User extends Model {
     }
 
 
+    public function setPassword($newPassword) {
+        $hashedPassword = Tools::my_hash($newPassword);
+        $this->hashed_password = $hashedPassword;
+    }
 
+    public function getHashedPassword() {
+        return $this->hashed_password;
+    }
 
+    public function updatePassword($newPassword) {
+        
+        $this->setPassword($newPassword);
+
+        $sql = "UPDATE users SET hashed_password = :hashed_password WHERE id = :id";
+        $params = array(':hashed_password' => $this->getHashedPassword(), ':id' => $this->id);
+
+        try {
+            $stmt = parent::execute($sql, $params);
+            echo "Mot de passe mis à jour avec succès!";
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de la mise à jour du mot de passe : " . $e->getMessage());
+        }
+    }
 
 }

@@ -32,9 +32,41 @@ class ControllerSettings extends Controller
 
     public function change_password(): void
     {
-        $user = User::get_user_by_id(2);
-        (new View("change_password"))->show(["user" => $user]);
+        $user = $this->get_user_or_redirect();
+
+        $successMessage = null;
+        $errors[] = [];
+        $sharers = NULL;
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $currentPassword = $_POST['currentPassword'];
+            $newPassword = $_POST['newPassword'];
+            $confirmNewPassword = $_POST['confirmNewPassword'];
+
+
+            $errors = User::validate_login($user->mail, $currentPassword);
+
+            if (empty($errors)) {
+
+                $passwordErrors = User::validate_passwords($newPassword, $confirmNewPassword);
+
+                if (empty($passwordErrors)) {
+
+                    try {
+                        $user->setPassword($newPassword);
+                        $user->updatePassword($newPassword);
+                        $successMessage = "Password changed successfully!";
+                    } catch (Exception $e) {
+                        $errors[] = "Erreur lors de la mise à jour du mot de passe : " . $e->getMessage();
+                    }
+                } else {
+                    $errors = array_merge($errors, $passwordErrors);
+                }
+            }
+            (new View("change_password"))->show(["user" => $user, "successMessage" => $successMessage, "errors" => $errors, "sharers" => $sharers]);
+        } else {(new View("change_password"))->show(["user" => $user, "sharers" => $sharers]);}
     }
+
 
     public function index(): void
     {

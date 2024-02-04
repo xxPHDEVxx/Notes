@@ -362,10 +362,24 @@ nav a {
   padding: 10px;
 } 
  
- 
- 
- 
- 
- 
- 
- 
+/* edit_profile */
+
+.edit_form {
+    position : absolute;
+    top: 120px;
+}
+
+.form-label {
+    color: white;
+   
+    font-size: 15px;
+    font-weight: 300;
+}
+
+/* erreurs */
+
+#alertPassword {
+    position: absolute;
+    top: 450px;
+    left: 100px;
+}
