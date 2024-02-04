@@ -25,7 +25,7 @@ class ControllerSettings extends Controller
             $newEmail = Tools::sanitize($_POST['email']);
             $newFullName = Tools::sanitize($_POST['fullName']);
 
-            $user->updateProfile($newEmail, $newFullName);
+            $user->updateProfile($newFullName, $newEmail);
             $this->redirect("settings", "edit_profile");
         }
 
