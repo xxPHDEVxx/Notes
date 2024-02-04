@@ -141,6 +141,14 @@ body, html{
   width: 100%;
   display: flex;
   justify-content: space-around;
+  background: #292c30;
+  padding: 2px;
+}
+
+.card-footer input {
+  background-color: unset;
+  border: unset;
+  color: blue;
 }
 
 .note{
@@ -159,6 +167,7 @@ body, html{
      height: 100%;
      top: 0;
      z-index: 2;
+     visibility: hidden;
  }
    #hamburger {
      display: none;
@@ -221,6 +230,7 @@ body, html{
    #hamburger:checked ~ #hamburger-logo,
    #hamburger:checked ~ nav {
      transform: translate(0);
+     visibility: visible;
    }
    
    nav a {
