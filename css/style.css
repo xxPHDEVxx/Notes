@@ -488,6 +488,8 @@ nav a:hover{
     border-radius: 7PX;
     border: 1.7px solid #53575e;
     background-color: #383c44;
+    overflow-y: auto;
+    max-height: 500px;
     
 }
 /*open_checklist_note*/
