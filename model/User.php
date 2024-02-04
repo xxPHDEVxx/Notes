@@ -141,6 +141,22 @@ class User extends Model {
         return Note::get_notes_unpinned($this);
     }
 
+    public function updateProfile(string $newFullName, string $newMail): void
+{
+    $this->full_name = $newFullName;
+    $this->mail = $newMail;
+
+    // Mettez à jour le profil dans la base de données
+    $sql = "UPDATE users SET full_name = :full_name, mail = :mail WHERE id = :id";
+    $params = [':full_name' => $newFullName, ':mail' => $newMail, ':id' => $this->id];
+
+    try {
+        $stmt = parent::execute($sql, $params);
+        echo "Profil mis à jour avec succès!";
+    } catch (PDOException $e) {
+        throw new Exception("Erreur lors de la mise à jour du profil : " . $e->getMessage());
+    }
+}
 
     public function setPassword($newPassword) {
         $hashedPassword = Tools::my_hash($newPassword);

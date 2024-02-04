@@ -22,8 +22,8 @@ class ControllerSettings extends Controller
         $sharers = "";
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $newEmail = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-            $newFullName = filter_input(INPUT_POST, 'fullName', FILTER_SANITIZE_STRING);
+            $newEmail = Tools::sanitize(INPUT_POST, 'email');
+            $newFullName = Tools::sanitize(INPUT_POST, 'fullName');
 
             $user->updateProfile($newEmail, $newFullName);
             $this->redirect("settings", "edit_profile");
