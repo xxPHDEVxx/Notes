@@ -6,7 +6,7 @@ body, html{
     margin: 0;
     padding: 0;
     background-color: #252729;
-   
+   color: white;
  }
 
  /* My archives */
@@ -161,6 +161,12 @@ body, html{
   margin: 3px;  
   position: relative;
 }
+
+/*view share*/
+.share-empty {
+  font-style: italic;
+}
+
   /*  menu burger */ 
    .menu {
      position: fixed;
