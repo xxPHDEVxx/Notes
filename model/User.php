@@ -72,6 +72,21 @@ class User extends Model {
         return $errors;
     }
 
+    public static function validateEdit($email, $fullname) : array {
+
+        $errors = [];
+        if (!strlen($email) > 0) {
+            $errors[] = "⚠Mail is requiered.";
+        } if (!(preg_match("/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/", $email))){
+            $errors[] = "⚠Email must have a valid structure.";
+        } if (!strlen($fullname) > 0) {
+            $errors[] = "⚠Full Name is required.";
+        } if(!(strlen($fullname) >= 3)){
+            $errors[] = "⚠Full Name must have mutch than 3 char";
+        }
+        return $errors;
+    }
+
     private static function check_password($clear_password, string $hash) : bool {
         return $hash === Tools::my_hash($clear_password);
     }
