@@ -25,9 +25,9 @@ class ControllerSettings extends Controller
     {
         $user = $this->get_user_or_redirect();
 
-        $successMessage = "";
-        $errors[] = null;
-        $sharers = "";
+        $successMessage = null;
+        $errors[] = [];
+        $sharers = NULL;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $currentPassword = $_POST['currentPassword'];
@@ -54,8 +54,8 @@ class ControllerSettings extends Controller
                     $errors = array_merge($errors, $passwordErrors);
                 }
             }
-        }
-        (new View("change_password"))->show(["user" => $user, "succesMessage" => $successMessage, "errors" => $errors, "sharers" => $sharers]);
+            (new View("change_password"))->show(["user" => $user, "successMessage" => $successMessage, "errors" => $errors, "sharers" => $sharers]);
+        } else {(new View("change_password"))->show(["user" => $user, "sharers" => $sharers]);}
     }
 
 

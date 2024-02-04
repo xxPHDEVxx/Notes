@@ -81,7 +81,7 @@ class User extends Model {
         $user = User::get_user_by_mail($mail);
         if($user) {
             if(!self::check_password($password, $user->hashed_password)) {
-                $errors[] = "⚠Wrong password.please try again.";
+                $errors[] = "⚠Wrong password. Please try again.";
             }
         }else {
             $errors[] = "⚠Can't find the user. Please sign up.";
