@@ -126,47 +126,11 @@ class User extends Model {
     }
 
 
-    public function get_notes() : array {
-        return Note::get_notes($this);
+    public function get_notes_pinned() : array {
+        return Note::get_notes_pinned($this);
+    }
+    public function get_notes_unpinned() : array {
+        return Note::get_notes_unpinned($this);
     }
 
-    public function get_archives() : array{
-        return Note::get_archives($this);
-        
-    }
-
-    public function get_shared_by(int $ownerid) : array {
-        return Note::get_shared_by($this->id, $ownerid);
-        
-    }
-
-    public function get_shared_note(): array {
-        return Note::get_shared_note($this);
-    }
-
-    public function updateProfile($newEmail, $newFullName) {
-        
-        $this->mail = $newEmail;
-        $this->full_name = $newFullName;
-
-        $sql = "UPDATE users SET mail = :mail, full_name = :fullName WHERE id = :id";
-        $params = array(':mail' => $this->mail, ':fullName' => $this->full_name, ':id' => $this->id);
-
-        try {
-            $stmt = parent::execute($sql, $params);
-            echo "Profil mis à jour avec succès!";
-        } catch (PDOException $e) {
-            echo "Erreur lors de la mise à jour du profil : " . $e->getMessage();
-        }
-    }
- 
-   
-
-
-
-
-
- 
 }
-   
-
