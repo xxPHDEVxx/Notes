@@ -16,8 +16,7 @@
     <h1>My notes</h1>
     <p class="title-note">Pinned</p> 
     <div class="view_notes">
-        <?php if (count($notes_pinned) != 0 && count($notes_unpinned) != 0) : ?>
-
+        <?php if (count($notes_pinned) != 0 && count($notes_unpinned) != 0) :  ?>
             <?php for ($i=0; $i < count($notes_pinned); $i++) { ?>
                 <div class="note">
                     <p class="note-title"><?= $notes_pinned[$i]->get_infos()->get_title(); ?></p>
@@ -54,15 +53,15 @@
                     </a>
                     <div class="card-footer">
                     <?php if ($i > 0) : ?>
-                    <form>
-                            <input type="number" value='<?=$notes_pinned[$i]->get_infos()->getNote_id() ?>' hidden>
-                            <span><<</span>
+                    <form action="note/move_up" class="left" method="post">
+                            <input name="up" type="number" value='<?=$notes_pinned[$i]->get_infos()->getNote_id() ?>' hidden>
+                                <input type='submit' value='<<'>
                         </form>
                         <?php endif; ?>
-                    <?php if ($i < count($notes_pinned)) : ?>
-                        <form>
-                            <input type="number" value='<?=$notes_pinned[$i]->get_infos()->getNote_id() ?>' hidden>
-                            <span>>><span>
+                    <?php if ($i != count($notes_pinned) - 1) : ?>
+                        <form action="note/move_down" class="right" method="post">
+                            <input type="number" name="down" value='<?=$notes_pinned[$i]->get_infos()->getNote_id() ?>' hidden>
+                                <input type='submit' value='>>'>
                         </form>
                         <?php endif; ?>
                     </div>
@@ -71,12 +70,13 @@
 
         
             </div>
+
+
             <p class="title-note">Others</p> 
             <div class="view_notes">
-
             <?php for ($i=0; $i < count($notes_unpinned); $i++) { ?>
                 <div class="note">
-                    <p class="note-title"><?= $notes_pinned[$i]->get_infos()->get_title() ;  ?></p>
+                    <p class="note-title"><?= $notes_unpinned[$i]->get_infos()->get_title() ;  ?></p>
                     <a class="link-note-archivee" href="#">
                         <div class="note-content">
                             <?php if ($notes_unpinned[$i]->get_type() == "TextNote") : ?>
@@ -110,15 +110,15 @@
                     </a>
                     <div class="card-footer">
                     <?php if ($i > 0) : ?>
-                    <form>
-                            <input type="number" value='<?=$notes_unpinned[$i]->get_infos()->getNote_id() ?>' hidden>
-                            <span><<</span>
+                    <form action="note/move_up" class="left" method="post">
+                            <input name="up" type="number" value='<?=$notes_unpinned[$i]->get_infos()->getNote_id() ?>' hidden>
+                                <input type='submit' value='<<'>
                         </form>
                         <?php endif; ?>
-                    <?php if ($i < count($notes_unpinned)) : ?>
-                        <form>
-                            <input type="number" value='<?=$notes_unpinned[$i]->get_infos()->getNote_id() ?>' hidden>
-                            <span>>><span>
+                    <?php if ($i != count($notes_unpinned)-1) : ?>
+                        <form action="note/move_down" class="right" method="post">
+                            <input type="number" name="down" value='<?=$notes_unpinned[$i]->get_infos()->getNote_id() ?>' hidden>
+                                <input type='submit' value='>>'>
                         </form>
                         <?php endif; ?>
                     </div>

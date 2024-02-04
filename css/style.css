@@ -1,0 +1,252 @@
+
+
+
+body, html{
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #252729;
+   
+ }
+
+ /* My archives */
+ 
+ h1{
+     position: absolute;
+     top:2%;
+     right: 5%;
+     color: white;
+     font-size: 18px;
+     font-weight: 500;
+ }
+ h2{
+     color: white;     
+    position: fixed;
+     font-size: 15px;
+     font-weight: 500;
+     top: 70px;
+     left: 20px;
+     
+     
+ }
+ 
+ .my-archives{
+    display:flex;
+    flex-wrap: wrap;
+    margin: 5px;
+    position:absolute;
+    top: 85px;
+    left: 5px;
+    margin-left: 0;
+}
+.note-archivee{
+  border:1.5px solid  #43464c;
+  color: white;
+  border-radius: 5px;
+  width: 188px;
+  background:#202325;
+  margin: 3px;  
+}
+.link-note-archivee{
+ text-decoration: none;
+  color:inherit;
+}
+.note-title{
+  font-size: 18px;
+  border-bottom: 1.5px solid #43464c;;
+  border-top-right-radius:5px ;
+  border-top-left-radius: 5px;
+  padding:3px 10px;
+  background: #292c30;
+}
+.note-content{
+  padding: 20px;
+  font-weight: 350;
+  font-size: 15px;
+}
+.content_text {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  position: relative;
+  
+}
+.check_item{
+  display: block;
+  max-height: 5em;
+  line-height: 1.7em;
+  overflow: hidden;
+}
+.content_check::after{
+  content: '...';
+  position:relative;
+}
+.checked_item, .unchecked_item {
+  width: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.unchecked_item::before {
+  content: '';
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 3px;
+  border: 1.5px solid rgb(75, 75, 73);
+  background: rgb(50, 50, 48);
+  border-radius: 3px;
+  
+}
+.checked_item::before {
+  content:'✓';
+  text-align: center;
+  line-height: 14px;
+  font-weight: 1000;
+  font-size: 15px;
+  color:  rgb(50, 50, 48);;
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 3px;
+  background:rgb(115, 115, 108);
+  border-radius: 3px;
+} 
+
+
+
+/* view notes */
+.title-empty {
+  color: white;
+  font-style: italic;
+}
+
+.view_notes{
+
+  display:flex;
+  flex-wrap: wrap;
+  margin: 0 10%;
+}
+.title-note {
+  color: white;
+  margin: 10% 0 0 7%;
+}
+
+.card-footer {
+  border:1.5px solid  #43464c;
+  color: white;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  background: #292c30;
+  padding: 2px;
+}
+
+.card-footer input {
+  background-color: unset;
+  border: unset;
+  color: blue;
+}
+
+.note{
+  border:1.5px solid  #43464c;
+  color: white;
+  border-radius: 5px;
+  width: 210px;
+  height: 230px;
+  background:#202325;
+  margin: 3px;  
+  position: relative;
+}
+  /*  menu burger */ 
+   .menu {
+     position: fixed;
+     height: 100%;
+     top: 0;
+     z-index: 2;
+     visibility: hidden;
+ }
+   #hamburger {
+     display: none;
+   }
+   
+   #hamburger-logo{
+     cursor: pointer;
+     background-color: #252729;
+     width: 200px;
+     display: block;
+     color: darkgrey;
+     /* Pour que le menu hamburger s'affiche toujours */
+     text-align: right;
+     /* Pour que le menu hamburger soit "rangé" par défaut */
+     transform: translateX(-120px);
+     padding:10px;
+ }
+ 
+   #hamburger-logo::before{
+     content: '☰' ;
+     border: 0.5px solid  darkgray;
+     padding: 3px 12px 5px 12px;
+     border-radius: 5px;
+     font-size: 25px;
+     line-height: 1; display: inline-block;
+    }
+ 
+   #hamburger:checked ~ #hamburger-logo::before{
+     content: '✕';
+     border: none;
+ }
+ 
+ #hamburger:checked ~ #hamburger-logo {
+     background-color: #2f3542;
+ }
+   
+ #burger-title{
+     color:#f39c12;
+     font-weight: 600;
+     font-size: 20px;
+     position: absolute;
+     top: 10px;
+     left: 10px;
+  }
+ 
+   nav {
+     display: flex;
+     flex-direction: column;
+     background:#2f3542;
+     overflow: hidden;
+     width: 200px;
+     height: 100%;
+     transform: translateX(-200px);
+   }
+   
+   #hamburger-logo, nav {
+     transition: 0.1s;
+   }
+   
+   #hamburger:checked ~ #hamburger-logo,
+   #hamburger:checked ~ nav {
+     transform: translate(0);
+     visibility: visible;
+   }
+   
+   nav a {
+     color: white;
+     text-decoration: none;
+     padding: 10px;
+   }
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
