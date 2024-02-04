@@ -10,8 +10,9 @@ class ControllerSettings extends Controller
     public function settings(): void
     {
         $user = $this->get_user_or_redirect();
+        $sharers = "";
 
-        (new View("settings"))->show(["user" => $user]);
+        (new View("settings"))->show(["user" => $user, "sharers" => $sharers]);
     }
 
     // ajouter error et validations
