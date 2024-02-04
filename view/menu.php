@@ -11,6 +11,6 @@
          <a href="#">Shared by <?= $name ?></a>
         <?php endforeach; ?>
       <?php endif; ?>
-      <a href="#">Settings</a>
+      <a href="settings/settings">Settings</a>
     </nav>
   </div>
