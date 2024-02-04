@@ -14,11 +14,9 @@ class ControllerOpenNote extends Controller {
             $isShared_as_editor = $note->isShared_as_editor($user_id);
             $isShared_as_reader = $note->isShared_as_reader($user_id);
             $body = $note->get_type() == "TextNote" ? TextNote::get_text_content($note_id) : CheckListNote::get_items($note_id);
-            $_SESSION['previous_page'] = $_SERVER['HTTP_REFERER'];
-            $back = $_SESSION['previous_page'];
         }
          ($note->get_type() == "TextNote" ? new View("open_text_note") : new View("open_checklist_note"))->show(["note"=>$note,"note_id"=>$note_id,"created"=>$this->get_created_time($note_id), "edited"=>$this->get_edited_time($note_id)
-                                            , "archived" =>$archived, "isShared_as_editor"=>$isShared_as_editor,"isShared_as_reader"=>$isShared_as_reader, "note_body" => $body, "back"=>$back, "pinned"=>$pinned]);
+                                            , "archived" =>$archived, "isShared_as_editor"=>$isShared_as_editor,"isShared_as_reader"=>$isShared_as_reader, "note_body" => $body, "pinned"=>$pinned]);
     }
     
 
@@ -60,13 +58,7 @@ class ControllerOpenNote extends Controller {
             return $res;
 
     }
-
-  
-   
-
-
     public function update_checked() : void {
-    // if( isset($_POST["param1"]) && isset($_POST["param1"]) !== "" && isset($_POST["checklist_item"])){
       if(isset($_POST["check"])){
             $checklist_item_id = $_POST["check"];
             $note_id = CheckListNoteItem::get_checklist_note($checklist_item_id);
@@ -79,8 +71,47 @@ class ControllerOpenNote extends Controller {
         $checked = false;
         CheckListNoteItem::update_checked($checklist_item_id, $checked);
       }
-      $this->redirect("note", "open_note/$note_id");
+      $this->redirect("openNote", "index/$note_id");
         
+    }
+
+    public function pin() : void {
+        if(isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
+            $note_id = $_GET["param1"];
+            $note = Note::get_note($note_id);
+            $note->pin();
+            $this->index();
+           
+}
+}
+    public function unpin() : void {
+        if(isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
+            $note_id = $_GET["param1"];
+            $note = Note::get_note($note_id);
+            $note->unpin();
+            $this->index();
+        
+    }
+    }
+    public function archive() : void {
+        if(isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
+            $note_id = $_GET["param1"];
+            $note = Note::get_note($note_id);
+            $note->archive();
+            $this->redirect();
+            
+    }
+    }
+
+    public function unarchive() : void {
+        if(isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
+            $note_id = $_GET["param1"];
+            $note = Note::get_note($note_id);
+            $note->unarchive();
+            $this->redirect();
+            
+        }
+
     }
 
    
