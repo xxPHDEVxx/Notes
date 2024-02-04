@@ -19,6 +19,7 @@ class ControllerSettings extends Controller
     public function edit_profile(): void
     {
         $user = $this->get_user_or_redirect();
+        $sharers = "";
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $newEmail = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
@@ -28,7 +29,7 @@ class ControllerSettings extends Controller
             $this->redirect("settings", "edit_profile");
         }
 
-        (new View("edit_profile"))->show(["user" => $user]);
+        (new View("edit_profile"))->show(["user" => $user, "sharers" => $sharers]);
     }
 
     public function change_password(): void
