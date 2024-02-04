@@ -14,7 +14,7 @@ enum TypeNote {
  class Note extends Model
 {
     private String $title;
-    private int $owner;
+    private User $owner;
     private string $created_at;
     private bool $pinned;
     private bool $archived;
@@ -22,21 +22,93 @@ enum TypeNote {
     private ?string $edited_at = NULL;
     private ?int $note_id = NULL;
 
-    public function __construct( $initial_title, $initial_owner, $initial_created_at, $initial_pinned, $initial_archived, $initial_weight, $initial_edited_at, $initial_note_id
+    public function __construct(
+        $initial_title,
+        User $initial_owner,
+        $initial_created_at,
+        $initial_pinned,
+        $initial_archived,
+        $initial_weight,
+        $initial_edited_at,
+        $initial_note_id
     ) {
-        $this->title = $initial_title ;
+        $this->title = $initial_title;
         $this->owner = $initial_owner;
-        $this->created_at= $initial_created_at; 
+        $this->created_at = $initial_created_at;
         $this->pinned = $initial_pinned;
         $this->archived = $initial_archived;
-        $this->weight = $initial_weight ;
-        $this->edited_at = $initial_edited_at; 
+        $this->weight = $initial_weight;
+        $this->edited_at = $initial_edited_at;
         $this->note_id = $initial_note_id;
-    
     }
 
 
-    public static function get_notes(User $user, bool $pinned) : array {
+    public function get_title() : string {
+        return $this->title;
+    }
+
+    public function setTitle(string $title) : void {
+        $this->title = $title;
+    }
+
+    public function  getOwner() {
+        return $this->owner;
+    }
+
+    public function setOwner(User $owner) {
+        $this->owner = $owner;
+    }
+
+    public function  getCreated_at() : string {
+        return $this->created_at;
+    }
+
+    public function  setCreated_at(String $created_at): void {
+        $this->created_at = $created_at;
+    }
+
+    public function isPinned() : bool {
+        return $this->pinned;
+    }
+
+    public function setPinned(bool $pinned) : void {
+        $this->pinned = $pinned;
+    }
+
+    public function  isArchived() : bool {
+        return $this->archived;
+    }
+
+    public function  setArchived(bool $archived) : void {
+        $this->archived = $archived;
+    }
+
+    public function  get_weight() : int {
+        return $this->weight;
+    }
+
+    public function  set_weight(int $weight) : void {
+        $this->weight = $weight;
+    }
+
+    public function  getEdited_at() : string {
+        return $this->edited_at;
+    }
+
+    public function setEdited_at(string $edited_at) : void {
+        $this->edited_at = $edited_at;
+    }
+
+    public function  getNote_id() : int {
+        return $this->note_id;
+    }
+
+    public function  setNote_id(int $note_id) : void {
+        $this->note_id = $note_id;
+    }
+
+
+    private static function get_notes(User $user, bool $pinned) : array {
         $pinnedCondition = $pinned ? '1' : '0';
 
         $query = self::execute("SELECT * FROM notes WHERE owner = :ownerid AND archived = 0 AND pinned = :pinned ORDER BY -weight" , ["ownerid" => $user->id, "pinned" => $pinnedCondition]);
@@ -44,7 +116,7 @@ enum TypeNote {
         $all_notes = [];
 
         foreach ($data as $row) {
-            $all_notes[] = new Note($row['title'],$row['owner'],$row['created_at'], $row['pinned'], $row['archived'], $row['weight'], $row['edited_at'],$row['id'] );
+            $all_notes[] = new Note($row['title'],User::get_user_by_id($row['owner']),$row['created_at'], $row['pinned'], $row['archived'], $row['weight'], $row['edited_at'],$row['id'] );
         }
 
         $notes = [];
@@ -80,80 +152,22 @@ enum TypeNote {
     }
 
     public static function get_note_by_id(int $note_id) : Note |false {
-        $query = self::execute("select * from Notes where note_id = :id", ["id" => $note_id]);
+        $query = self::execute("SELECT * FROM notes WHERE id = :id", ["id" => $note_id]);
         $data = $query->fetch(); 
         if($query->rowCount() == 0) {
             return false;
         }else {
-            return new Note($data['note_id'], $data['title'] , $data['owner'], $data['created_at'], $data['edited_at'], $data['pinned'], $data['archived'], $data['weight']);
+            return new Note( $data['title'] , 
+            User::get_user_by_id($data['owner']), 
+            $data['created_at'], 
+            $data['pinned'], 
+            $data['archived'], 
+            $data['weight'], 
+            $data['edited_at'], 
+            $data['id']);
         }
 
     }
-
-    public function getTitle() : string {
-        return $this->title;
-    }
-
-    public function setTitle(string $title) : void {
-        $this->title = $title;
-    }
-
-    public function  getOwner() {
-        return $this->owner;
-    }
-
-    public function setOwner(int $owner) {
-        $this->owner = $owner;
-    }
-
-    public function  getCreated_at() : string {
-        return $this->created_at;
-    }
-
-    public function  setCreated_at(String $created_at): void {
-        $this->created_at = $created_at;
-    }
-
-    public function isPinned() : bool {
-        return $this->pinned;
-    }
-
-    public function setPinned(bool $pinned) : void {
-        $this->pinned = $pinned;
-    }
-
-    public function  isArchived() : bool {
-        return $this->archived;
-    }
-
-    public function  setArchived(bool $archived) : void {
-        $this->archived = $archived;
-    }
-
-    public function  getWeight() : int {
-        return $this->weight;
-    }
-
-    public function  setWeight(int $weight) : void {
-        $this->weight = $weight;
-    }
-
-    public function  getEdited_at() : string {
-        return $this->edited_at;
-    }
-
-    public function setEdited_at(string $edited_at) : void {
-        $this->edited_at = $edited_at;
-    }
-
-    public function  getNote_id() : int {
-        return $this->note_id;
-    }
-
-    public function  setNote_id(int $note_id) : void {
-        $this->note_id = $note_id;
-    }
-
 
 
 
@@ -177,7 +191,7 @@ enum TypeNote {
             if(empty($errors)){
                 self::execute('INSERT INTO Notes (title, owner, pinned, archived, weight) VALUES (:title, :owner,:pinned,:archived,:weight)', 
                                ['title' => $this->title,
-                                'owner' => $this->owner,
+                                'owner' => $this->owner->id,
                                 'pinned' => $this->pinned? 1 : 0,
                                 'archived' => $this->archived? 1 : 0,
                                 'weight' => $this->weight,
@@ -194,23 +208,46 @@ enum TypeNote {
         }
     }
 
-    public function get_title(): string {
-        return $this->title;
-    }
-    public function isMax(int $id): int {
+    public function is_weight_unique(int $id): int {
         $query = self::execute("SELECT id, MAX(weight) from notes where id = :note_id group by id" , ["note_id" => $id]);
         $data = $query->fetch();
         return $data['id'];
     }
-    public function max_weight(int $id) : float {
-        $query = self::execute("SELECT MAX(weight) from notes where owner = :id group by owner" , ["id" => $id]);
-        $data = $query->fetch();
-        return $data['MAX(weight)'];
-    }
 
-    public function min_weight(int $id) : float {
-        $query = self::execute("SELECT MIN(weight) from notes where owner = :id group by owner" , ["id" => $id]);
+    public function get_note_up(User $user,int $note_id, int $weight, bool $pin): Note | false {
+        $query = self::execute("
+        SELECT * FROM notes n
+        WHERE owner = :ownerid AND n.id <> :note_id AND archived = 0 AND pinned = :pin AND weight > :weight 
+        ORDER BY weight LIMIT 1
+        ", ["ownerid" => $user->id, "note_id" => $note_id, "pin" => $pin, "weight" => $weight]);
+    
         $data = $query->fetch();
-        return $data['MIN(weight)'];
+        if (!$data) {
+            return false;
+        }
+
+        $note_up = new Note(
+            $data['title'],
+            $user,
+            $data['created_at'],
+            $data['pinned'],
+            $data['archived'],
+            $data['weight'],
+            $data['edited_at'],
+            $data['id']
+        );
+    
+        return $note_up;
+    } 
+
+    public function move_db(Note $second) : Note {
+        $weight_second = $second->get_weight();
+        $second_id = $second->getNote_id();
+        self::execute('UPDATE notes SET weight = :weight_note2 WHERE id = :id_note1', 
+        ['id_note1' => $this->note_id, 'weight_note2' => $weight_second]);
+        self::execute('UPDATE notes SET weight = :weight_note1 WHERE id = :id_note2', ['id_note2' => $second_id, 'weight_note1' => $this->weight]);
+
+
+        return $this;
     }
 }
