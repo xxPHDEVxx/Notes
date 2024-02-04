@@ -33,15 +33,22 @@
         </form>
     </div>
 
-     <?php if (!empty($errors)) : ?>
-            <div id="alertPassword" class="alert alert-danger" role="alert">
-                <?php foreach ($errors as $error) : ?>
-                    <p><?= $error ?></p>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
+    <?php if (!empty($errors)) : ?>
+        <div id="alertPassword" class="alert alert-danger" role="alert">
+            <?php foreach ($errors as $error) : ?>
+                <p><?= $error ?></p>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 
-    <?php (new View("menu"))->show(["sharers"=>$sharers]); ?>
+
+    <?php if (isset($successMessage)) : ?>
+        <div id="alertPassword" class="alert alert-success" role="alert">
+            <p><?= $successMessage ?></p>
+        </div>
+    <?php endif; ?>
+
+    <?php (new View("menu"))->show(["sharers" => $sharers]); ?>
 
 </body>
 
