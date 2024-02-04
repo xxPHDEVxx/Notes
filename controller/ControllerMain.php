@@ -37,7 +37,7 @@ class ControllerMain extends Controller
     public function logout(): void
     {
         $user = $this->get_user_or_redirect();
-
+        $sharers ="";
 
         if (isset($_POST['logout'])) {
             $this->logout();
@@ -46,7 +46,7 @@ class ControllerMain extends Controller
         }
 
 
-        (new View("logout"))->show(["user" => $user]);
+        (new View("logout"))->show(["user" => $user, "sharers" => $sharers]);
     }
 
 
