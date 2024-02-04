@@ -5,8 +5,7 @@ require_once "model/User.php";
 
 class ControllerNote extends Controller {
     public function index() : void {
-       // $user = $this->get_user_or_redirect();
-        $user = User::get_user_by_id(1);
+       $user = $this->get_user_or_redirect();
         $notes_pinned = $user->get_notes_pinned();
         $notes_unpinned = $user->get_notes_unpinned();
         $names ="";
@@ -14,8 +13,7 @@ class ControllerNote extends Controller {
     }
 
     public function move_up() : void{
-       // $user = $this->get_user_or_redirect();
-       $user = User::get_user_by_id(1);
+        $user = $this->get_user_or_redirect();
         if (isset($_POST["up"]) && $_POST["up"] != "") {
             $id = $_POST["up"];
             $note = Note::get_note_by_id($id);
