@@ -2,8 +2,15 @@
 
 require_once "framework/Model.php";
 require_once "User.php";
+require_once "TextNote.php";
+require_once "checklistNote.php";
 
-class Note extends Model
+enum TypeNote {
+    const TN = "TextNote";
+    const CLN = "CheckListNote";
+}
+
+abstract class Note extends Model
 {
     public function __construct(
         public int $note_id,
@@ -16,29 +23,52 @@ class Note extends Model
         public ?string $edited_at = NULL
     ) {
     }
+    public abstract function get_type();
 
 
-    public static function get_notes(User $user) : array {
-        $query = self::execute("select * from Notes where owner = :id order by weight", ["id" => $user->id]);
+    public static function get_created_at(int $id) : String {
+        $query = self::execute("SELECT created_at from notes WHERE id = :id", ["id" => $id]);
+        $data = $query->fetchColumn();
+        
+        return $data;
+        
+    }
+    public static function get_edited_at(int $id) : String | null {
+        $query = self::execute("SELECT edited_at from notes WHERE id = :id", ["id" => $id]);
+        $data = $query->fetchColumn();
+        
+        return $data;
+        
+    }
+    public function isShared_as_editor(int $userid) : bool {
+        $query = self::execute("SELECT * FROM note_shares WHERE note = :id and user =:userid and editor = 1", ["id" => $this->note_id, "userid"=>$userid]);
         $data = $query->fetchAll();
-        $notes = [];
-        foreach ($data as $row) {
-            $notes[] = new Note($row['id'], $row['title'] , User::get_user_by_id($row['owner']), $row['created_at'], $row['edited_at'], $row['pinned'], $row['archived'], $row['weight']);
-        }
-        return $notes;
-
+        return count($data) !== 0;
     }
 
-    public static function get_note(int $note_id) : Note |false {
-        $query = self::execute("select * from Notes where id = :id", ["id" => $note_id]);
-        $data = $query->fetch(); 
-        if($query->rowCount() == 0) {
-            return false;
-        }else {
-            return new Note($data['id'], $data['title'] , $data['owner'], $data['created_at'],$data['pinned'], $data['archived'], $data['weight'],$data['edited_at']);
-        }
-
+    public function isShared_as_reader(int $userid) : bool {
+        $query = self::execute("SELECT * FROM note_shares WHERE note = :id and user =:userid and editor = 0", ["id" => $this->note_id, "userid"=>$userid]);
+        $data = $query->fetchAll();
+        return count($data) !== 0;
     }
+    public function in_my_archives(int $userid) : int {
+        $query = self::execute("SELECT archived FROM notes WHERE owner = :userid and id = :id", ["userid"=> $userid, "id"=>$this->note_id]);
+        $data = $query->fetchColumn();
+        return $data;
+    }
+    public function is_pinned(int $userid) : int {
+        $query = self::execute("SELECT pinned FROM notes WHERE owner = :userid and id = :id", ["userid"=> $userid, "id"=>$this->note_id]);
+        $data = $query->fetchColumn();
+        return $data;
+    }
+
+   public static function get_note(int $note_id) : Note|false {
+        $query = self::execute("SELECT content FROM text_notes where id = :id", ["id" =>$note_id]);
+        $data = $query->fetchAll();
+        return count($data) !== 0 ? TextNote::get_note($note_id) : CheckListNote::get_note($note_id);
+
+   }
+
 
     public function delete(User $initiator) : Note |false {
         if($this->owner == $initiator) {
@@ -75,8 +105,6 @@ class Note extends Model
             throw new Exception("Not Implemented.");
         }
     }
-
-    
     public static function get_archives(User $user): array {
         $archives = [];
         $query = self::execute("SELECT id, title FROM notes WHERE owner = :ownerid AND archived = 1 ORDER BY -weight" , ["ownerid" => $user->id]);
@@ -87,7 +115,7 @@ class Note extends Model
             $content = $dataQuery->fetchColumn(); 
           
             if(!$content) {
-                $dataQuery = self::execute("SELECT content, checked FROM checklist_note_items WHERE checklist_note = :note_id ", ["note_id" => $row["id"]]);
+                $dataQuery = self::execute("SELECT content, checked FROM checklist_note_items WHERE checklist_note = :note_id order by checked, id ", ["note_id" => $row["id"]]);
                 $content_checklist = $dataQuery->fetchAll();
             }
             $row["content"] = $content;
@@ -114,9 +142,7 @@ class Note extends Model
              $row["content_checklist"] = $content_checklist;
             }
         return $shared_by;
-
-        
-    }
+}
 
     public static function get_shared_note(User $user): array {
         $shared = [];
@@ -124,12 +150,26 @@ class Note extends Model
         $shared_note_id = $query->fetchAll(PDO::FETCH_COLUMN);
         foreach ($shared_note_id as $note_id) {
            $note = Note::get_note($note_id);
+        
             $shared[] = $note;
 
         }
         return $shared;
     }
 
-    
+    public function archive() : void {
+        self::execute("UPDATE notes SET archived = :val WHERE id = :id" , ["val" => 1, "id" =>$this->note_id]);
+    }
+
+    public function unarchive() : void {
+        self::execute("UPDATE notes SET archived = :val WHERE id = :id" , ["val" => 0, "id" =>$this->note_id]);
+    }
+    public function pin() : void {
+        self::execute("UPDATE notes SET pinned = :val WHERE id = :id" , ["val" => 1, "id" =>$this->note_id]);
+    }
+    public function unpin() : void {
+        self::execute("UPDATE notes SET pinned = :val WHERE id = :id" , ["val" => 0, "id" =>$this->note_id]);
+    }
+   
 
 }
