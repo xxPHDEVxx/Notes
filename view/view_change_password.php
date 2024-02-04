@@ -32,9 +32,9 @@
             <button type="submit" class="btn btn-primary">Change Password</button>
         </form>
     </div>
-    
+
      <?php if (!empty($errors)) : ?>
-            <div class="alert alert-danger" role="alert">
+            <div id="alertPassword" class="alert alert-danger" role="alert">
                 <?php foreach ($errors as $error) : ?>
                     <p><?= $error ?></p>
                 <?php endforeach; ?>

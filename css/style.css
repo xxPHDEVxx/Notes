@@ -380,6 +380,14 @@ h2{
     font-weight: 300;
 }
 
+/* erreurs */
+
+#alertPassword {
+    position: absolute;
+    top: 450px;
+    left: 100px;
+}
+
 
 
   
