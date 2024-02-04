@@ -385,7 +385,7 @@ nav a {
 .edit_form {
     position : absolute;
     top: 120px;
-    left: 100px;
+    left: 300px;
 }
 
 .form-label {
@@ -409,5 +409,5 @@ nav a {
 #alertPassword {
     position: absolute;
     top: 450px;
-    left: 100px;
+    left: 300px;
 }
