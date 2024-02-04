@@ -21,7 +21,7 @@ class ControllerUser extends Controller {
         $shared = $user->get_shared_note();
         $ids = [];
         foreach($shared as $shared_note) {
-            $id = $shared_note->owner;
+            $id = $shared_note->getOwner()->id;
             $ids[]= $id;
         }
         $idsUnique = array_unique($ids);

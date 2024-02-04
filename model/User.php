@@ -81,7 +81,7 @@ class User extends Model {
         $user = User::get_user_by_mail($mail);
         if($user) {
             if(!self::check_password($password, $user->hashed_password)) {
-                $errors[] = "⚠Wrong password.please try again.";
+                $errors[] = "⚠Wrong password. Please try again.";
             }
         }else {
             $errors[] = "⚠Can't find the user. Please sign up.";
@@ -126,47 +126,59 @@ class User extends Model {
     }
 
 
-    public function get_notes() : array {
-        return Note::get_notes($this);
-    }
-
-    public function get_archives() : array{
+    public function get_archives() : array {
         return Note::get_archives($this);
-        
     }
 
-    public function get_shared_by(int $ownerid) : array {
-        return Note::get_shared_by($this->id, $ownerid);
-        
-    }
-
-    public function get_shared_note(): array {
+    public function get_shared_note() : array {
         return Note::get_shared_note($this);
     }
+ 
+    public function get_notes_pinned() : array {
+        return Note::get_notes_pinned($this);
+    }
+    public function get_notes_unpinned() : array {
+        return Note::get_notes_unpinned($this);
+    }
 
-    public function updateProfile($newEmail, $newFullName) {
+    public function updateProfile(string $newFullName, string $newMail): void
+{
+    $this->mail = $newMail;
+    $this->full_name = $newFullName;
+    
+    $sql = "UPDATE users SET full_name = :full_name, mail = :mail WHERE id = :id";
+    $params = [':full_name' => $newFullName, ':mail' => $newMail, ':id' => $this->id];
+
+    try {
+        $stmt = parent::execute($sql, $params);
+        echo "Profil mis à jour avec succès!";
+    } catch (PDOException $e) {
+        throw new Exception("Erreur lors de la mise à jour du profil : " . $e->getMessage());
+    }
+}
+
+    public function setPassword($newPassword) {
+        $hashedPassword = Tools::my_hash($newPassword);
+        $this->hashed_password = $hashedPassword;
+    }
+
+    public function getHashedPassword() {
+        return $this->hashed_password;
+    }
+
+    public function updatePassword($newPassword) {
         
-        $this->mail = $newEmail;
-        $this->full_name = $newFullName;
+        $this->setPassword($newPassword);
 
-        $sql = "UPDATE users SET mail = :mail, full_name = :fullName WHERE id = :id";
-        $params = array(':mail' => $this->mail, ':fullName' => $this->full_name, ':id' => $this->id);
+        $sql = "UPDATE users SET hashed_password = :hashed_password WHERE id = :id";
+        $params = array(':hashed_password' => $this->getHashedPassword(), ':id' => $this->id);
 
         try {
             $stmt = parent::execute($sql, $params);
-            echo "Profil mis à jour avec succès!";
+            echo "Mot de passe mis à jour avec succès!";
         } catch (PDOException $e) {
-            echo "Erreur lors de la mise à jour du profil : " . $e->getMessage();
+            throw new Exception("Erreur lors de la mise à jour du mot de passe : " . $e->getMessage());
         }
     }
- 
-   
 
-
-
-
-
- 
 }
-   
-
