@@ -166,7 +166,6 @@ class User extends Model {
 
     try {
         $stmt = parent::execute($sql, $params);
-        echo "Profil mis à jour avec succès!";
     } catch (PDOException $e) {
         throw new Exception("Erreur lors de la mise à jour du profil : " . $e->getMessage());
     }
@@ -190,7 +189,6 @@ class User extends Model {
 
         try {
             $stmt = parent::execute($sql, $params);
-            echo "Mot de passe mis à jour avec succès!";
         } catch (PDOException $e) {
             throw new Exception("Erreur lors de la mise à jour du mot de passe : " . $e->getMessage());
         }

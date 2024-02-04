@@ -305,7 +305,7 @@ input:focus {
 
 #hamburger-logo{
   cursor: pointer;
-  background-color:#202325; /*#252729;*/
+  background-color:#252729;
   width: 200px;
   display: block;
   color: darkgrey;
