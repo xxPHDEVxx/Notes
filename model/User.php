@@ -145,7 +145,7 @@ class User extends Model {
     }
 
     public function setPassword($newPassword) {
-        $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
+        $hashedPassword = Tools::my_hash($newPassword);
         $this->hashed_password = $hashedPassword;
     }
 

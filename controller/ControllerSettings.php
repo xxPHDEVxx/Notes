@@ -25,35 +25,33 @@ class ControllerSettings extends Controller
     {
         $user = $this->get_user_or_redirect();
 
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $currentPassword = $_POST['currentPassword'];
+            $newPassword = $_POST['newPassword'];
+            $confirmNewPassword = $_POST['confirmNewPassword'];
 
 
-        $currentPassword = $_POST['currentPassword'];
-        $newPassword = $_POST['newPassword'];
-        $confirmNewPassword = $_POST['confirmNewPassword'];
+            $errors = User::validate_login($user->mail, $currentPassword);
 
+            if (empty($errors)) {
 
-        $errors = User::validate_login($user->mail, $currentPassword);
+                $passwordErrors = User::validate_passwords($newPassword, $confirmNewPassword);
 
-        if (empty($errors)) {
+                if (empty($passwordErrors)) {
 
-            $passwordErrors = User::validate_passwords($newPassword, $confirmNewPassword);
-
-            if (empty($passwordErrors)) {
-
-                try {
-                    $user->setPassword($newPassword);
-                    $user->updatePassword($newPassword);
-                    $successMessage = "Password changed successfully!";
-                } catch (Exception $e) {
-                    $errors[] = "Erreur lors de la mise à jour du mot de passe : " . $e->getMessage();
+                    try {
+                        $user->setPassword($newPassword);
+                        $user->updatePassword($newPassword);
+                        $successMessage = "Password changed successfully!";
+                    } catch (Exception $e) {
+                        $errors[] = "Erreur lors de la mise à jour du mot de passe : " . $e->getMessage();
+                    }
+                } else {
+                    $errors = array_merge($errors, $passwordErrors);
                 }
-            } else {
-                $errors = array_merge($errors, $passwordErrors);
             }
         }
-
         (new View("change_password"))->show(["user" => $user, "errors" => $errors, "successMessage" => $successMessage]);
-
     }
 
 
