@@ -42,6 +42,7 @@ class ControllerSettings extends Controller
                 $errors = array_merge($errors);
             }
             (new View("edit_profile"))->show(["user" => $user, "successMessage" => $successMessage, "errors" => $errors, "sharers" => $sharers]);
+            $this->redirect("settings", "edit_profile"); // obliger de refresh car petit bug de debordement css
         }
         (new View("edit_profile"))->show(["user" => $user, "sharers" => $sharers]);
     }
