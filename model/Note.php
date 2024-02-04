@@ -239,6 +239,31 @@ enum TypeNote {
     
         return $note_up;
     } 
+    public function get_note_down(User $user,int $note_id, int $weight, bool $pin): Note | false {
+        $query = self::execute("
+        SELECT * FROM notes n
+        WHERE owner = :ownerid AND n.id <> :note_id AND archived = 0 AND pinned = :pin AND weight < :weight 
+        ORDER BY -weight LIMIT 1
+        ", ["ownerid" => $user->id, "note_id" => $note_id, "pin" => $pin, "weight" => $weight]);
+    
+        $data = $query->fetch();
+        if (!$data) {
+            return false;
+        }
+
+        $note_down = new Note(
+            $data['title'],
+            $user,
+            $data['created_at'],
+            $data['pinned'],
+            $data['archived'],
+            $data['weight'],
+            $data['edited_at'],
+            $data['id']
+        );
+    
+        return $note_down;
+    } 
 
     public function move_db(Note $second) : Note {
         $weight_second = $second->get_weight();
