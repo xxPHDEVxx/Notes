@@ -42,4 +42,9 @@ class ControllerNote extends Controller {
             throw new Exception("Missing ID");
         }
     }
+
+    public function share_note() {
+        $user = $this->get_user_or_redirect();
+        (new View("share"))->show();
+    }
 }

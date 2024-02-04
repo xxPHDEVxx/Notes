@@ -126,11 +126,23 @@ class User extends Model {
     }
 
 
+    public function get_archives() : array {
+        return Note::get_archives($this);
+    }
+
+    public function get_shared_note() : array {
+        return Note::get_shared_note($this);
+    }
+    
     public function get_notes_pinned() : array {
         return Note::get_notes_pinned($this);
     }
     public function get_notes_unpinned() : array {
         return Note::get_notes_unpinned($this);
     }
+
+
+
+
 
 }
