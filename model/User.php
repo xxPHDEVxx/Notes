@@ -146,7 +146,6 @@ class User extends Model {
     $this->full_name = $newFullName;
     $this->mail = $newMail;
 
-    // Mettez à jour le profil dans la base de données
     $sql = "UPDATE users SET full_name = :full_name, mail = :mail WHERE id = :id";
     $params = [':full_name' => $newFullName, ':mail' => $newMail, ':id' => $this->id];
 
