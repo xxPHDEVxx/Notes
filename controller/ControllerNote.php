@@ -29,8 +29,7 @@ class ControllerNote extends Controller {
         
     }
     public function move_down() : void{
-        $user = User::get_user_by_id(1);
-       // $user = $this->get_user_or_redirect();
+       $user = $this->get_user_or_redirect();
         if (isset($_POST["down"]) && $_POST["down"] != "") {
             $id = $_POST["down"];
             $note = Note::get_note_by_id($id);
