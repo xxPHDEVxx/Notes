@@ -385,6 +385,7 @@ nav a {
 .edit_form {
     position : absolute;
     top: 120px;
+    left: 100px;
 }
 
 .form-label {
