@@ -1,6 +1,6 @@
 <?php
 require_once "framework/Model.php";
-require_once "Note.php";
+require_once "Note2.php";
 
 class User extends Model
 {
@@ -172,11 +172,11 @@ class User extends Model
 
     public function get_notes_pinned(): array
     {
-        return Note::get_notes_pinned($this);
+        return Note2::get_notes_pinned($this);
     }
     public function get_notes_unpinned(): array
     {
-        return Note::get_notes_unpinned($this);
+        return Note2::get_notes_unpinned($this);
     }
 
     public function updateProfile(string $newFullName, string $newMail): void

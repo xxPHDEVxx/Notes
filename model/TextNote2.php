@@ -1,14 +1,14 @@
 <?php
 
 require_once "framework/Model.php";
-require_once "Note.php";
+require_once "Note2.php";
 require_once "User.php";
 
-class TextNote extends Note
+class TextNote2 extends Note2
 {
     public function __construct(
-        private Note $note,
-        public int $id,
+        private Note2  $note,
+        public int     $id,
         public ?string $content = NULL,
 
     ) {
@@ -18,7 +18,7 @@ class TextNote extends Note
         return TypeNote::TN;
     }
 
-    public function get_infos() : Note {
+    public function get_infos() : Note2 {
         return $this->note;
     }
 }

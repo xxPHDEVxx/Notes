@@ -16,7 +16,7 @@ class ControllerNote extends Controller {
         $user = $this->get_user_or_redirect();
         if (isset($_POST["up"]) && $_POST["up"] != "") {
             $id = $_POST["up"];
-            $note = Note::get_note_by_id($id);
+            $note = Note2::get_note_by_id($id);
             if ($note === false)
                 throw new Exception("undefined note");
             $other = $note->get_note_up($user, $id,$note->get_weight(), $note->isPinned());
@@ -32,7 +32,7 @@ class ControllerNote extends Controller {
        $user = $this->get_user_or_redirect();
         if (isset($_POST["down"]) && $_POST["down"] != "") {
             $id = $_POST["down"];
-            $note = Note::get_note_by_id($id);
+            $note = Note2::get_note_by_id($id);
             if ($note === false)
                 throw new Exception("undefined note");
             $other = $note->get_note_down($user, $id,$note->get_weight(), $note->isPinned());

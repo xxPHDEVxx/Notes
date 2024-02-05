@@ -1,10 +1,10 @@
 <?php
 
 require_once "framework/Model.php";
-require_once "Note.php";
+require_once "Note2.php";
 require_once "ChecklistNote2.php";
 
-class ChecklistNoteItem extends Model
+class ChecklistNoteItem2 extends Model
 {
     public function __construct(
 
@@ -22,7 +22,7 @@ class ChecklistNoteItem extends Model
         $data = $query->fetchAll();
         $items = [];
         foreach ($data as $row) {
-            $items[] = new ChecklistNoteItem( 
+            $items[] = new ChecklistNoteItem2(
                 $row['id'],
                 $row['content'],
                 $row['checked']);
