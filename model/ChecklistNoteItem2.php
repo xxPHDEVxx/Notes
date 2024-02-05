@@ -2,7 +2,7 @@
 
 require_once "framework/Model.php";
 require_once "Note.php";
-require_once "ChecklistNote.php";
+require_once "ChecklistNote2.php";
 
 class ChecklistNoteItem extends Model
 {
@@ -15,7 +15,7 @@ class ChecklistNoteItem extends Model
     ) {
     }
 
-    public static function get_items(ChecklistNote $checklistNote) : array {
+    public static function get_items(ChecklistNote2 $checklistNote) : array {
         $query =  self::execute("SELECT id,content, checked 
         FROM checklist_note_items
         WHERE checklist_note = :id", ["id" => $checklistNote->id]);

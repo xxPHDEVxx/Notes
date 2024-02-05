@@ -3,7 +3,7 @@
 require_once "framework/Model.php";
 require_once "User.php";
 require_once "TextNote.php";
-require_once "ChecklistNote.php";
+require_once "ChecklistNote2.php";
 
 enum TypeNote {
     const TN = "TextNote";
@@ -131,8 +131,8 @@ enum TypeNote {
     }
     
 
-    public static function get_checklist_note(Note $note,int $id) : ChecklistNote {
-        $content = new ChecklistNote($note,$id); 
+    public static function get_checklist_note(Note $note,int $id) : ChecklistNote2 {
+        $content = new ChecklistNote2($note,$id);
 
         return $content;
     }

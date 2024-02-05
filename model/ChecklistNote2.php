@@ -2,10 +2,10 @@
 
 require_once "framework/Model.php";
 require_once "Note.php";
-require_once "ChecklistNote.php";
+require_once "ChecklistNote2.php";
 require_once "ChecklistNoteItem.php";
 
-class ChecklistNote extends Note
+class ChecklistNote2 extends Note
 {
     public function __construct(
     
