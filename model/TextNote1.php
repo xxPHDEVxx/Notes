@@ -7,7 +7,7 @@ class TextNote1 extends Note1 {
   
     public ?string $content = null ;
     public function get_type() : string {
-        return TypeNote::TN;
+        return TypeNote1::TN;
         
     }
     public static function get_note(int $note_id) : Note1 |false {

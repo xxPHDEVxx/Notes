@@ -12,7 +12,7 @@ class CheckListNote1 extends Note1 {
     }
 
     public function get_type() : string {
-        return TypeNote::CLN;
+        return TypeNote1::CLN;
     }
     public static function get_note(int $note_id) : Note1 |false {
         $query = self::execute("SELECT * FROM Notes JOIN checklist_notes ON notes.id = checklist_notes.id WHERE notes.id = :id", ["id" => $note_id]);

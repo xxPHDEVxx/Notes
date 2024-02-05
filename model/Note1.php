@@ -5,7 +5,7 @@ require_once "User.php";
 require_once "TextNote1.php";
 require_once "checklistNote1.php";
 
-enum TypeNote {
+enum TypeNote1 {
     const TN = "TextNote";
     const CLN = "CheckListNote";
 }
