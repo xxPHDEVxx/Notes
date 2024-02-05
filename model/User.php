@@ -137,10 +137,23 @@ class User extends Model {
         
     }
 
-    public function get_shared_note(): array {
-        return Note::get_shared_note($this);
-    }
 
+    public function shared_by() : array {
+        
+        $shared =  Note::get_shared_note($this);
+        $ids = [];
+        foreach($shared as $shared_note) {
+          $id = $shared_note->owner;
+            $ids[]= $id;
+        }
+        $idsUnique = array_unique($ids);
+        $sharers = [];
+        foreach($idsUnique as $userid) {
+            $user = User::get_user_by_id($userid);
+            $sharers[] = $user;
+        }
+        return $sharers;
+    }
  
    
 
