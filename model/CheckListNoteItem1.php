@@ -1,8 +1,8 @@
 <?php 
-require_once "Note.php";
-require_once "CheckListNote.php";
+require_once "Note1.php";
+require_once "CheckListNote1.php";
 
-class CheckListNoteItem extends Model {
+class CheckListNoteItem1 extends Model {
     public function __construct(public int $id,public int $checklist_note, public string $content, 
     public bool $checked){
         

@@ -1,6 +1,6 @@
 <?php
 require_once "framework/Model.php";
-require_once "Note.php";
+require_once "Note1.php";
 
 class User extends Model {
     
@@ -128,19 +128,19 @@ class User extends Model {
 
 
     public function get_archives() : array{
-        return Note::get_archives($this);
+        return Note1::get_archives($this);
         
     }
 
     public function get_shared_by(int $ownerid) : array {
-        return Note::get_shared_by($this->id, $ownerid);
+        return Note1::get_shared_by($this->id, $ownerid);
         
     }
 
 
     public function shared_by() : array {
         
-        $shared =  Note::get_shared_note($this);
+        $shared =  Note1::get_shared_note($this);
         $ids = [];
         foreach($shared as $shared_note) {
           $id = $shared_note->owner;

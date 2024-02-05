@@ -2,15 +2,15 @@
 
 require_once "framework/Model.php";
 require_once "User.php";
-require_once "TextNote.php";
-require_once "checklistNote.php";
+require_once "TextNote1.php";
+require_once "checklistNote1.php";
 
 enum TypeNote {
     const TN = "TextNote";
     const CLN = "CheckListNote";
 }
 
-abstract class Note extends Model
+abstract class Note1 extends Model
 {
     public function __construct(
         public int $note_id,
@@ -62,15 +62,15 @@ abstract class Note extends Model
         return $data;
     }
 
-   public static function get_note(int $note_id) : Note|false {
+   public static function get_note(int $note_id) : Note1|false {
         $query = self::execute("SELECT content FROM text_notes where id = :id", ["id" =>$note_id]);
         $data = $query->fetchAll();
-        return count($data) !== 0 ? TextNote::get_note($note_id) : CheckListNote::get_note($note_id);
+        return count($data) !== 0 ? TextNote1::get_note($note_id) : CheckListNote1::get_note($note_id);
 
    }
 
 
-    public function delete(User $initiator) : Note |false {
+    public function delete(User $initiator) : Note1 |false {
         if($this->owner == $initiator) {
             self::execute("DELETE FROM Notes WHERE id = :note_id", ['note_id' => $this->note_id]);
             return $this;
@@ -83,7 +83,7 @@ abstract class Note extends Model
 
         return $errors;
     }
-    public function persist() : Note|array {
+    public function persist() : Note1|array {
         if($this->note_id == NULL) {
             $errors = $this->validate();
             if(empty($errors)){
@@ -149,7 +149,7 @@ abstract class Note extends Model
         $query = self::execute("SELECT note from note_shares WHERE user = :userid" , ['userid'=>$user->id]);
         $shared_note_id = $query->fetchAll(PDO::FETCH_COLUMN);
         foreach ($shared_note_id as $note_id) {
-           $note = Note::get_note($note_id);
+           $note = Note1::get_note($note_id);
         
             $shared[] = $note;
 

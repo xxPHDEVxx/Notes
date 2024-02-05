@@ -1,9 +1,9 @@
 <?php
 require_once "framework/Model.php";
 require_once "User.php";
-require_once "Note.php";
+require_once "Note1.php";
 
-class NoteShare extends Model {
+class NoteShare1 extends Model {
     public function __construct(public int $note, public int $user, public bool $editor) {
 
     }
