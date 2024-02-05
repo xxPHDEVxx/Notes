@@ -29,22 +29,21 @@ class ControllerSettings extends Controller
 
             $errors = User::validateEdit($newEmail, $newFullName);
 
-   
-                if (empty($errors)) {
 
-                    try {
-                        $user->updateProfile($newFullName, $newEmail);
-                        $successMessage = "Profile updated !";
-                    } catch (Exception $e) {
-                        $errors[] = "Error updating profile : " . $e->getMessage();
-                    }
-                } else {
-                    $errors = array_merge($errors);
+            if (empty($errors)) {
+
+                try {
+                    $user->updateProfile($newFullName, $newEmail);
+                    $successMessage = "Profile updated !";
+                } catch (Exception $e) {
+                    $errors[] = "Error updating profile : " . $e->getMessage();
                 }
+            } else {
+                $errors = array_merge($errors);
+            }
             (new View("edit_profile"))->show(["user" => $user, "successMessage" => $successMessage, "errors" => $errors, "sharers" => $sharers]);
-
+            $this->redirect("settings", "edit_profile"); // obliger de refresh car petit bug de debordement css
         }
-
         (new View("edit_profile"))->show(["user" => $user, "sharers" => $sharers]);
     }
 

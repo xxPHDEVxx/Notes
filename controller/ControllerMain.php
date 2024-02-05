@@ -2,6 +2,7 @@
 require_once "framework/Controller.php";
 require_once "framework/View.php";
 require_once "model/User.php";
+require_once "controller/ControllerUser.php";
 
 
 
@@ -15,6 +16,11 @@ class ControllerMain extends Controller
         } else {
             $this->login();
         }
+    }
+
+    public function merge(): void
+    {
+        (new View ("merge"))->show();
     }
 
     public function login(): void
@@ -37,16 +43,15 @@ class ControllerMain extends Controller
     public function logout(): void
     {
         $user = $this->get_user_or_redirect();
-        $sharers ="";
+        $sharers = "";
 
         if (isset($_POST['logout'])) {
-            $this->logout();
-        } else if (isset($_POST['no'])){
+            Controller::logout();
+        } else if (isset($_POST['no'])) {
             $this->redirect("settings", "settings");
+        } else {
+            (new View("logout"))->show(["user" => $user, "sharers" => $sharers]);
         }
-
-
-        (new View("logout"))->show(["user" => $user, "sharers" => $sharers]);
     }
 
 
