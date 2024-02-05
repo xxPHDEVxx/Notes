@@ -69,42 +69,7 @@ abstract class Note1 extends Model
 
    }
 
-
-    public function delete(User $initiator) : Note1 |false {
-        if($this->owner == $initiator) {
-            self::execute("DELETE FROM Notes WHERE id = :note_id", ['note_id' => $this->note_id]);
-            return $this;
-        }
-        return false;
-    }
-
-    public function validate() : array {
-        $errors = [];
-
-        return $errors;
-    }
-    public function persist() : Note1|array {
-        if($this->note_id == NULL) {
-            $errors = $this->validate();
-            if(empty($errors)){
-                self::execute('INSERT INTO Notes (title, owner, pinned, archived, weight) VALUES (:author,:recipient,:body,:private)', 
-                               ['tilte' => $this->title,
-                                'owner' => $this->owner,
-                                'pinned' => $this->pinned? 1 : 0,
-                                'archived' => $this->archived? 1 : 0,
-                                'weight' => $this->weight,
-                               ]);
-                $note = self::get_note(self::lastInsertId());
-                $this->note_id = $note->note_id;
-                return $this;
-            } else {
-                return $errors; 
-            }
-        } else {
-            //on ne modifie jamais les messages : pas de "UPDATE" SQL.
-            throw new Exception("Not Implemented.");
-        }
-    }
+ 
     public static function get_archives(User $user): array {
         $archives = [];
         $query = self::execute("SELECT id, title FROM notes WHERE owner = :ownerid AND archived = 1 ORDER BY -weight" , ["ownerid" => $user->id]);
