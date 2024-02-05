@@ -21,7 +21,7 @@ class ControllerSettings extends Controller
         $user = $this->get_user_or_redirect();
         $successMessage = null;
         $errors[] = [];
-        $sharers = NULL;
+        $sharers = "";
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $newEmail = Tools::sanitize($_POST['email']);
@@ -42,9 +42,9 @@ class ControllerSettings extends Controller
                 $errors = array_merge($errors);
             }
             (new View("edit_profile"))->show(["user" => $user, "successMessage" => $successMessage, "errors" => $errors, "sharers" => $sharers]);
-            $this->redirect("settings", "edit_profile"); // obliger de refresh car petit bug de debordement css
+        } else {
+            (new View("edit_profile"))->show(["user" => $user, "sharers" => $sharers]);
         }
-        (new View("edit_profile"))->show(["user" => $user, "sharers" => $sharers]);
     }
 
     public function change_password(): void
@@ -53,7 +53,7 @@ class ControllerSettings extends Controller
 
         $successMessage = null;
         $errors[] = [];
-        $sharers = NULL;
+        $sharers = "";
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $currentPassword = $_POST['currentPassword'];
