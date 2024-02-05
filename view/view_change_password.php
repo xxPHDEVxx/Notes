@@ -16,7 +16,7 @@
     </div>
     <div class="container mt-5">
         <h2>Change Password</h2>
-        <form class="edit_form" action="update_password.php" method="post">
+        <form class="edit_form" action="settings/change_password" method="post">
             <div class="mb-3">
                 <label for="currentPassword" class="form-label">Current Password</label>
                 <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
@@ -33,7 +33,22 @@
         </form>
     </div>
 
-    <?php (new View("menu"))->show(); ?>
+    <?php if (!empty($errors)) : ?>
+        <div id="alertPassword" class="alert alert-danger" role="alert">
+            <?php foreach ($errors as $error) : ?>
+                <p><?= $error ?></p>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+
+
+    <?php if (isset($successMessage)) : ?>
+        <div id="alertPassword" class="alert alert-success" role="alert">
+            <p><?= $successMessage ?></p>
+        </div>
+    <?php endif; ?>
+
+    <?php (new View("menu"))->show(["sharers" => $sharers]); ?>
 
 </body>
 

@@ -305,7 +305,7 @@ input:focus {
 
 #hamburger-logo{
   cursor: pointer;
-  background-color:#202325; /*#252729;*/
+  background-color:#252729;
   width: 200px;
   display: block;
   color: darkgrey;
@@ -361,11 +361,53 @@ nav a {
   text-decoration: none;
   padding: 10px;
 } 
+
+/* settings */
+
+.menu_settings {
+  position: absolute;
+  top: 80px;
+  left: 200px;
+}
+
+.menu_settings a {
+  color: white;
+  display: block;
+  position: relative;
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+  margin: 2em;
+}
  
- 
- 
- 
- 
- 
- 
- 
+/* edit_profile */
+
+.edit_form {
+    position : absolute;
+    top: 120px;
+    left: 300px;
+}
+
+.form-label {
+    color: white;
+   
+    font-size: 15px;
+    font-weight: 300;
+}
+
+/* logout */
+
+.logout {
+    position: absolute;
+    top: 300px;
+    left: 200px;
+    color: white;
+}
+
+/* erreurs */
+
+#alertPassword {
+    position: absolute;
+    top: 450px;
+    left: 300px;
+}
