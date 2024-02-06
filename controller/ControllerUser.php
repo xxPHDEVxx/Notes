@@ -15,7 +15,6 @@ class ControllerUser extends Controller {
         (new View("archives"))->show(["currentPage"=> "my_archives","archives"=>$archives, "sharers"=>$user->shared_by()]);
     }
 
-
     public function get_shared_by() : void {
         $shared_notes_by = [];
         $shared_notes_as_editor = [];

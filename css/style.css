@@ -1,152 +1,136 @@
 
-body{
+body, html{
    height: 100%;
    margin: 0;
    padding: 0;
-   background-color: #202325;/*#252729;#23252a;/*#1e272e; */
-   
-
+   background-color: #202325;
+   color: white;
 }
-/* login et signup */
+  /*login et signup*/
 .container_login_signup{
     max-width: 500px;
     padding: 0 20px;
     margin: 170px auto;
 }
 
+
 .main_login_signup{
-   width: 100%;
-   height: 370px;
-   border-radius: 10px;
-   border: 1.5px solid #48505f;
+  width: 100%;
+ height: 370px;
+ border-radius: 10px;
+ border: 1.5px solid #48505f;
 }
-
 .signup {
-    height: 470px;
-
-    
+  height: 470px;
+  
 }
 .main_login_signup .title{
-    
-    color: #fff;
-    height: 60px;
-    border-bottom: 1.5px solid #48505f;
-    font-size: 25px;
-    font-weight: 500;
-    text-align: center;
-    margin: 20px;
+  
+  color: #fff;
+  height: 60px;
+  border-bottom: 1.5px solid #48505f;
+  font-size: 25px;
+  font-weight: 500;
+  text-align: center;
+  margin: 20px;
 }
-
 .main_login_signup form{
-  padding: 0 15px 0 15px ;
+padding: 0 15px 0 15px ;
 }
 .main_login_signup form .inputbox{
-    height: 45px;
-    margin-bottom: 17px;
-    position: relative;
+  height: 45px;
+  margin-bottom: 17px;
+  position: relative;
 }
-
-
 .main_login_signup form .inputbox input{
-
-    outline: none;
-    background: #2d3442;
-    padding-left: 20px;
-    color: white;
-    font-size: 17px;
-    height: 100%;
-    
-    
- }
- .text {
-    background:#2f323a; 
-    border-radius:7px;
-    border: 1.5px solid #48505f;
- }
-
- .text input{
-    margin-left: 15%;
-    width: 85%;
-    border-radius:0 5px 5px 0;
-    border: 1px solid #48505f;
+  outline: none;
+  background: #2d3442;
+  padding-left: 20px;
+  color: white;
+  font-size: 17px;
+  height: 100%;
+  
+  
 }
- input:focus {
-    border: 1.5px solid rgb(142, 180, 204);
-    box-shadow: 0 0 8px 2px rgb(48, 109, 208, 1); 
-    border-radius: 0 7px 0 7px 0;
-    
+.text {
+  background:#2f323a; 
+  border-radius:7px;
+  border: 1.5px solid #48505f;
 }
-
+.text input{
+  margin-left: 15%;
+  width: 85%;
+  border-radius:0 5px 5px 0;
+  border: 1px solid #48505f;
+}
+input:focus {
+  border: 1.5px solid rgb(142, 180, 204);
+  box-shadow: 0 0 8px 2px rgb(48, 109, 208, 1); 
+  border-radius: 0 7px 0 7px 0;
+  
+}
 .main_login_signup form .inputbox i{
-    position: absolute;
-    width: 14%;
-    height: 100%;
-    border-radius: 7px 0 0 7px;
-    display:flex;
-    border-left: none;
-    align-items: center;
-    justify-content: center;
-    background:#2f323a;
+  position: absolute;
+  width: 14%;
+  height: 100%;
+  border-radius: 7px 0 0 7px;
+  display:flex;
+  border-left: none;
+  align-items: center;
+  justify-content: center;
+  background:#2f323a;
 }
-
-
 .material-symbols-outlined {
-    color: white;
-    position: relative;
+  color: white;
+  position: relative;
 }
-
-
 .main_login_signup form .button input{
-
-    padding-left: 0px;
-    cursor: pointer;
-    font-size: 17px;
-    font-weight: 500;
-    width: 100%;
-    border-radius: 7px;
-    transition: all 0.3s ease;
+  padding-left: 0px;
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: 500;
+  width: 100%;
+  border-radius: 7px;
+  transition: all 0.3s ease;
 }
 .main_login_signup form .text input{
-    color: white;
-    font-size: 17px;
+  color: white;
+  font-size: 17px;
 }
 .main_login_signup form .subscribe-link a{
-
-    width: 100%;
-    border-radius: 7px;
+  width: 100%;
+  border-radius: 7px;
 }
-
 .main_login_signup form .subscribe-link a{
-
-    color:#70a1ff;
-    font-size: 19px;
-
+  color:#70a1ff;
+  font-size: 19px;
 }
 .main_login_signup form .subscribe-link{
-    text-align: center;
-    margin-top: 25px;
+  text-align: center;
+  margin-top: 25px;
 }
 .errors {
-    color: red;
-    font-weight: 300;
-    font-size: 15px;
-   }
+  color: red;
+  font-weight: 300;
+  font-size: 15px;
+ }
 .errors li{
-   list-style-type: none; 
+ list-style-type: none; 
 }
 .main_login_signup form .cancel input{
-    background-color: #202325;/*#23252a;/*#1e272e;*/
-    border: 1px solid red;
-    color: red;
-    font-size: 18px;
-    font-weight: 300;
-   
+  background-color: #202325;/*#23252a;/*#1e272e;*/
+  border: 1px solid red;
+  color: red;
+  font-size: 18px;
+  font-weight: 300;
+ 
 }
 .main_login_signup form .login input{
-    background-color: #0652DD;
-    border: none;
-    color: #fff;
+  background-color: #0652DD;
+  border: none;
+  color: #fff;
 }
+
 
 /* My archives + view-shared-note*/
 
@@ -168,6 +152,7 @@ h2{
 }
 
 .my-archives{
+
     display:flex;
     flex-wrap: wrap;
     margin: 5px;
@@ -176,90 +161,138 @@ h2{
     left: 5px;
     margin-left: 0;
 }
-.note-archivee, .shared-note{
-   
-    border:1.5px solid  #43464c;
-    color: white;
-    border-radius: 5px;
-    width: 188px;
-    background:#202325;
-    margin: 3px;  
+.note-archivee{
+  border:1.5px solid  #43464c;
+  color: white;
+  border-radius: 5px;
+  width: 188px;
+  background:#202325;
+  margin: 3px;  
 }
 .link-note-archivee, .shared-note-link{
    text-decoration: none;
     color:inherit;
+
 }
 .note-title{
-    font-size: 18px;
-    border-bottom: 1.5px solid #43464c;;
-    border-top-right-radius:5px ;
-    border-top-left-radius: 5px;
-    padding:3px 10px;
-    background: #292c30;
+  font-size: 18px;
+  border-bottom: 1.5px solid #43464c;;
+  border-top-right-radius:5px ;
+  border-top-left-radius: 5px;
+  padding:3px 10px;
+  background: #292c30;
 }
 .note-content{
-    padding: 20px;
-    font-weight: 350;
-    font-size: 15px;
+  padding: 20px;
+  font-weight: 350;
+  font-size: 15px;
 }
 .content_text {
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    position: relative;
-    
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  position: relative;
+  
 }
 .check_item{
-    display: block;
-    max-height: 5em;
-    line-height: 1.7em;
-    overflow: hidden;
+  display: block;
+  max-height: 5em;
+  line-height: 1.7em;
+  overflow: hidden;
 }
 .content_check::after{
-    content: '...';
-    position:relative;
+  content: '...';
+  position:relative;
 }
-
 .checked_item, .unchecked_item {
-    width: 120px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  width: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.unchecked_item::before {
+  content: '';
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 3px;
+  border: 1.5px solid rgb(75, 75, 73);
+  background: rgb(50, 50, 48);
+  border-radius: 3px;
+  
+}
+.checked_item::before {
+  content:'✓';
+  text-align: center;
+  line-height: 14px;
+  font-weight: 1000;
+  font-size: 15px;
+  color:  rgb(50, 50, 48);;
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 3px;
+  background:rgb(115, 115, 108);
+  border-radius: 3px;
+} 
+
+
+
+/* view notes */
+.title-empty {
+  color: white;
+  font-style: italic;
 }
 
-  .unchecked_item::before {
-    content: '';
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    margin-right: 3px;
-    border: 1.5px solid rgb(75, 75, 73);
-    background: rgb(50, 50, 48);
-    border-radius: 3px;
-    
-  }
-  .checked_item::before {
-    content:'✓';
-    text-align: center;
-    line-height: 14px;
-    font-weight: 1000;
-    font-size: 15px;
-    color:  rgb(50, 50, 48);;
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    margin-right: 3px;
-    background:rgb(115, 115, 108);
-    border-radius: 3px;
-  }
+.view_notes{
 
-   
-  
-    
+  display:flex;
+  flex-wrap: wrap;
+  margin: 0 10%;
+}
+.title-note {
+  color: white;
+  margin: 10% 0 0 7%;
+}
 
+.card-footer {
+  border:1.5px solid  #43464c;
+  color: white;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  background: #292c30;
+  padding: 2px;
+}
+
+.card-footer input {
+  background-color: unset;
+  border: unset;
+  color: blue;
+}
+
+.note{
+  border:1.5px solid  #43464c;
+  color: white;
+  border-radius: 5px;
+  width: 210px;
+  height: 230px;
+  background:#202325;
+  margin: 3px;  
+  position: relative;
+}
+
+/* share note*/
+
+.share-empty {
+  font-style: italic;
+}
 
  /*  menu burger */ 
+
   .menu {
     position:fixed;
     height: 100%;
@@ -384,21 +417,69 @@ nav a:hover{
     display: flex;
     flex-wrap: wrap;
     
-    
-   
-}
-
+} 
 .shared_title {
-   color: white;
-   margin: 5px;
+  color: white;
+  margin: 5px;
 }
 .shared_by {
-    margin: 5px;
+   margin: 5px;
+   position: absolute;
+   top: 70px;
+   left: 5px;
+   margin-left: 0;
+   
+} 
+
+
+/* settings */
+
+.menu_settings {
+  position: absolute;
+  top: 80px;
+  left: 200px;
+}
+
+.menu_settings a {
+  color: white;
+  display: block;
+  position: relative;
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+  margin: 2em;
+}
+ 
+/* edit_profile */
+
+.edit_form {
+    position : absolute;
+    top: 120px;
+    left: 300px;
+}
+
+.form-label {
+    color: white;
+
+   
+    font-size: 15px;
+    font-weight: 300;
+}
+
+/* logout */
+
+.logout {
     position: absolute;
+
     top: 70px;
     left: 5px;
     margin-left: 0;
     
+
+    top: 300px;
+    left: 200px;
+    color: white;
+
 }
 /*partie commune entre checklist_note et text_note dans open_note :
 /*barre open note*/
@@ -505,7 +586,7 @@ nav a:hover{
 #check_submit {
     background:  #0962ea;
     border-radius: 5px 0 0 5px;
-    border: 1.7px solid #0962ea;          /*rgb(44, 44, 238);*/
+    border: 1.7px solid #0962ea;          
     position: absolute;
     width: 14%;
     height: 100%;
@@ -536,15 +617,10 @@ nav a:hover{
 }
 
 
+/* erreurs */
 
-  
-
-
-
-
-
-
-
-
-
-
+#alertPassword {
+    position: absolute;
+    top: 450px;
+    left: 300px;
+}
