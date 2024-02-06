@@ -453,3 +453,14 @@ nav a {
   top: 450px;
   left: 300px;
 }
+
+/* text note settings */
+
+.back-icon {
+  position: absolute;
+  top: 2%;
+  left: 5%;
+  color: white;
+  font-size: 18px;
+  font-weight: 500;
+}

@@ -12,7 +12,7 @@ class ControllerMain extends Controller
     public function index(): void
     {
         if ($this->user_logged()) {
-            $this->redirect("note", "index");
+            $this->redirect("note", "edit_text_note");
         } else {
             $this->login();
         }

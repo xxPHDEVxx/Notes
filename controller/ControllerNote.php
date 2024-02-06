@@ -47,4 +47,8 @@ class ControllerNote extends Controller {
         $user = $this->get_user_or_redirect();
         (new View("share"))->show();
     }
+
+    public function edit_text_note() : void{
+        (new View("edit_text_note"))->show();
+    }
 }
