@@ -21,7 +21,7 @@ class ControllerSettings extends Controller
         $user = $this->get_user_or_redirect();
         $successMessage = null;
         $errors[] = [];
-        $sharers = NULL;
+        $sharers = $user->shared_by();
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $newEmail = Tools::sanitize($_POST['email']);
@@ -53,7 +53,7 @@ class ControllerSettings extends Controller
 
         $successMessage = null;
         $errors[] = [];
-        $sharers = NULL;
+        $sharers = $user->shared_by();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $currentPassword = $_POST['currentPassword'];
@@ -89,6 +89,5 @@ class ControllerSettings extends Controller
 
     public function index(): void
     {
-        (new View("index"))->show();
     }
 }

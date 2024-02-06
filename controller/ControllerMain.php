@@ -39,7 +39,7 @@ class ControllerMain extends Controller
     public function logout(): void
     {
         $user = $this->get_user_or_redirect();
-        $sharers = "";
+        $sharers = $user->shared_by();
 
         if (isset($_POST['logout'])) {
             Controller::logout();
