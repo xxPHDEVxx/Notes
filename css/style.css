@@ -1,26 +1,23 @@
-body,
-html {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  background-color: #252729;
-  color: white;
-  overflow: hidden;
-
+body, html{
+   height: 100%;
+   margin: 0;
+   padding: 0;
+   background-color: #202325;
+   color: white;
+}
+  /*login et signup*/
+.container_login_signup{
+    max-width: 500px;
+    padding: 0 20px;
+    margin: 170px auto;
 }
 
-/* login et signup */
-.container_login_signup {
-  max-width: 500px;
-  padding: 0 20px;
-  margin: 170px auto;
-}
 
-.main_login_signup {
+.main_login_signup{
   width: 100%;
-  height: 370px;
-  border-radius: 10px;
-  border: 1.5px solid #48505f;
+ height: 370px;
+ border-radius: 10px;
+ border: 1.5px solid #48505f;
 }
 
 .signup {
@@ -153,15 +150,35 @@ input:focus {
   color: #fff;
 }
 
-/* My archives */
 
-h1 {
-  position: absolute;
-  top: 2%;
-  right: 5%;
-  color: white;
-  font-size: 18px;
-  font-weight: 500;
+/* My archives + view-shared-note*/
+
+h1{
+    position: absolute;
+    top:20px;
+    right: 30px;
+    color: white;
+    font-size: 18px;
+    font-weight: 500;
+}
+h2{
+    color: white;
+    position: absolute;
+    font-size: 15px;
+    font-weight: 500;
+    top: 70px;
+    left: 10px;
+}
+
+.my-archives{
+
+    display:flex;
+    flex-wrap: wrap;
+    margin: 5px;
+    position:absolute;
+    top: 85px;
+    left: 5px;
+    margin-left: 0;
 }
 
 h2 {
@@ -194,9 +211,9 @@ h2 {
   margin: 3px;
 }
 
-.link-note-archivee {
-  text-decoration: none;
-  color: inherit;
+.link-note-archivee, .shared-note-link{
+   text-decoration: none;
+    color:inherit;
 }
 
 .note-title {
@@ -327,82 +344,137 @@ h2 {
   font-style: italic;
 }
 
-/*  menu burger */
-.menu {
-  position: absolute;
-  height: 100%;
-  top: 0;
-  z-index: 2;
+ /*  menu burger */ 
+
+  .menu {
+    position:fixed;
+    height: 100%;
+    top: 0;
+    visibility: hidden;
+    z-index: 2;
+    
+    
+}
+  #hamburger {
+    display: none;
+}
+  
+  #hamburger-logo{
+    cursor: pointer;
+    background-color:#202325; /*#252729;*/
+    width: 200px;
+    display: block;
+    color: darkgrey;
+    text-align: right;
+    transform: translateX(-120px);
+    padding:10px;
 }
 
-#hamburger {
-  display: none;
+  #hamburger-logo::before{
+    content:'☰' ;
+    border: 0.5px solid  darkgray;
+    padding: 3px 12px 5px 12px;
+    border-radius: 5px;
+    font-size: 23px;
+    line-height: 1; 
+    display: inline-block;
+    visibility: visible;
+    margin-right: 15px;
+
 }
 
-#hamburger-logo {
-  cursor: pointer;
-  background-color: #252729;
-  width: 200px;
-  display: block;
-  color: darkgrey;
-  text-align: right;
-  transform: translateX(-120px);
-  padding: 10px;
+  #hamburger:checked ~ #hamburger-logo::before{
+    content: '✕';
+    border: none;
+    margin-right: 0;
 }
 
-#hamburger-logo::before {
-  content: '☰';
-  border: 0.5px solid darkgray;
-  padding: 3px 12px 5px 12px;
-  border-radius: 5px;
-  font-size: 23px;
-  line-height: 1;
-  display: inline-block;
+#hamburger:checked ~ #hamburger-logo {
+    background-color:#292c30;
 }
-
-#hamburger:checked~#hamburger-logo::before {
-  content: '✕';
-  border: none;
-}
-
-#hamburger:checked~#hamburger-logo {
-  background-color: #292c30;
-}
-
-#burger-title {
-  color: #f39c12;
-  font-weight: 600;
-  font-size: 20px;
-  position: absolute;
-  top: 10px;
-  left: 10px;
+  
+#burger-title{
+    color:#f39c12;
+    font-weight: 600;
+    font-size: 20px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
 }
 
 nav {
-  display: flex;
-  flex-direction: column;
-  background: #292c30;
-  overflow: hidden;
-  width: 200px;
-  height: 100%;
-  transform: translateX(-200px);
+    display: flex;
+    flex-direction: column;
+    background:#292c30;
+    overflow: hidden;
+    width: 200px;
+    height: 100%;
+    transform: translateX(-200px);
+   }
+nav a:hover{
+    background-color:#43464c;
+    
+  }
+  
+  #hamburger-logo, nav {
+    transition: 0.2s;
+  }
+  
+  #hamburger:checked ~ #hamburger-logo,
+  #hamburger:checked ~ nav {
+    transform: translate(0);
+    visibility: visible;
+    
+  }
+  
+  nav a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+  }
+.active {
+    color : white;
+
+}
+.not_active {
+    color : gray;
+}
+#hamburger:checked ~ .menu-overlay {
+    display:block;
+    visibility: visible;
+    
+}
+.menu-overlay {
+    
+    position: fixed;
+    top:0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    pointer-events: none;
+    
+    
 }
 
-#hamburger-logo,
-nav {
-  transition: 0.1s;
-}
-
-#hamburger:checked~#hamburger-logo,
-#hamburger:checked~nav {
-  transform: translate(0);
-}
-
-nav a {
+  /* View_shared_by*/
+.shared_reader, .shared_editor {
+    display: flex;
+    flex-wrap: wrap;
+    
+} 
+.shared_title {
   color: white;
-  text-decoration: none;
-  padding: 10px;
+  margin: 5px;
 }
+.shared_by {
+   margin: 5px;
+   position: absolute;
+   top: 70px;
+   left: 5px;
+   margin-left: 0;
+   
+} 
 
 /* settings */
 
@@ -431,10 +503,9 @@ nav a {
 }
 
 .form-label {
-  color: white;
-
-  font-size: 15px;
-  font-weight: 300;
+    color: white;
+    font-size: 15px;
+    font-weight: 300;
 }
 
 /* logout */
@@ -445,6 +516,142 @@ nav a {
   left: 200px;
   color: white;
 }
+
+/*partie commune entre checklist_note et text_note dans open_note :
+/*barre open note*/
+.barre {
+    position: absolute;
+    left: 3%;
+    width: 94%;
+    top: 30px;
+   
+
+}
+#delete_icon {
+    color: red;
+    position: absolute;
+    right: 40px; 
+}
+
+
+.unarchive {
+    position: absolute;
+    right: 0;
+}
+.archive {
+    position: absolute;
+    right: 40px;
+}
+
+.isShared{
+    position: absolute;
+    right: 0;
+}
+.pinned {
+    position: absolute;
+    right: 80px;
+}
+.share {
+    position: absolute;
+    right: 120px;
+}
+/* Partie title et dates */
+.dates {
+    position: absolute;
+    top: 60px;
+    left: 3%;
+    font-style: italic;
+    color:lightgray;
+    font-weight: 350;
+
+}
+.title_note {
+    position: absolute;
+    top: 125px;
+    left: 3%;
+    color: lightgray;
+    width: 94%;
+    padding: 7px 7px 7px 10px;
+    border: 1.7px solid  #494c51;    /*#53575e;*/
+    background-color: #383c44;
+    border-radius: 7px;
+    
+    
+}
+.title_note_title{
+    color: white;
+    position: absolute;
+    top: 100px;
+    left: 3.5%;
+    font-size: 18px;
+    
+}
+.note_body_title {
+    position: absolute;
+    top: 170px;
+    left: 3.5%;
+    color: white;
+    font-size: 18px;
+}
+/*open_text_note*/
+
+.note_body_text {
+    color : lightgray;
+    position: absolute;
+    top: 200px;
+    left: 3%;
+    padding: 15px;
+    width: 94%;
+    border-radius: 7PX;
+    border: 1.7px solid #53575e;
+    background-color: #383c44;
+    overflow-y: auto;
+    max-height: 500px;
+    
+}
+/*open_checklist_note*/
+
+.note_body_checklist {
+    color : lightgray;
+    position: absolute;
+    top: 200px;
+    left: 3%;
+    width: 94%;
+    
+}
+#check_submit {
+    background:  #0962ea;
+    border-radius: 5px 0 0 5px;
+    border: 1.7px solid #0962ea;          
+    position: absolute;
+    width: 14%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    color: #fff;
+}
+.check_label, .uncheck_label {
+    border-radius: 0 7px 7px 0;
+    border: 1.6px solid #494c51;
+    border-left: none;
+    background-color: #383c44;
+    padding: 7px;
+    margin-left: 14%;
+    width: 86%;
+}
+.check_form{
+    margin-bottom: 10px;
+    position: relative;
+    
+}
+.check_label {
+    text-decoration:line-through;
+}
+
+.material-symbols-rounded {
+    color: white;
+}
+
 
 /* erreurs */
 

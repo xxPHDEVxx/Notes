@@ -2,8 +2,8 @@
 
 require_once "framework/Model.php";
 require_once "User.php";
-require_once "TextNote.php";
-require_once "ChecklistNote.php";
+require_once "TextNote2.php";
+require_once "ChecklistNote2.php";
 
 enum TypeNote {
     const TN = "TextNote";
@@ -11,7 +11,7 @@ enum TypeNote {
 }
 
 
- class Note extends Model
+ class Note2 extends Model
 {
 
     private String $title;
@@ -110,7 +110,7 @@ enum TypeNote {
         $all_notes = [];
 
         foreach ($data as $row) {
-            $all_notes[] = new Note($row['title'],User::get_user_by_id($row['owner']),$row['created_at'], $row['pinned'], $row['archived'], $row['weight'], $row['edited_at'],$row['id'] );
+            $all_notes[] = new Note2($row['title'],User::get_user_by_id($row['owner']),$row['created_at'], $row['pinned'], $row['archived'], $row['weight'], $row['edited_at'],$row['id'] );
         }
 
         $notes = [];
@@ -121,7 +121,7 @@ enum TypeNote {
             if ($query_cln->rowCount() == 0) {
                 $query_text = self::execute("SELECT content FROM text_notes WHERE id = :note_id", ["note_id" => $note->note_id]);
                 $data_text = $query_text->fetchColumn();         
-                $notes[] = new TextNote($note,$note->note_id,$data_text); 
+                $notes[] = new TextNote2($note,$note->note_id,$data_text);
                     } else {
                 $notes[]= self::get_checklist_note($note,$note->note_id);
             }
@@ -131,8 +131,8 @@ enum TypeNote {
     }
     
 
-    public static function get_checklist_note(Note $note,int $id) : ChecklistNote {
-        $content = new ChecklistNote($note,$id); 
+    public static function get_checklist_note(Note2 $note, int $id) : ChecklistNote2 {
+        $content = new ChecklistNote2($note,$id);
 
         return $content;
     }
@@ -146,13 +146,13 @@ enum TypeNote {
         return self::get_notes($user, false);
     }
 
-    public static function get_note_by_id(int $note_id) : Note |false {
+    public static function get_note_by_id(int $note_id) : Note2 |false {
         $query = self::execute("SELECT * FROM notes WHERE id = :id", ["id" => $note_id]);
         $data = $query->fetch(); 
         if($query->rowCount() == 0) {
             return false;
         }else {
-            return new Note( $data['title'] , 
+            return new Note2( $data['title'] ,
             User::get_user_by_id($data['owner']), 
             $data['created_at'], 
             $data['pinned'], 
@@ -167,7 +167,7 @@ enum TypeNote {
 
 
 
-    public function delete(User $initiator) : Note |false {
+    public function delete(User $initiator) : Note2 |false {
         if($this->owner == $initiator) {
             self::execute("DELETE FROM Notes WHERE id = :note_id", ['note_id' => $this->note_id]);
             return $this;
@@ -180,7 +180,7 @@ enum TypeNote {
 
         return $errors;
     }
-    public function persist() : Note|array {
+    public function persist() : Note2|array {
         if($this->note_id == NULL) {
             $errors = $this->validate();
             if(empty($errors)){
@@ -224,42 +224,6 @@ enum TypeNote {
         return $archives;
     }
 
-    public static function get_shared_by(int $userid, int $ownerid) : array {
-        $shared_by = [];
-        $query = self::execute("SELECT id, title, editor FROM notes JOIN note_shares ON notes.id = note_shares.note and note_shares.user = :userid and 
-        notes.owner = :ownerid", ["ownerid"=>$ownerid, "userid"=>$userid]);
-        $shared_by = $query->fetchAll();
-        $content_checklist = [];
-        foreach ($shared_by as &$row) {
-             $dataQuery = self::execute("SELECT content FROM text_notes WHERE id = :note_id", ["note_id" => $row["id"]]);
-             $content = $dataQuery->fetchColumn(); 
-           
-             if(!$content) {
-                 $dataQuery = self::execute("SELECT content, checked FROM checklist_note_items WHERE checklist_note = :note_id ", ["note_id" => $row["id"]]);
-                 $content_checklist = $dataQuery->fetchAll();
-             }
-             $row["content"] = $content;
-             $row["content_checklist"] = $content_checklist;
-            }
-        return $shared_by;
-
-        
-    }
-
-    public static function get_shared_note(User $user): array {
-        $shared = [];
-        $query = self::execute("SELECT note from note_shares WHERE user = :userid" , ['userid'=>$user->id]);
-        $shared_note_id = $query->fetchAll(PDO::FETCH_COLUMN);
-        foreach ($shared_note_id as $note_id) {
-           $note = Note::get_note_by_id($note_id);
-            $shared[] = $note;
-
-        }
-        return $shared;
-    }
-
-    
-
 
     public function is_weight_unique(int $id): int {
         $query = self::execute("SELECT id, MAX(weight) from notes where id = :note_id group by id" , ["note_id" => $id]);
@@ -267,7 +231,7 @@ enum TypeNote {
         return $data['id'];
     }
 
-    public function get_note_up(User $user,int $note_id, int $weight, bool $pin): Note | false {
+    public function get_note_up(User $user,int $note_id, int $weight, bool $pin): Note2 | false {
         $query = self::execute("
         SELECT * FROM notes n
         WHERE owner = :ownerid AND n.id <> :note_id AND archived = 0 AND pinned = :pin AND weight > :weight 
@@ -279,7 +243,7 @@ enum TypeNote {
             return false;
         }
 
-        $note_up = new Note(
+        $note_up = new Note2(
             $data['title'],
             $user,
             $data['created_at'],
@@ -292,7 +256,7 @@ enum TypeNote {
     
         return $note_up;
     } 
-    public function get_note_down(User $user,int $note_id, int $weight, bool $pin): Note | false {
+    public function get_note_down(User $user,int $note_id, int $weight, bool $pin): Note2 | false {
         $query = self::execute("
         SELECT * FROM notes n
         WHERE owner = :ownerid AND n.id <> :note_id AND archived = 0 AND pinned = :pin AND weight < :weight 
@@ -304,7 +268,7 @@ enum TypeNote {
             return false;
         }
 
-        $note_down = new Note(
+        $note_down = new Note2(
             $data['title'],
             $user,
             $data['created_at'],
@@ -318,7 +282,7 @@ enum TypeNote {
         return $note_down;
     } 
 
-    public function move_db(Note $second) : Note {
+    public function move_db(Note2 $second) : Note2 {
         $weight_second = $second->get_weight();
         $second_id = $second->getNote_id();
         self::execute('UPDATE notes SET weight = :weight_note2 WHERE id = :id_note1', 
