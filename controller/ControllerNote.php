@@ -10,6 +10,7 @@ class ControllerNote extends Controller {
         $notes_pinned = $user->get_notes_pinned();
         $notes_unpinned = $user->get_notes_unpinned();
         $names ="";
+        $_SESSION['previous_page'] = $_SERVER['REQUEST_URI'];
         (new View("notes"))->show(["currentPage"=>"my_notes","notes_pinned" => $notes_pinned,"notes_unpinned" => $notes_unpinned, "names"=>$names, "user"=>$user, "sharers"=>$user->shared_by()]);
     }
 
