@@ -33,8 +33,13 @@ class ControllerSettings extends Controller
             if (empty($errors)) {
 
                 try {
+                    if ($user->mail == $newEmail && $user->full_name == $newFullName){
+                        $successMessage = "Nothing to update.";
+                    } else {
                     $user->updateProfile($newFullName, $newEmail);
-                    $successMessage = "Profile updated !";
+                    $successMessage = "Profil updated !";
+                    }
+
                 } catch (Exception $e) {
                     $errors[] = "Error updating profile : " . $e->getMessage();
                 }
