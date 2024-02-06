@@ -7,8 +7,11 @@ class CheckListNote1 extends Note1 {
 
 
     
-    public static function get_items(int $id) : array {
-        return CheckListNoteItem1::get_items($id);
+    public function get_content() : array {
+        $query = self::execute("SELECT * FROM checklist_note_items 
+        WHere checklist_note = :id order by checked, id ", ["id" => $this->note_id]);
+        $data = $query->fetchAll();
+        return $data;
     }
 
     public function get_type() : string {
