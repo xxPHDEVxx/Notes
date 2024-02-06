@@ -1,0 +1,455 @@
+body,
+html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #252729;
+  color: white;
+  overflow: hidden;
+
+}
+
+/* login et signup */
+.container_login_signup {
+  max-width: 500px;
+  padding: 0 20px;
+  margin: 170px auto;
+}
+
+.main_login_signup {
+  width: 100%;
+  height: 370px;
+  border-radius: 10px;
+  border: 1.5px solid #48505f;
+}
+
+.signup {
+  height: 470px;
+
+}
+
+.main_login_signup .title {
+
+  color: #fff;
+  height: 60px;
+  border-bottom: 1.5px solid #48505f;
+  font-size: 25px;
+  font-weight: 500;
+  text-align: center;
+  margin: 20px;
+}
+
+.main_login_signup form {
+  padding: 0 15px 0 15px;
+}
+
+.main_login_signup form .inputbox {
+  height: 45px;
+  margin-bottom: 17px;
+  position: relative;
+}
+
+.main_login_signup form .inputbox input {
+  outline: none;
+  background: #2d3442;
+  padding-left: 20px;
+  color: white;
+  font-size: 17px;
+  height: 100%;
+
+
+}
+
+.text {
+  background: #2f323a;
+  border-radius: 7px;
+  border: 1.5px solid #48505f;
+}
+
+.text input {
+  margin-left: 15%;
+  width: 85%;
+  border-radius: 0 5px 5px 0;
+  border: 1px solid #48505f;
+}
+
+input:focus {
+  border: 1.5px solid rgb(142, 180, 204);
+  box-shadow: 0 0 8px 2px rgb(48, 109, 208, 1);
+  border-radius: 0 7px 0 7px 0;
+
+}
+
+.main_login_signup form .inputbox i {
+  position: absolute;
+  width: 14%;
+  height: 100%;
+  border-radius: 7px 0 0 7px;
+  display: flex;
+  border-left: none;
+  align-items: center;
+  justify-content: center;
+  background: #2f323a;
+}
+
+.material-symbols-outlined {
+  color: white;
+  position: relative;
+}
+
+.main_login_signup form .button input {
+  padding-left: 0px;
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: 500;
+  width: 100%;
+  border-radius: 7px;
+  transition: all 0.3s ease;
+}
+
+.main_login_signup form .text input {
+  color: white;
+  font-size: 17px;
+}
+
+.main_login_signup form .subscribe-link a {
+  width: 100%;
+  border-radius: 7px;
+}
+
+.main_login_signup form .subscribe-link a {
+  color: #70a1ff;
+  font-size: 19px;
+}
+
+.main_login_signup form .subscribe-link {
+  text-align: center;
+  margin-top: 25px;
+}
+
+.errors {
+  color: red;
+  font-weight: 300;
+  font-size: 15px;
+}
+
+.errors li {
+  list-style-type: none;
+}
+
+.main_login_signup form .cancel input {
+  background-color: #202325;
+  /*#23252a;/*#1e272e;*/
+  border: 1px solid red;
+  color: red;
+  font-size: 18px;
+  font-weight: 300;
+
+}
+
+.main_login_signup form .login input {
+  background-color: #0652DD;
+  border: none;
+  color: #fff;
+}
+
+/* My archives */
+
+h1 {
+  position: absolute;
+  top: 2%;
+  right: 5%;
+  color: white;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+h2 {
+  color: white;
+  position: fixed;
+  font-size: 15px;
+  font-weight: 500;
+  top: 70px;
+  left: 20px;
+
+
+}
+
+.my-archives {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 5px;
+  position: absolute;
+  top: 85px;
+  left: 5px;
+  margin-left: 0;
+}
+
+.note-archivee {
+  border: 1.5px solid #43464c;
+  color: white;
+  border-radius: 5px;
+  width: 188px;
+  background: #202325;
+  margin: 3px;
+}
+
+.link-note-archivee {
+  text-decoration: none;
+  color: inherit;
+}
+
+.note-title {
+  font-size: 18px;
+  border-bottom: 1.5px solid #43464c;
+  ;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+  padding: 3px 10px;
+  background: #292c30;
+}
+
+.note-content {
+  padding: 20px;
+  font-weight: 350;
+  font-size: 15px;
+}
+
+.content_text {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  position: relative;
+
+}
+
+.check_item {
+  display: block;
+  max-height: 5em;
+  line-height: 1.7em;
+  overflow: hidden;
+}
+
+.content_check::after {
+  content: '...';
+  position: relative;
+}
+
+.checked_item,
+.unchecked_item {
+  width: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.unchecked_item::before {
+  content: '';
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 3px;
+  border: 1.5px solid rgb(75, 75, 73);
+  background: rgb(50, 50, 48);
+  border-radius: 3px;
+
+}
+
+.checked_item::before {
+  content: '✓';
+  text-align: center;
+  line-height: 14px;
+  font-weight: 1000;
+  font-size: 15px;
+  color: rgb(50, 50, 48);
+  ;
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 3px;
+  background: rgb(115, 115, 108);
+  border-radius: 3px;
+}
+
+
+
+/* view notes */
+.title-empty {
+  color: white;
+  font-style: italic;
+}
+
+.view_notes {
+
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 10%;
+}
+
+.title-note {
+  color: white;
+  margin: 10% 0 0 7%;
+}
+
+.card-footer {
+  border: 1.5px solid #43464c;
+  color: white;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  background: #292c30;
+  padding: 2px;
+}
+
+.card-footer input {
+  background-color: unset;
+  border: unset;
+  color: blue;
+}
+
+.note {
+  border: 1.5px solid #43464c;
+  color: white;
+  border-radius: 5px;
+  width: 210px;
+  height: 230px;
+  background: #202325;
+  margin: 3px;
+  position: relative;
+}
+
+/* share note*/
+
+.share-empty {
+  font-style: italic;
+}
+
+/*  menu burger */
+.menu {
+  position: absolute;
+  height: 100%;
+  top: 0;
+  z-index: 2;
+}
+
+#hamburger {
+  display: none;
+}
+
+#hamburger-logo {
+  cursor: pointer;
+  background-color: #252729;
+  width: 200px;
+  display: block;
+  color: darkgrey;
+  text-align: right;
+  transform: translateX(-120px);
+  padding: 10px;
+}
+
+#hamburger-logo::before {
+  content: '☰';
+  border: 0.5px solid darkgray;
+  padding: 3px 12px 5px 12px;
+  border-radius: 5px;
+  font-size: 23px;
+  line-height: 1;
+  display: inline-block;
+}
+
+#hamburger:checked~#hamburger-logo::before {
+  content: '✕';
+  border: none;
+}
+
+#hamburger:checked~#hamburger-logo {
+  background-color: #292c30;
+}
+
+#burger-title {
+  color: #f39c12;
+  font-weight: 600;
+  font-size: 20px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+nav {
+  display: flex;
+  flex-direction: column;
+  background: #292c30;
+  overflow: hidden;
+  width: 200px;
+  height: 100%;
+  transform: translateX(-200px);
+}
+
+#hamburger-logo,
+nav {
+  transition: 0.1s;
+}
+
+#hamburger:checked~#hamburger-logo,
+#hamburger:checked~nav {
+  transform: translate(0);
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  padding: 10px;
+}
+
+/* settings */
+
+.menu_settings {
+  position: absolute;
+  top: 80px;
+  left: 200px;
+}
+
+.menu_settings a {
+  color: white;
+  display: block;
+  position: relative;
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+  margin: 2em;
+}
+
+/* edit_profile */
+
+.edit_form {
+  position: absolute;
+  top: 120px;
+  left: 300px;
+}
+
+.form-label {
+  color: white;
+
+  font-size: 15px;
+  font-weight: 300;
+}
+
+/* logout */
+
+.logout {
+  position: absolute;
+  top: 300px;
+  left: 200px;
+  color: white;
+}
+
+/* erreurs */
+
+#alertPassword {
+  position: absolute;
+  top: 450px;
+  left: 300px;
+}
