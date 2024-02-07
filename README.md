@@ -7,13 +7,12 @@
   * boverhaegen@epfc.eu, password "Password1,", utilisateur
   * bepenelle@epfc.eu, password "Password1,", utilisateur
   * xapigeolet@epfc.eu, password "Password1,", utilisateur
-  * mamichel@epfc.eu, password "Password1,", utilisateur
-  * A compléter...
+  * mamichel@epfc.eu, password "Password1,", utilisateu
 
 ### Liste des bugs connus
 
-  * bug 1
-  * bug 2
+  * 1/3 des fonctionnalités sont manquantes.
+  * Risques de failles de sécurité potentielles
   * ...
 
 ### Liste des fonctionnalités supplémentaires
