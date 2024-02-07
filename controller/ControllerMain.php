@@ -19,11 +19,6 @@ class ControllerMain extends Controller
         }
     }
 
-    public function merge(): void
-    {
-        (new View ("merge"))->show();
-    }
-
     public function login(): void
     {
         $mail = '';
