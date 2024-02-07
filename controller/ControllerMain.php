@@ -12,8 +12,8 @@ class ControllerMain extends Controller
     public function index(): void
     {
         if ($this->user_logged()) {
-            $this->redirect("note", "index");
 
+            $this->redirect("note", "index");
         } else {
             $this->login();
         }
