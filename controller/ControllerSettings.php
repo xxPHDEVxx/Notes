@@ -10,9 +10,9 @@ class ControllerSettings extends Controller
     public function settings(): void
     {
         $user = $this->get_user_or_redirect();
-        $sharers = "";
+        $sharers = $user->shared_by();
 
-        (new View("settings"))->show(["user" => $user, "sharers" => $sharers]);
+        (new View("settings"))->show(["currentPage" => "settings", "user" => $user, "sharers" => $sharers]);
     }
 
     // ajouter error et validations
@@ -21,7 +21,8 @@ class ControllerSettings extends Controller
         $user = $this->get_user_or_redirect();
         $successMessage = null;
         $errors[] = [];
-        $sharers = "";
+        $sharers = $user->shared_by();
+
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $newEmail = Tools::sanitize($_POST['email']);
@@ -33,13 +34,12 @@ class ControllerSettings extends Controller
             if (empty($errors)) {
 
                 try {
-                    if ($user->mail == $newEmail && $user->full_name == $newFullName){
+                    if ($user->mail == $newEmail && $user->full_name == $newFullName) {
                         $successMessage = "Nothing to update.";
                     } else {
-                    $user->updateProfile($newFullName, $newEmail);
-                    $successMessage = "Profil updated !";
+                        $user->updateProfile($newFullName, $newEmail);
+                        $successMessage = "Profil updated !";
                     }
-
                 } catch (Exception $e) {
                     $errors[] = "Error updating profile : " . $e->getMessage();
                 }
@@ -58,7 +58,7 @@ class ControllerSettings extends Controller
 
         $successMessage = null;
         $errors[] = [];
-        $sharers = "";
+        $sharers = $user->shared_by();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $currentPassword = $_POST['currentPassword'];
@@ -94,6 +94,5 @@ class ControllerSettings extends Controller
 
     public function index(): void
     {
-        (new View("index"))->show();
     }
 }

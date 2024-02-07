@@ -12,6 +12,7 @@
 </head>
 
 <body>
+    <?php include('view/menu.php'); ?>
     <div class="title">
         <h1>Settings</h1>
     </div>
@@ -31,10 +32,6 @@
             <button type="submit" name="no" class="btn btn-primary">No</button>
         </form>
     </div>
-
-    <?php (new View("menu"))->show(["sharers" => $sharers]); ?>
-
-
 </body>
 
 </html>
