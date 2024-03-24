@@ -11,35 +11,18 @@ enum TypeNote {
 }
 
 
- class Note extends Model
+abstract class Note extends Model
 {
-    private String $title;
-    private User $owner;
-    private string $created_at;
-    private bool $pinned;
-    private bool $archived;
-    private int $weight;
-    private ?string $edited_at = NULL;
-    private ?int $note_id = NULL;
-
     public function __construct(
-        $initial_title,
-        User $initial_owner,
-        $initial_created_at,
-        $initial_pinned,
-        $initial_archived,
-        $initial_weight,
-        $initial_edited_at,
-        $initial_note_id
+        public int $note_id,
+        public String $title,
+        public int $owner,
+        public string $created_at,
+        public bool $pinned,
+        public bool $archived,
+        public int $weight,
+        public ?string $edited_at = NULL
     ) {
-        $this->title = $initial_title;
-        $this->owner = $initial_owner;
-        $this->created_at = $initial_created_at;
-        $this->pinned = $initial_pinned;
-        $this->archived = $initial_archived;
-        $this->weight = $initial_weight;
-        $this->edited_at = $initial_edited_at;
-        $this->note_id = $initial_note_id;
     }
 
 
@@ -111,37 +94,25 @@ enum TypeNote {
     private static function get_notes(User $user, bool $pinned) : array {
         $pinnedCondition = $pinned ? '1' : '0';
 
-        $query = self::execute("SELECT * FROM notes WHERE owner = :ownerid AND archived = 0 AND pinned = :pinned ORDER BY -weight" , ["ownerid" => $user->id, "pinned" => $pinnedCondition]);
-        $data = $query->fetchAll();
-        $all_notes = [];
-
-        foreach ($data as $row) {
-            $all_notes[] = new Note($row['title'],User::get_user_by_id($row['owner']),$row['created_at'], $row['pinned'], $row['archived'], $row['weight'], $row['edited_at'],$row['id'] );
-        }
-
         $notes = [];
-
-        
-        foreach ($all_notes as $note) {
-            $query_cln = self::execute("SELECT id from checklist_notes where id = :id ", ["id" => $note->note_id]);
-            if ($query_cln->rowCount() == 0) {
-                $query_text = self::execute("SELECT content FROM text_notes WHERE id = :note_id", ["note_id" => $note->note_id]);
-                $data_text = $query_text->fetchColumn();         
-                $notes[] = new TextNote($note,$note->note_id,$data_text); 
-                    } else {
-                $notes[]= self::get_checklist_note($note,$note->note_id);
+        $query = self::execute("SELECT * FROM notes WHERE owner = :ownerid AND archived = 0 AND pinned = :pinned ORDER BY -weight" , ["ownerid" => $user->id, "pinned" => $pinnedCondition]);
+        $notes = $query->fetchAll();
+        $content_checklist = [];
+       foreach ($notes as &$row) {
+            $dataQuery = self::execute("SELECT content FROM text_notes WHERE id = :note_id", ["note_id" => $row["id"]]);
+            $content = $dataQuery->fetchColumn(); 
+          
+            if(!$content) {
+                $dataQuery = self::execute("SELECT content, checked FROM checklist_note_items WHERE checklist_note = :note_id order by checked, id ", ["note_id" => $row["id"]]);
+                $content_checklist = $dataQuery->fetchAll();
             }
-            
-         }
+            $row["content"] = $content;
+            $row["content_checklist"] = $content_checklist;
+        }
         return $notes;
     }
     
 
-    public static function get_checklist_note(Note $note,int $id) : ChecklistNote {
-        $content = new ChecklistNote($note,$id); 
-
-        return $content;
-    }
 
     public static function get_notes_pinned(User $user) : array {
         return self::get_notes($user, true);
@@ -185,28 +156,37 @@ enum TypeNote {
 
         return $errors;
     }
+
     public function persist() : Note|array {
         if($this->note_id == NULL) {
             $errors = $this->validate();
             if(empty($errors)){
-                self::execute('INSERT INTO Notes (title, owner, pinned, archived, weight) VALUES (:title, :owner,:pinned,:archived,:weight)', 
-                               ['title' => $this->title,
-                                'owner' => $this->owner->id,
+                self::execute('INSERT INTO Notes (title, owner, pinned, archived, weight) VALUES (:author,:recipient,:body,:private)', 
+                               ['tilte' => $this->title,
+                                'owner' => $this->owner,
                                 'pinned' => $this->pinned? 1 : 0,
                                 'archived' => $this->archived? 1 : 0,
                                 'weight' => $this->weight,
                                ]);
-                $note = self::get_note_by_id(self::lastInsertId());
+                $note = self::get_note(self::lastInsertId());
                 $this->note_id = $note->note_id;
                 return $this;
             } else {
                 return $errors; 
             }
         } else {
-            //on ne modifie jamais les notes : pas de "UPDATE" SQL.
+            //on ne modifie jamais les messages : pas de "UPDATE" SQL.
             throw new Exception("Not Implemented.");
         }
     }
+
+    
+   public static function get_note(int $note_id) : Note|false {
+    $query = self::execute("SELECT content FROM text_notes where id = :id", ["id" =>$note_id]);
+    $data = $query->fetchAll();
+    return count($data) !== 0 ? TextNote::get_note($note_id) : CheckListNote::get_note($note_id);
+
+}
 
     public function is_weight_unique(int $id): int {
         $query = self::execute("SELECT id, MAX(weight) from notes where id = :note_id group by id" , ["note_id" => $id]);
@@ -228,7 +208,7 @@ enum TypeNote {
 
         $note_up = new Note(
             $data['title'],
-            $user,
+            $data['owner'],
             $data['created_at'],
             $data['pinned'],
             $data['archived'],
@@ -239,40 +219,40 @@ enum TypeNote {
     
         return $note_up;
     } 
-    public function get_note_down(User $user,int $note_id, int $weight, bool $pin): Note | false {
-        $query = self::execute("
-        SELECT * FROM notes n
-        WHERE owner = :ownerid AND n.id <> :note_id AND archived = 0 AND pinned = :pin AND weight < :weight 
-        ORDER BY -weight LIMIT 1
-        ", ["ownerid" => $user->id, "note_id" => $note_id, "pin" => $pin, "weight" => $weight]);
+    // public function get_note_down(User $user,int $note_id, int $weight, bool $pin): Note | false {
+    //     $query = self::execute("
+    //     SELECT * FROM notes n
+    //     WHERE owner = :ownerid AND n.id <> :note_id AND archived = 0 AND pinned = :pin AND weight < :weight 
+    //     ORDER BY -weight LIMIT 1
+    //     ", ["ownerid" => $user->id, "note_id" => $note_id, "pin" => $pin, "weight" => $weight]);
     
-        $data = $query->fetch();
-        if (!$data) {
-            return false;
-        }
+    //     $data = $query->fetch();
+    //     if (!$data) {
+    //         return false;
+    //     }
 
-        $note_down = new Note(
-            $data['title'],
-            $user,
-            $data['created_at'],
-            $data['pinned'],
-            $data['archived'],
-            $data['weight'],
-            $data['edited_at'],
-            $data['id']
-        );
+    //     $note_down = new Note(
+    //         $data['title'],
+    //         $user,
+    //         $data['created_at'],
+    //         $data['pinned'],
+    //         $data['archived'],
+    //         $data['weight'],
+    //         $data['edited_at'],
+    //         $data['id']
+    //     );
     
-        return $note_down;
-    } 
+    //     return $note_down;
+    // } 
 
-    public function move_db(Note $second) : Note {
-        $weight_second = $second->get_weight();
-        $second_id = $second->getNote_id();
-        self::execute('UPDATE notes SET weight = :weight_note2 WHERE id = :id_note1', 
-        ['id_note1' => $this->note_id, 'weight_note2' => $weight_second]);
-        self::execute('UPDATE notes SET weight = :weight_note1 WHERE id = :id_note2', ['id_note2' => $second_id, 'weight_note1' => $this->weight]);
+    // public function move_db(Note $second) : Note {
+    //     $weight_second = $second->get_weight();
+    //     $second_id = $second->getNote_id();
+    //     self::execute('UPDATE notes SET weight = :weight_note2 WHERE id = :id_note1', 
+    //     ['id_note1' => $this->note_id, 'weight_note2' => $weight_second]);
+    //     self::execute('UPDATE notes SET weight = :weight_note1 WHERE id = :id_note2', ['id_note2' => $second_id, 'weight_note1' => $this->weight]);
 
 
-        return $this;
-    }
+    //     return $this;
+    // }
 }
