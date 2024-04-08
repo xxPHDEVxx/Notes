@@ -6,7 +6,7 @@
         <a class="unarchive" href="openNote/unarchive/<?= $note_id ?>"><span class="material-symbols-outlined">unarchive</span></a>
 
 
-    <?php elseif ($isShared_as_editor == 1 || $note->owner == $user_id) : ?>
+    <?php elseif ($isShared_as_editor == 1 ) : ?>
         <a class="isShared" href="openNote/edit/<?=$note_id?>"><span class="material-symbols-outlined">edit</span></a>
     <?php elseif ($archived == 0 && $isShared_as_editor == 0 && $isShared_as_reader == 0) : ?>
         <a class="share" href="#"><span class="material-symbols-outlined">share</span></a>
