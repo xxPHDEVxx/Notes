@@ -12,8 +12,8 @@ class ControllerMain extends Controller
     public function index(): void
     {
         if ($this->user_logged()) {
-            $this->redirect("note", "index");
 
+            $this->redirect("note", "index");
         } else {
             $this->login();
         }
@@ -39,7 +39,7 @@ class ControllerMain extends Controller
     public function logout(): void
     {
         $user = $this->get_user_or_redirect();
-        $sharers = "";
+        $sharers = $user->shared_by();
 
         if (isset($_POST['logout'])) {
             Controller::logout();

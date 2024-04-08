@@ -20,7 +20,7 @@
             <?php for ($i=0; $i < count($notes_pinned); $i++) { ?>
                 <div class="note">
                     <p class="note-title"><?= $notes_pinned[$i]->get_infos()->get_title(); ?></p>
-                    <a class="link-note-archivee" href="#">
+                    <a class="link-note-archivee" href='openNote/index/<?= $notes_pinned[$i]->get_infos()->getNote_id(); ?>'>
                         <div class="note-content">
                             <?php if ($notes_pinned[$i]->get_type() == "TextNote") : ?>
                                 <div class="content_text">
@@ -77,7 +77,7 @@
             <?php for ($i=0; $i < count($notes_unpinned); $i++) { ?>
                 <div class="note">
                     <p class="note-title"><?= $notes_unpinned[$i]->get_infos()->get_title() ;  ?></p>
-                    <a class="link-note-archivee" href="#">
+                    <a class="link-note-archivee" href='openNote/index/<?= $notes_unpinned[$i]->get_infos()->getNote_id(); ?>'>
                         <div class="note-content">
                             <?php if ($notes_unpinned[$i]->get_type() == "TextNote") : ?>
                                 <div class="content_text">
