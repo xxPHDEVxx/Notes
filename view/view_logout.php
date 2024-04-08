@@ -12,6 +12,7 @@
 </head>
 
 <body>
+<?php include("menu.php"); ?>
     <div class="title">
         <h1>Settings</h1>
     </div>
@@ -32,7 +33,7 @@
         </form>
     </div>
 
-    <?php (new View("menu"))->show(["sharers" => $sharers]); ?>
+    
 
 
 </body>

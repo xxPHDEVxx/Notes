@@ -11,6 +11,7 @@
 </head>
 
 <body>
+<?php include("menu.php"); ?>
     <div class="title">
         <h1>Settings</h1>
     </div>
@@ -48,7 +49,7 @@
         </div>
     <?php endif; ?>
 
-    <?php (new View("menu"))->show(["sharers" => $sharers]); ?>
+   
 
 </body>
 
