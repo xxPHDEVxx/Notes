@@ -15,6 +15,8 @@
 
 <body>
 
+
+
     <div class="title">
         <div>
             <h1>Settings</h1>
@@ -53,6 +55,7 @@
             <p><?= $successMessage ?></p>
         </div>
     <?php endif; ?>
+
 
 
 </body>
