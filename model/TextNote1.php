@@ -23,6 +23,10 @@ class TextNote1 extends Note1 {
     public function get_content() : String {
         $dataQuery = self::execute("SELECT content FROM text_notes WHERE id = :note_id", ["note_id" => $this->note_id]);
         $content = $dataQuery->fetchColumn(); 
+        // pour éviter lien mort lorsque le contenu est null
+        if ($content == null){
+            $content = "";
+        }
         return $content;
     }
 }
