@@ -2,8 +2,8 @@
 
 require_once "framework/Model.php";
 require_once "User.php";
-require_once "TextNote1.php";
-require_once "checklistNote1.php";
+require_once "TextNote.php";
+require_once "checklistNote.php";
 
 enum TypeNote1 {
     const TN = "TextNote";
@@ -25,6 +25,7 @@ abstract class Note1 extends Model
     }
     public abstract function get_type();
     public abstract function get_content();
+    public abstract function get_note();
 
 
     public static function get_created_at(int $id) : String {
@@ -63,12 +64,7 @@ abstract class Note1 extends Model
         return $data;
     }
 
-   public static function get_note(int $note_id) : Note1|false {
-        $query = self::execute("SELECT content FROM text_notes where id = :id", ["id" =>$note_id]);
-        $data = $query->fetchAll();
-        return count($data) !== 0 ? TextNote1::get_note($note_id) : CheckListNote1::get_note($note_id);
 
-   }
 
  
     public static function get_archives(User $user): array {

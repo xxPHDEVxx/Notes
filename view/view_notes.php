@@ -60,13 +60,13 @@
                     <?php if ($i > 0) : ?>
 
                         <form action="note/move_up" class="left" method="post">
-                            <input type="number" value='<?=$notes_pinned[$i]["note_id"] ?>' hidden>
+                            <input name="up" type="number" value='<?=$notes_pinned[$i]["note_id"] ?>' hidden>
                             <input type='submit' value='<<'>
                         </form>
                         <?php endif; ?>
                     <?php if ($i < count($notes_pinned)) : ?>
                         <form>
-                            <input type="number" value='<?=$notes_pinned[$i]["note_id"] ?>' hidden>
+                            <input name="down" type="number" value='<?=$notes_pinned[$i]["note_id"] ?>' hidden>
                             <input type='submit' value='>>'>
 
                         </form>

@@ -1,20 +1,18 @@
 <?php
-
 require_once "framework/Model.php";
 require_once "Note.php";
 require_once "User.php";
 
-class TextNote extends Note
-{
-
+class TextNote extends Note {
+  
     public ?string $content = null ;
 
     public function get_type() : string {
         return TypeNote::TN;
         
     }
-    public static function get_note(int $note_id) : Note |false {
-        $query = self::execute("SELECT * FROM Notes JOIN text_notes ON notes.id = text_notes.id WHERE notes.id = :id", ["id" => $note_id]);
+    public function get_note() : Note |false {
+        $query = self::execute("SELECT * FROM Notes JOIN text_notes ON notes.id = text_notes.id WHERE notes.id = :id", ["id" => $this->note_id]);
         $data = $query->fetch(); 
         if($query->rowCount() == 0) {
             return false;
@@ -23,10 +21,9 @@ class TextNote extends Note
         }
 
     }
-    public static function get_text_content(int $id) : String {
-        $dataQuery = self::execute("SELECT content FROM text_notes WHERE id = :note_id", ["note_id" => $id]);
+    public function get_content() : String {
+        $dataQuery = self::execute("SELECT content FROM text_notes WHERE id = :note_id", ["note_id" => $this->note_id]);
         $content = $dataQuery->fetchColumn(); 
         return $content;
-
     }
 }

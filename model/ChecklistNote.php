@@ -1,22 +1,22 @@
 <?php
-
 require_once "framework/Model.php";
-require_once "Note.php";
-require_once "ChecklistNote.php";
-require_once "ChecklistNoteItem.php";
+require_once "User.php";
+require_once "CheckListNoteItem.php";
 
-class ChecklistNote extends Note
-{
+class CheckListNote extends Note {
     
-    public static function get_items(int $id) : array {
-        return CheckListNoteItem::get_items($id);
+    public function get_content() : array {
+        $query = self::execute("SELECT * FROM checklist_note_items 
+        WHere checklist_note = :id order by checked, id ", ["id" => $this->note_id]);
+        $data = $query->fetchAll();
+        return $data;
     }
 
     public function get_type() : string {
         return TypeNote::CLN;
     }
-    public static function get_note(int $note_id) : Note |false {
-        $query = self::execute("SELECT * FROM Notes JOIN checklist_notes ON notes.id = checklist_notes.id WHERE notes.id = :id", ["id" => $note_id]);
+    public function get_note() : Note |false {
+        $query = self::execute("SELECT * FROM Notes JOIN checklist_notes ON notes.id = checklist_notes.id WHERE notes.id = :id", ["id" => $this->note_id]);
         $data = $query->fetch(); 
         if($query->rowCount() == 0) {
             return false;
@@ -25,5 +25,5 @@ class ChecklistNote extends Note
         }
 
     }
-
+    
 }

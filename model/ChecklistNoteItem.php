@@ -1,23 +1,20 @@
-<?php
+<?php 
+require_once "Note1.php";
+require_once "CheckListNote.php";
 
-require_once "framework/Model.php";
-require_once "Note.php";
-require_once "ChecklistNote.php";
-
-class ChecklistNoteItem extends Model
-{
+class CheckListNoteItem extends Model {
     public function __construct(public int $id,public int $checklist_note, public string $content, 
     public bool $checked){
         
     }
 
-    public static function get_items(int $checklist_note) : array {
+    /*public static function get_items(int $checklist_note) : array {
         $query = self::execute("SELECT * FROM checklist_note_items 
         WHERE checklist_note = :id order by checked, id ", ["id" => $checklist_note]);
         $data = $query->fetchAll();
         return $data;
 
-    }
+    }*/
     public static function update_checked(int $checklist_item_id, bool $checked) : bool{
      self::execute("UPDATE checklist_note_items SET checked =:checked WHERE id = :id", ["id"=>$checklist_item_id, "checked"=>$checked]);
         return true;
@@ -27,6 +24,4 @@ class ChecklistNoteItem extends Model
         $data = $query->fetchColumn();
         return $data ;  
  }
-
-
 }

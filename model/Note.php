@@ -26,8 +26,10 @@ abstract class Note extends Model
 
     }
 
-
-    public function get_title() : string {
+    public abstract function get_type();
+    public abstract function get_content();
+    public abstract function get_note();
+   /* public function get_title() : string {
         return $this->title;
     }
 
@@ -41,21 +43,82 @@ abstract class Note extends Model
 
     public function setOwner(User $owner) {
         $this->owner = $owner;
+    }*/
+
+    public static function get_created_at(int $id) : String {
+        $query = self::execute("SELECT created_at from notes WHERE id = :id", ["id" => $id]);
+        $data = $query->fetchColumn();
+        
+        return $data;
+        
+    }
+    public static function get_edited_at(int $id) : String | null {
+        $query = self::execute("SELECT edited_at from notes WHERE id = :id", ["id" => $id]);
+        $data = $query->fetchColumn();
+        
+        return $data;
+        
+    }
+    public function isShared_as_editor(int $userid) : bool {
+        $query = self::execute("SELECT * FROM note_shares WHERE note = :id and user =:userid and editor = 1", ["id" => $this->note_id, "userid"=>$userid]);
+        $data = $query->fetchAll();
+        return count($data) !== 0;
+    }
+    public function isShared_as_reader(int $userid) : bool {
+        $query = self::execute("SELECT * FROM note_shares WHERE note = :id and user =:userid and editor = 0", ["id" => $this->note_id, "userid"=>$userid]);
+        $data = $query->fetchAll();
+        return count($data) !== 0;
+    }
+    public function in_my_archives(int $userid) : int {
+        $query = self::execute("SELECT archived FROM notes WHERE owner = :userid and id = :id", ["userid"=> $userid, "id"=>$this->note_id]);
+        $data = $query->fetchColumn();
+        return $data;
+    }
+    public function is_pinned(int $userid) : int {
+        $query = self::execute("SELECT pinned FROM notes WHERE owner = :userid and id = :id", ["userid"=> $userid, "id"=>$this->note_id]);
+        $data = $query->fetchColumn();
+        return $data;
     }
 
-    public function  getCreated_at() : string {
-        return $this->created_at;
+ 
+   public static function get_archives(User $user): array {
+    $archives = [];
+    $query = self::execute("SELECT id, title FROM notes WHERE owner = :ownerid AND archived = 1 ORDER BY -weight" , ["ownerid" => $user->id]);
+    $archives = $query->fetchAll();
+    $content_checklist = [];
+   foreach ($archives as &$row) {
+        $dataQuery = self::execute("SELECT content FROM text_notes WHERE id = :note_id", ["note_id" => $row["id"]]);
+        $content = $dataQuery->fetchColumn(); 
+      
+        if(!$content) {
+            $dataQuery = self::execute("SELECT content, checked FROM checklist_note_items WHERE checklist_note = :note_id order by checked, id ", ["note_id" => $row["id"]]);
+            $content_checklist = $dataQuery->fetchAll();
+        }
+        $row["content"] = $content;
+        $row["content_checklist"] = $content_checklist;
+    }
+    return $archives;
+}
+    public function archive() : void {
+        self::execute("UPDATE notes SET archived = :val WHERE id = :id" , ["val" => 1, "id" =>$this->note_id]);
     }
 
-    public function  setCreated_at(String $created_at): void {
-        $this->created_at = $created_at;
+    public function unarchive() : void {
+        self::execute("UPDATE notes SET archived = :val WHERE id = :id" , ["val" => 0, "id" =>$this->note_id]);
+    }
+    public function pin() : void {
+        self::execute("UPDATE notes SET pinned = :val WHERE id = :id" , ["val" => 1, "id" =>$this->note_id]);
+    }
+    public function unpin() : void {
+        self::execute("UPDATE notes SET pinned = :val WHERE id = :id" , ["val" => 0, "id" =>$this->note_id]);
     }
 
-    public function isPinned() : bool {
-        return $this->pinned;
-    }
 
-    public function setPinned(bool $pinned) : void {
+   
+
+    
+
+   /* public function setPinned(bool $pinned) : void {
         $this->pinned = $pinned;
     }
 
@@ -65,7 +128,7 @@ abstract class Note extends Model
 
     public function  setArchived(bool $archived) : void {
         $this->archived = $archived;
-    }
+    }*/
 
     public function  get_weight() : int {
         return $this->weight;
@@ -75,21 +138,17 @@ abstract class Note extends Model
         $this->weight = $weight;
     }
 
-    public function  getEdited_at() : string {
+  /*  public function  getEdited_at() : string {
         return $this->edited_at;
     }
 
     public function setEdited_at(string $edited_at) : void {
         $this->edited_at = $edited_at;
-    }
+    }*/
 
-    public function  getNote_id() : int {
-        return $this->note_id;
-    }
+    
 
-    public function  setNote_id(int $note_id) : void {
-        $this->note_id = $note_id;
-    }
+    
 
 
     private static function get_notes(User $user, bool $pinned) : array {
@@ -183,12 +242,7 @@ abstract class Note extends Model
 
     
 
-   public static function get_note(int $note_id) : Note|false {
-    $query = self::execute("SELECT content FROM text_notes where id = :id", ["id" =>$note_id]);
-    $data = $query->fetchAll();
-    return count($data) !== 0 ? TextNote::get_note($note_id) : CheckListNote::get_note($note_id);
 
-}
 
 
     public function is_weight_unique(int $id): int {
@@ -253,7 +307,7 @@ abstract class Note extends Model
 
      public function move_db(Note $second) : Note {
          $weight_second = $second->get_weight();
-         $second_id = $second->getNote_id();
+         $second_id = $second->note_id;
          self::execute('UPDATE notes SET weight = :weight_note2 WHERE id = :id_note1', 
          ['id_note1' => $this->note_id, 'weight_note2' => $weight_second]);
          self::execute('UPDATE notes SET weight = :weight_note1 WHERE id = :id_note2', ['id_note2' => $second_id, 'weight_note1' => $this->weight]);
