@@ -695,3 +695,30 @@ nav a:hover{
   border: 1.7px solid  #494c51;
   border-radius: 7px;
 }
+.edit_checklist_form{
+  margin-bottom: 10px;
+  position: relative;
+  
+}
+.edit_check_div {
+  
+  border-radius: 5px 0 0 5px;
+  border: 1.7px solid  #494c51;         
+  position: absolute;
+  width: 14%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+
+}
+
+.check_square {
+  content: '';
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin: 10px;
+  border: 1.5px solid rgb(75, 75, 73);
+ 
+  border-radius: 3px;
+}

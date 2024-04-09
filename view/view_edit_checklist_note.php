@@ -1,6 +1,3 @@
-
-
-
 <!DOCTYPE html>
 
 <head>
@@ -16,50 +13,20 @@
     <link href="css/style.css" rel="stylesheet" type="text/css"/>
     
 </head>
-<body>
-    <?php include("edit_note.php"); ?>
-    <div class="note_body_title">Items</div>
-   
-   <div class="note_body_checklist">
- 
-   <?php foreach($note_body as $row): ?>
-    
-    <?php if($row['checked']): ?>
-      
-        <form class="check_form" action="openNote/update_checked" method="post">
-       
-        <input type="text" name="uncheck"  value="<?=$row["id"]?>" hidden>
-        <input class="material-symbols-outlined" id="check_submit" type="submit" value='check_box'>
-
-        
-        
-        <label class="check_label" for="uncheck"> <?=$row["content"]?></label>
-        
-    </form>
-    
-       
-    <?php else: ?>
-        
-        
-        <form class="check_form" action="openNote/update_checked" method="post">
-        
-        <input type="text" name="check"  value="<?=$row["id"]?>" hidden>
-        <input class="material-symbols-outlined" id="check_submit" type="submit" value= "check_box_outline_blank" >
-        
-        
-        <label class="uncheck_label" for="check"> <?=$row["content"]?></label>
-        </form>
-        
-     
-    <?php endif; ?>
-    
-    <?php endforeach; ?>
-
-
-
-
-
-</div>
-  
-</body>
+    <body>
+        <?php include("edit_note.php"); ?>
+        <div class="note_body_title">Items</div>
+        <div class="note_body_checklist">
+            <?php foreach($note_body as $row): ?>
+                
+                    <form class="edit_checklist_form">
+                        <div class="edit_check_div"><div class="check_square"></div></div>
+                        <label class="check_label" for="uncheck"> <?=$row["content"]?></label>
+                    </form>
+                
+                  
+                
+            <?php endforeach; ?>
+        </div>
+    </body>
 </html>
