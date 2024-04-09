@@ -671,3 +671,27 @@ nav a:hover{
   font-size: 18px;
   font-weight: 500;
 }
+/*partie commune entre edit_checklist_note et edit_text_note  :
+*/
+.edit {
+  position: absolute;
+  left: 3%;
+  width: 94%;
+  top: 30px;
+ 
+
+}
+.save{
+  position: absolute;
+  right: 0;
+}
+.title_edit_note {
+  position: absolute;
+  top: 125px;
+  left: 3%;
+  color: lightgray;
+  width: 94%;
+  padding: 7px 7px 7px 10px;
+  border: 1.7px solid  #494c51;
+  border-radius: 7px;
+}

@@ -17,7 +17,7 @@
     
 </head>
 <body>
-    <?php include("open_note.php"); ?>
+    <?php include("edit_note.php"); ?>
     <div class="note_body_title">Items</div>
    
    <div class="note_body_checklist">
