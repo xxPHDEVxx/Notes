@@ -26,6 +26,7 @@ abstract class Note1 extends Model
     public abstract function get_type();
     public abstract function get_content();
     public abstract function get_note();
+  
 
 
     public static function get_created_at(int $id) : String {
@@ -98,6 +99,15 @@ abstract class Note1 extends Model
     public function unpin() : void {
         self::execute("UPDATE notes SET pinned = :val WHERE id = :id" , ["val" => 0, "id" =>$this->note_id]);
     }
+    public static function get_note_by_id(int $note_id) : Note |false {
+
+        $query = self::execute("SELECT * FROM notes WHERE id = :id", ["id" => $note_id]);
+        $data = $query->fetch(); 
+        return count($data) !== 0 ? new TextNote( $data['id'] , $data['title'],  $data['owner'],  $data['created_at'], 
+                                    $data['pinned'],  $data['archived'], $data['weight'], $data['edited_at']): 
+                                    new CheckListNote( $data['id'] , $data['title'],  $data['owner'],  $data['created_at'], 
+                                    $data['pinned'],  $data['archived'], $data['weight'], $data['edited_at']);
+        }
    
 
 }

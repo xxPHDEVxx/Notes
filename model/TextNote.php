@@ -26,4 +26,24 @@ class TextNote extends Note {
         $content = $dataQuery->fetchColumn(); 
         return $content;
     }
+    
+    public static function get_note_by_id(int $note_id) : Note |false {
+
+        $query = self::execute("SELECT * FROM notes WHERE id = :id", ["id" => $note_id]);
+        $data = $query->fetch(); 
+        if($query->rowCount() == 0) {
+            return false;
+        }else {
+
+            return new TextNote( $data['title'] , 
+            User::get_user_by_id($data['owner']), 
+            $data['created_at'], 
+            $data['pinned'], 
+            $data['archived'], 
+            $data['weight'], 
+            $data['edited_at'], 
+            $data['id']);
+        }
+
+    }
 }

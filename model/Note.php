@@ -29,6 +29,7 @@ abstract class Note extends Model
     public abstract function get_type();
     public abstract function get_content();
     public abstract function get_note();
+  
    /* public function get_title() : string {
         return $this->title;
     }
@@ -182,25 +183,7 @@ abstract class Note extends Model
         return self::get_notes($user, false);
     }
 
-    public static function get_note_by_id(int $note_id) : Note |false {
 
-        $query = self::execute("SELECT * FROM notes WHERE id = :id", ["id" => $note_id]);
-        $data = $query->fetch(); 
-        if($query->rowCount() == 0) {
-            return false;
-        }else {
-
-            return new Note( $data['title'] , 
-            User::get_user_by_id($data['owner']), 
-            $data['created_at'], 
-            $data['pinned'], 
-            $data['archived'], 
-            $data['weight'], 
-            $data['edited_at'], 
-            $data['id']);
-        }
-
-    }
 
     public function delete(User $initiator) : Note |false {
         if($this->owner == $initiator) {
@@ -315,5 +298,17 @@ abstract class Note extends Model
 
          return $this;
      }
+   
+   public static function get_note_by_id(int $note_id) : Note |false {
+
+    $query = self::execute("SELECT * FROM notes WHERE id = :id", ["id" => $note_id]);
+    $data = $query->fetch(); 
+    return count($data) !== 0 ? new TextNote( $data['id'] , $data['title'],  $data['owner'],  $data['created_at'], 
+                                $data['pinned'],  $data['archived'], $data['weight'], $data['edited_at']): 
+                                new CheckListNote( $data['id'] , $data['title'],  $data['owner'],  $data['created_at'], 
+                                $data['pinned'],  $data['archived'], $data['weight'], $data['edited_at']);
+    }
 
 }
+
+
