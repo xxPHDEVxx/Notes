@@ -5,7 +5,7 @@ require_once "CheckListNoteItem.php";
 
 class CheckListNote extends Note {
     
-    public function get_content() : array {
+    public function get_content() : array | null {
         $query = self::execute("SELECT * FROM checklist_note_items 
         WHere checklist_note = :id order by checked, id ", ["id" => $this->note_id]);
         $data = $query->fetchAll();

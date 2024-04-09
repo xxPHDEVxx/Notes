@@ -21,7 +21,7 @@ class TextNote extends Note {
         }
 
     }
-    public function get_content() : String {
+    public function get_content() : String | null{
         $dataQuery = self::execute("SELECT content FROM text_notes WHERE id = :note_id", ["note_id" => $this->note_id]);
         $content = $dataQuery->fetchColumn(); 
         return $content;
