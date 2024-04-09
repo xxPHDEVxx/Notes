@@ -709,6 +709,7 @@ nav a:hover{
   height: 100%;
   display: flex;
   justify-content: center;
+  background-color: #2f323a;
 
 }
 
@@ -719,6 +720,14 @@ nav a:hover{
   height: 14px;
   margin: 10px;
   border: 1.5px solid rgb(75, 75, 73);
+  background-color: #262829;
  
   border-radius: 3px;
+}
+.checklist_elements{
+  border: 1.6px solid #494c51;
+  border-left: none;
+  padding: 7px;
+  margin-left: 14%;
+  width: 70%;
 }

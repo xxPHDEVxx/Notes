@@ -21,7 +21,7 @@
                 
                     <form class="edit_checklist_form">
                         <div class="edit_check_div"><div class="check_square"></div></div>
-                        <label class="check_label" for="uncheck"> <?=$row["content"]?></label>
+                        <label class="checklist_elements"> <?=$row["content"]?></label>
                     </form>
                 
                   
