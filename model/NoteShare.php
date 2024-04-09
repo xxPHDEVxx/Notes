@@ -1,7 +1,7 @@
 <?php
 require_once "framework/Model.php";
 require_once "User.php";
-require_once "Note1.php";
+require_once "Note.php";
 
 class NoteShare1 extends Model {
     public function __construct(public int $note, public int $user, public bool $editor) {
@@ -33,7 +33,7 @@ class NoteShare1 extends Model {
         $query = self::execute("SELECT note from note_shares WHERE user = :userid" , ['userid'=>$user->id]);
         $shared_note_id = $query->fetchAll(PDO::FETCH_COLUMN);
         foreach ($shared_note_id as $note_id) {
-           $note = Note1::get_note_by_id($note_id);
+           $note = Note::get_note_by_id($note_id);
         
             $shared[] = $note;
 

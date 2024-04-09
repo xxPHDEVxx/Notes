@@ -64,7 +64,7 @@
                             <input type='submit' value='<<'>
                         </form>
                         <?php endif; ?>
-                    <?php if ($i < count($notes_pinned)) : ?>
+                    <?php if ($i < count($notes_pinned) - 1) : ?>
                         <form action="note/move_down" class="right" method="post">
                             <input name="down" type="number" value='<?=$notes_pinned[$i]["id"] ?>' hidden>
                             <input type='submit' value='>>'>
@@ -130,7 +130,7 @@
                             <input type='submit' value='<<'>
                         </form>
                         <?php endif; ?>
-                    <?php if ($i < count($notes_unpinned)) : ?>
+                    <?php if ($i < count($notes_unpinned) - 1) : ?>
                         <form action="note/move_down" class="right" method="post">
                             <input name="down" type="number" value='<?=$notes_unpinned[$i]["id"] ?>' hidden>
                             <input type='submit' value='>>'>

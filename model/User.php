@@ -1,7 +1,7 @@
 <?php
 require_once "framework/Model.php";
-require_once "Note1.php";
-require_once "NoteShare1.php";
+require_once "Note.php";
+require_once "NoteShare.php";
 require_once "Note.php";
 
 
@@ -166,7 +166,7 @@ class User extends Model
 
 
     public function get_archives() : array{
-        return Note1::get_archives($this);
+        return Note::get_archives($this);
         
     }
 
