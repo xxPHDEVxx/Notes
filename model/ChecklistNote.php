@@ -28,21 +28,16 @@ class CheckListNote extends Note {
     public static function get_note_by_id(int $note_id) : Note |false {
 
         $query = self::execute("SELECT * FROM notes WHERE id = :id", ["id" => $note_id]);
-        $data = $query->fetch(); 
-        if($query->rowCount() == 0) {
-            return false;
-        }else {
-
-            return new CheckListNote( $data['title'] , 
-            User::get_user_by_id($data['owner']), 
-            $data['created_at'], 
-            $data['pinned'], 
-            $data['archived'], 
-            $data['weight'], 
-            $data['edited_at'], 
-            $data['id']);
+        $data = $query->fetch();
+        if (count($data) !== 0 ) {
+            return new CheckListNote( $data['id'] , $data['title'],  $data['owner'],  $data['created_at'], 
+                                    $data['pinned'],  $data['archived'], $data['weight'], $data['edited_at']); 
         }
-
+                                 
+        }
+    public function isPinned() : bool {
+        return $this->pinned;
     }
-    
+ 
 }
+    

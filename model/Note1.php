@@ -101,12 +101,9 @@ abstract class Note1 extends Model
     }
     public static function get_note_by_id(int $note_id) : Note |false {
 
-        $query = self::execute("SELECT * FROM notes WHERE id = :id", ["id" => $note_id]);
-        $data = $query->fetch(); 
-        return count($data) !== 0 ? new TextNote( $data['id'] , $data['title'],  $data['owner'],  $data['created_at'], 
-                                    $data['pinned'],  $data['archived'], $data['weight'], $data['edited_at']): 
-                                    new CheckListNote( $data['id'] , $data['title'],  $data['owner'],  $data['created_at'], 
-                                    $data['pinned'],  $data['archived'], $data['weight'], $data['edited_at']);
+        $query = self::execute("SELECT content FROM text_notes where id = :id", ["id" =>$note_id]);
+        $data = $query->fetchAll();
+        return count($data) !== 0 ? TextNote::get_note_by_id($note_id) : CheckListNote::get_note_by_id($note_id);
         }
    
 

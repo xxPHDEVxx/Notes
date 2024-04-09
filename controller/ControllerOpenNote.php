@@ -9,7 +9,7 @@ class ControllerOpenNote extends Controller
     {
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
-            $note = Note1::get_note($note_id);
+            $note = Note1::get_note_by_id($note_id);
             $user_id = $this->get_user_or_redirect()->id;
             $archived = $note->in_My_archives($user_id);
             $pinned = $note->is_pinned($user_id);
@@ -60,14 +60,14 @@ class ControllerOpenNote extends Controller
     {
         if (isset($_POST["check"])) {
             $checklist_item_id = $_POST["check"];
-            $note_id = CheckListNoteItem1::get_checklist_note($checklist_item_id);
+            $note_id = CheckListNoteItem::get_checklist_note($checklist_item_id);
             $checked = true;
-            CheckListNoteItem1::update_checked($checklist_item_id, $checked);
+            CheckListNoteItem::update_checked($checklist_item_id, $checked);
         } elseif (isset($_POST["uncheck"])) {
             $checklist_item_id = $_POST["uncheck"];
-            $note_id = CheckListNoteItem1::get_checklist_note($checklist_item_id);
+            $note_id = CheckListNoteItem::get_checklist_note($checklist_item_id);
             $checked = false;
-            CheckListNoteItem1::update_checked($checklist_item_id, $checked);
+            CheckListNoteItem::update_checked($checklist_item_id, $checked);
         }
         $this->redirect("openNote", "index/$note_id");
     }
@@ -76,7 +76,7 @@ class ControllerOpenNote extends Controller
     {
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
-            $note = Note1::get_note($note_id);
+            $note = Note1::get_note_by_id($note_id);
             $note->pin();
             $this->index();
         }
@@ -85,7 +85,7 @@ class ControllerOpenNote extends Controller
     {
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
-            $note = Note1::get_note($note_id);
+            $note = Note1::get_note_by_id($note_id);
             $note->unpin();
             $this->index();
         }
@@ -94,7 +94,7 @@ class ControllerOpenNote extends Controller
     {
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
-            $note = Note1::get_note($note_id);
+            $note = Note1::get_note_by_id($note_id);
             $note->archive();
             $this->redirect();
         }
@@ -104,7 +104,7 @@ class ControllerOpenNote extends Controller
     {
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
-            $note = Note1::get_note($note_id);
+            $note = Note1::get_note_by_id($note_id);
             $note->unarchive();
             $this->redirect();
         }
@@ -114,7 +114,7 @@ class ControllerOpenNote extends Controller
     {
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
-            $note = Note1::get_note($note_id);
+            $note = Note1::get_note_by_id($note_id);
             $user_id = $this->get_user_or_redirect()->id;
             $archived = $note->in_My_archives($user_id);
             $pinned = $note->is_pinned($user_id);

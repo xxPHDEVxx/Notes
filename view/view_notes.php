@@ -24,7 +24,7 @@
                     
 
                     <p class="note-title"><?= $notes_pinned[$i]["title"]; ?></p>
-                    <a class="link-note-archivee" href='openNote/index/<?= $notes_pinned[$i]["note_id"]; ?>'>
+                    <a class="link-note-archivee" href='openNote/index/<?= $notes_pinned[$i]["id"]; ?>'>
 
                         <div class="note-content">
                             <?php if ($notes_pinned[$i]["content"]) : ?>
@@ -60,13 +60,13 @@
                     <?php if ($i > 0) : ?>
 
                         <form action="note/move_up" class="left" method="post">
-                            <input name="up" type="number" value='<?=$notes_pinned[$i]["note_id"] ?>' hidden>
+                            <input name="up" type="number" value='<?=$notes_pinned[$i]["id"] ?>' hidden>
                             <input type='submit' value='<<'>
                         </form>
                         <?php endif; ?>
                     <?php if ($i < count($notes_pinned)) : ?>
-                        <form>
-                            <input name="down" type="number" value='<?=$notes_pinned[$i]["note_id"] ?>' hidden>
+                        <form action="note/move_down" class="right" method="post">
+                            <input name="down" type="number" value='<?=$notes_pinned[$i]["id"] ?>' hidden>
                             <input type='submit' value='>>'>
 
                         </form>
@@ -88,7 +88,7 @@
 
 
                     <p class="note-title"><?= $notes_unpinned[$i]["title"] ;  ?></p>
-                    <a class="link-note-archivee" href='openNote/index/<?= $notes_unpinned[$i]["note_id"]; ?>'>
+                    <a class="link-note-archivee" href='openNote/index/<?= $notes_unpinned[$i]["id"]; ?>'>
 
  
                         <div class="note-content">
@@ -126,13 +126,13 @@
 
  
                         <form action="note/move_up" class="left" method="post">
-                            <input type="number" value='<?=$notes_unpinned[$i]["note_id"] ?>' hidden>
+                            <input type="number" value='<?=$notes_unpinned[$i]["id"] ?>' hidden>
                             <input type='submit' value='<<'>
                         </form>
                         <?php endif; ?>
                     <?php if ($i < count($notes_unpinned)) : ?>
-                        <form>
-                            <input type="number" value='<?=$notes_unpinned[$i]["note_id"] ?>' hidden>
+                        <form action="note/move_down" class="right" method="post">
+                            <input type="number" value='<?=$notes_unpinned[$i]["id"] ?>' hidden>
                             <input type='submit' value='>>'>
 
                         </form>

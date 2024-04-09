@@ -29,6 +29,10 @@ abstract class Note extends Model
     public abstract function get_type();
     public abstract function get_content();
     public abstract function get_note();
+    public abstract function isPinned();
+    
+        
+    
   
    /* public function get_title() : string {
         return $this->title;
@@ -246,20 +250,9 @@ abstract class Note extends Model
         if (!$data) {
             return false;
         }
-
-        $note_up = new Note(
-            $data['title'],
-            $data['owner'],
-
-            $data['created_at'],
-            $data['pinned'],
-            $data['archived'],
-            $data['weight'],
-            $data['edited_at'],
-            $data['id']
-        );
+        else return Note::create_Note($data); 
+        
     
-        return $note_up;
     } 
 
      public function get_note_down(User $user,int $note_id, int $weight, bool $pin): Note | false {
@@ -270,22 +263,11 @@ abstract class Note extends Model
          ", ["ownerid" => $user->id, "note_id" => $note_id, "pin" => $pin, "weight" => $weight]);
     
          $data = $query->fetch();
-         if (!$data) {
+         if (!$data) 
              return false;
-         }
-
-         $note_down = new Note(
-            $data['title'],
-            $data['owner'],
-             $data['created_at'],
-             $data['pinned'],
-             $data['archived'],
-             $data['weight'],
-             $data['edited_at'],
-             $data['id']
-         );
-    
-         return $note_down;
+         
+         else return Note::create_Note($data);
+      
      } 
 
      public function move_db(Note $second) : Note {
@@ -299,16 +281,38 @@ abstract class Note extends Model
          return $this;
      }
    
-   public static function get_note_by_id(int $note_id) : Note |false {
-
-    $query = self::execute("SELECT * FROM notes WHERE id = :id", ["id" => $note_id]);
-    $data = $query->fetch(); 
-    return count($data) !== 0 ? new TextNote( $data['id'] , $data['title'],  $data['owner'],  $data['created_at'], 
-                                $data['pinned'],  $data['archived'], $data['weight'], $data['edited_at']): 
-                                new CheckListNote( $data['id'] , $data['title'],  $data['owner'],  $data['created_at'], 
-                                $data['pinned'],  $data['archived'], $data['weight'], $data['edited_at']);
+    public static function get_note_by_id(int $note_id) : Note |false {
+        return Note::is_Text_note($note_id) ? TextNote::get_note_by_id($note_id) : CheckListNote::get_note_by_id($note_id);
     }
+    public static function is_Text_note(int $id) : bool {
+        $query = self::execute("SELECT content FROM text_notes where id = :id", ["id" =>$id]);
+        $data = $query->fetchAll();
+        return count($data) !== 0;
 
+    } 
+    public static function create_Note($data) : Note | false
+    {
+        if (count($data) !== 0 ) {
+            return Note::is_Text_note($data['id']) ? new TextNote( $data['id'] , 
+                   $data['title'],
+                   $data['owner'],
+                   $data['created_at'],
+                   $data['pinned'],
+                   $data['archived'], 
+                   $data['weight'],
+                   $data['edited_at']):
+                   new CheckListNote( $data['id'] , 
+                   $data['title'],
+                   $data['owner'],
+                   $data['created_at'],
+                   $data['pinned'],
+                   $data['archived'], 
+                   $data['weight'],
+                   $data['edited_at']); 
+       
+    }  
+
+    }
 }
 
 
