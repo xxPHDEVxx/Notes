@@ -297,16 +297,24 @@ h2 {
   font-style: italic;
 }
 
-.view_notes {
-
+.view_notes_pinned, .view_notes_unpinned{
   display: flex;
   flex-wrap: wrap;
-  margin: 0 10%;
+  top:3px;
+  position:relative;
+  left: 2%;
 }
 
-.title-note {
+.view_notes_header {
+  height: 50px;
+}
+
+.title_note_pinned, .title_note_unpinned {
   color: white;
-  margin: 10% 0 0 7%;
+  margin-left: 3%;
+  margin-bottom: 0;
+  
+  
 }
 
 .card-footer {
@@ -324,15 +332,15 @@ h2 {
 .card-footer input {
   background-color: unset;
   border: unset;
-  color: blue;
+  color: rgb(30, 115, 213);
 }
 
 .note {
+  
   border: 1.5px solid #43464c;
   color: white;
   border-radius: 5px;
-  width: 210px;
-  height: 230px;
+  width: 188px;
   background: #202325;
   margin: 3px;
   position: relative;

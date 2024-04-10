@@ -9,31 +9,26 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <link href="css/style.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 
 <body>
     <?php include('view/menu.php'); ?>
+    <div class="view_notes_header">
     <h1>My notes</h1>
-    <p class="title-note">Pinned</p> 
-    <div class="view_notes">
+    </div>
+    <p class="title_note_pinned">Pinned</p> 
+    <div class="view_notes_pinned">
         <?php if (count($notes_pinned) != 0 && count($notes_unpinned) != 0) :  ?>
             <?php for ($i=0; $i < count($notes_pinned); $i++) { ?>
                 <div class="note">
-
-               
-                    
-
                     <p class="note-title"><?= $notes_pinned[$i]["title"]; ?></p>
                     <a class="link-note-archivee" href='openNote/index/<?= $notes_pinned[$i]["id"]; ?>'>
-
                         <div class="note-content">
                             <?php if ($notes_pinned[$i]["content"]) : ?>
                                 <div class="content_text">
-
                                     <?= $notes_pinned[$i]["content"] ?>
-
                                 </div>
-
                             <?php else : ?>
                                 <div class="content_check">
                                     <div class="check_item">
@@ -61,13 +56,15 @@
 
                         <form action="note/move_up" class="left" method="post">
                             <input name="up" type="number" value='<?=$notes_pinned[$i]["id"] ?>' hidden>
-                            <input type='submit' value='<<'>
+                            <input class="material-symbols-outlined"type='submit' value="keyboard_double_arrow_left">
                         </form>
                         <?php endif; ?>
                     <?php if ($i < count($notes_pinned) - 1) : ?>
                         <form action="note/move_down" class="right" method="post">
                             <input name="down" type="number" value='<?=$notes_pinned[$i]["id"] ?>' hidden>
-                            <input type='submit' value='>>'>
+                          <input class="material-symbols-outlined"type='submit' value="keyboard_double_arrow_right">
+
+                            
 
                         </form>
                         <?php endif; ?>
@@ -79,8 +76,8 @@
             </div>
 
 
-            <p class="title-note">Others</p> 
-            <div class="view_notes">
+            <p class="title_note_unpinned">Others</p> 
+            <div class="view_notes_unpinned">
             <?php for ($i=0; $i < count($notes_unpinned); $i++) { ?>
                 <div class="note">
 
@@ -127,13 +124,13 @@
  
                         <form action="note/move_up" class="left" method="post">
                             <input name="up" type="number" value='<?=$notes_unpinned[$i]["id"] ?>' hidden>
-                            <input type='submit' value='<<'>
+                            <input class="material-symbols-outlined"type='submit' value="keyboard_double_arrow_left">
                         </form>
                         <?php endif; ?>
                     <?php if ($i < count($notes_unpinned) - 1) : ?>
                         <form action="note/move_down" class="right" method="post">
                             <input name="down" type="number" value='<?=$notes_unpinned[$i]["id"] ?>' hidden>
-                            <input type='submit' value='>>'>
+                            <input class="material-symbols-outlined"type='submit' value="keyboard_double_arrow_right">
 
                         </form>
                         <?php endif; ?>
@@ -148,7 +145,7 @@
             <p class="title-empty">Your notes are empty</p>
         <?php endif; ?>
     </div>
-
+  
 </body>
 
 </html>
