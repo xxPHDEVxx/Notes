@@ -52,4 +52,11 @@ class ControllerNote extends Controller
         $user = $this->get_user_or_redirect();
         (new View("share"))->show();
     }
+    
+    public function add_note() : void {  
+        (new view("add_text_note"))->show();  
+    }
+    public function add_checklist_note() {
+        (new view("add_checklist_note")) ->show();
+    }
 }

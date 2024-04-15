@@ -685,7 +685,7 @@ nav a:hover{
   position: absolute;
   left: 3%;
   width: 94%;
-  top: 30px;
+  top: 15px;
  
 
 }
@@ -750,7 +750,6 @@ nav a:hover{
 .pointer {
   cursor: pointer;
 }
-.file_add {
-  color: rgb(255, 213, 0);
-  
+.form-control {
+  background: transparent;
 }
