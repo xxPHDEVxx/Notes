@@ -739,3 +739,18 @@ nav a:hover{
   margin-left: 14%;
   width: 70%;
 }
+.input_add {
+  background-color: transparent;
+
+}
+.adapt_height {
+  
+  height: 500px;
+}
+.pointer {
+  cursor: pointer;
+}
+.file_add {
+  color: rgb(255, 213, 0);
+  
+}
