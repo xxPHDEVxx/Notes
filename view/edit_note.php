@@ -4,5 +4,3 @@
 <a class="save" href="#"><span class="material-symbols-outlined">save</span></a>
 </div>
 <div class="dates">Created <?= $created ?><?= ($edited ? " Edited " . $edited : " Not edited yet") ?></div>
-<div class="title_note_title">Title</div>
-<div class="title_edit_note"><?= $note->title ?></div>

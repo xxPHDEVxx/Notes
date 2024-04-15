@@ -17,6 +17,8 @@
 <body>
     
     <?php include("open_note.php"); ?>
+    <div class="title_note_title">Title</div>
+    <div class="title_edit_note"><?= $note->title ?></div>
     <div class="note_body_title">Text</div>
    
         <div class="note_body_text">

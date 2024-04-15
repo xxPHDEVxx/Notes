@@ -698,6 +698,7 @@ nav a:hover{
   top: 125px;
   left: 3%;
   color: lightgray;
+  background-color: transparent;
   width: 94%;
   padding: 7px 7px 7px 10px;
   border: 1.7px solid  #494c51;
@@ -718,6 +719,20 @@ nav a:hover{
   display: flex;
   justify-content: center;
   background-color: #2f323a;
+}
+.icone-delete {
+  background-color: red;
+  width: 10%;
+  color: white;
+  border: none;
+  border-radius: 4%;
+}
+.form-control-edit {
+  border: 1.6px solid #494c51;
+  padding: 7px;
+  width: 80%;
+  background-color: transparent;
+  border-radius: 5px;
 
 }
 
@@ -734,6 +749,7 @@ nav a:hover{
 }
 .checklist_elements{
   border: 1.6px solid #494c51;
+  border-radius: 0 5px 5px 0;
   border-left: none;
   padding: 7px;
   margin-left: 14%;
