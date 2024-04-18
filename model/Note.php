@@ -3,7 +3,7 @@
 require_once "framework/Model.php";
 require_once "User.php";
 require_once "TextNote.php";
-require_once "ChecklistNote.php";
+require_once 'CheckListNote.php';
 
 enum TypeNote {
     const TN = "TextNote";
