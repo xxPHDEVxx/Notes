@@ -56,6 +56,7 @@ class ControllerNote extends Controller
     public function edit_checklist_note(): void
     {
         $user = $this->get_user_or_redirect();
+        $errors = [];
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $id = $_GET['param1'];
 
@@ -68,8 +69,13 @@ class ControllerNote extends Controller
             if (isset($_POST['title']) && $_POST['title'] != "" ) {
                 $title = Tools::sanitize($_POST["title"]);
                 $note = Note::get_note_by_id($id);
-                $note->title = $title;
-                $note->persist();
+                $errors = $note->validate();
+                if(empty($errors)){
+    
+                    $note->title = $title;
+                    $note->persist();           
+                }
+
             }
 
             if (isset($_POST['delete']) && $_POST['delete'] ) {

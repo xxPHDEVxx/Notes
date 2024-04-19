@@ -212,13 +212,47 @@ abstract class Note extends Model
         return false;
     }
 
+
     public function validate(): array
     {
         $errors = [];
 
+        $minLength = intval(Configuration::get('MIN_TITLE_LENGTH'));
+        $maxLength = intval(Configuration::get('MAX_TITLE_LENGTH'));
+        if (strlen($this->title) < $minLength || strlen($this->title) > $maxLength) {
+            $errors[] = "Le titre doit avoir au minimum $minLength caractères et au maximum $maxLength caractères.";
+        }
+
+        // Validation de l'unicité du titre
+        $uniqueErrors = $this->validate_unicity();
+        $errors = array_merge($errors, $uniqueErrors);
+
         return $errors;
     }
 
+    public function validate_unicity(): array
+    {
+        $errors = [];
+        $existingNote = Note::get_note_by_title($this->title);
+
+        if ($existingNote && $existingNote->note_id !== $this->note_id) {
+            $errors[] = "Un autre note existe déjà avec ce titre.";
+        }
+
+        return $errors;
+    }
+
+    public static function get_note_by_title(string $title): Note | bool
+    {
+        $query = self::execute("SELECT * FROM notes WHERE title = :title", ["title" => $title]);
+        $data = $query->fetch();
+
+        if ($data) {
+            return Note::create_note($data);
+        } else {
+            return null;
+        }
+    }
 
     public function persist(): Note|array
     {
@@ -287,9 +321,9 @@ abstract class Note extends Model
     {
         $query = self::execute("
          SELECT * FROM notes n
-         WHERE owner = :ownerid AND n.id <> :note_id AND archived = 0 AND pinned = :pin AND weight < :weight 
-         ORDER BY -weight LIMIT 1
-         ", ["ownerid" => $user->id, "note_id" => $note_id, "pin" => $pin, "weight" => $weight]);
+        WHERE owner = :ownerid AND n.id <> :note_id AND archived = 0 AND pinned = :pin AND weight < :weight 
+        ORDER BY -weight LIMIT 1
+        ", ["ownerid" => $user->id, "note_id" => $note_id, "pin" => $pin, "weight" => $weight]);
 
         $data = $query->fetch();
         if (!$data)
