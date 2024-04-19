@@ -706,6 +706,10 @@ nav a:hover{
   border: 1.7px solid  #494c51;
   border-radius: 7px;
 }
+.erreur_edit {
+  color: red;
+
+}
 .edit_checklist_form{
   margin-bottom: 10px;
   position: relative;
