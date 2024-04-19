@@ -3,7 +3,7 @@
 require_once "framework/Model.php";
 require_once "User.php";
 require_once "TextNote.php";
-require_once "ChecklistNote.php";
+require_once 'CheckListNote.php';
 
 enum TypeNote {
     const TN = "TextNote";
@@ -28,8 +28,10 @@ abstract class Note extends Model
 
     public abstract function get_type();
     public abstract function get_content();
+    public abstract function set_content(?string$data);
     public abstract function get_note();
     public abstract function isPinned();
+    public abstract function update();
     
         
     
@@ -209,7 +211,7 @@ abstract class Note extends Model
             $errors = $this->validate();
             if(empty($errors)){
                 self::execute('INSERT INTO Notes (title, owner, pinned, archived, weight) VALUES (:author,:recipient,:body,:private)', 
-                               ['tilte' => $this->title,
+                               ['title' => $this->title,
                                 'owner' => $this->owner,
                                 'pinned' => $this->pinned? 1 : 0,
                                 'archived' => $this->archived? 1 : 0,
@@ -222,8 +224,17 @@ abstract class Note extends Model
                 return $errors; 
             }
         } else {
-            //on ne modifie jamais les messages : pas de "UPDATE" SQL.
-            throw new Exception("Not Implemented.");
+            self::execute(
+                'UPDATE Notes SET title = :title, pinned = :pinned, archived = :archived, weight = :weight WHERE id = :note_id',
+                [
+                    'title' => $this->title,
+                    'pinned' => $this->pinned ? 1 : 0,
+                    'archived' => $this->archived ? 1 : 0,
+                    'weight' => $this->weight,
+                    'note_id' => $this->note_id,
+                ]
+            );
+            return $this;
         }
     }
 

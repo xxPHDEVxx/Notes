@@ -26,6 +26,10 @@ class TextNote extends Note {
         $content = $dataQuery->fetchColumn(); 
         return $content;
     }
+
+    public function set_content(?string $content): void {
+        $this->content = $content;
+    }
     
     public static function get_note_by_id(int $note_id) : Note |false {
 
@@ -40,8 +44,23 @@ class TextNote extends Note {
     public function isPinned() : bool {
         return $this->pinned;
     }
- 
 
-        
-    
+
+public function update() {
+    // Mettre à jour la note dans la base de données
+    self::execute("UPDATE notes SET title=:title, edited_at=NOW() WHERE id=:id", [
+        'title' => $this->title,
+        'id' => $this->note_id
+    ]);
+    // Mettre à jour les informations dans la table des notes
+    self::execute("UPDATE notes SET edited_at=NOW() WHERE id=:id", [
+        'id' => $this->note_id
+    ]);
+        // Mettre à jour la text_note dans la base de données
+    self::execute("UPDATE text_notes SET content=:content WHERE id=:id", [
+        'content' => $this->content,
+        'id' => $this->note_id
+    ]);
+}
+
 }

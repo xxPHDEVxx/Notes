@@ -28,7 +28,7 @@ class ControllerSettings extends Controller
             $newEmail = Tools::sanitize($_POST['email']);
             $newFullName = Tools::sanitize($_POST['fullName']);
 
-            $errors = User::validateEdit($newEmail, $newFullName);
+            $errors = User::validateEdit($newEmail, $newFullName, $user);
 
 
             if (empty($errors)) {
@@ -70,7 +70,7 @@ class ControllerSettings extends Controller
 
             if (empty($errors)) {
 
-                $passwordErrors = User::validate_passwords($newPassword, $confirmNewPassword);
+                $passwordErrors = User::validate_passwords($newPassword, $confirmNewPassword, $user);
 
                 if (empty($passwordErrors)) {
 
