@@ -28,8 +28,10 @@ abstract class Note extends Model
 
     public abstract function get_type();
     public abstract function get_content();
+    public abstract function set_content(?string $content);
     public abstract function get_note();
     public abstract function isPinned();
+    public abstract function update();
     
         
     

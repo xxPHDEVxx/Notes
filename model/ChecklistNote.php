@@ -12,6 +12,14 @@ class CheckListNote extends Note {
         return $data;
     }
 
+    public function set_content($data){
+
+    }
+
+    public function update(){
+        
+    }
+
     public function get_type() : string {
         return TypeNote::CLN;
     }

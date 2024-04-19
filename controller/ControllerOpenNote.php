@@ -110,20 +110,80 @@ class ControllerOpenNote extends Controller
         }
     }
 
-    public function edit(): void
-    {
-        if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
+    public function edit() {
+        $user = $this->get_user_or_redirect();
+    
+        // Vérifie que l'ID de la note est présent dans l'URL
+        if (isset($_GET["param1"]) && $_GET["param1"] !== "") {
             $note_id = $_GET["param1"];
-            $note = Note::get_note_by_id($note_id);
-            $user_id = $this->get_user_or_redirect()->id;
-            $archived = $note->in_My_archives($user_id);
-            $pinned = $note->is_pinned($user_id);
-            $isShared_as_editor = $note->isShared_as_editor($user_id);
-            $isShared_as_reader = $note->isShared_as_reader($user_id);
-            $body = $note->get_content();
+            // Récupération de la note par son ID
+            $note = TextNote::get_note_by_id($note_id);
+    
+            // Si la note existe
+            if ($note) {
+                $user_id = $user->id;
+                $archived = $note->in_My_archives($user_id);
+                $pinned = $note->is_pinned($user_id);
+                $isShared_as_editor = $note->isShared_as_editor($user_id);
+                $isShared_as_reader = $note->isShared_as_reader($user_id);
+                $content = $note->get_content();
+    
+                // Si la note est une TextNote et que l'utilisateur est le propriétaire
+                if ($note instanceof TextNote && $note->owner == $user_id) {
+                    (new View("edit_text_note"))->show([
+                        "note" => $note,
+                        "note_id" => $note_id,
+                        "created" => $this->get_created_time($note_id),
+                        "edited" => $this->get_edited_time($note_id),
+                        "content" => $content,
+                        "archived" => $archived,
+                        "isShared_as_editor" => $isShared_as_editor,
+                        "isShared_as_reader" => $isShared_as_reader,
+                        "pinned" => $pinned
+                    ]);
+                } else {
+                    echo "Note not found or you do not have permission to edit it.";
+                }
+            } else {
+                echo "No note found with the provided ID.";
+            }
+        } else {
+            echo "No note ID provided.";
         }
-        ($note->get_type() == "TextNote" ? new View("edit_text_note") : new View("edit_checklist_note"))->show([
-            "note" => $note, "note_id" => $note_id, "created" => $this->get_created_time($note_id), "edited" => $this->get_edited_time($note_id), "archived" => $archived, "isShared_as_editor" => $isShared_as_editor, "isShared_as_reader" => $isShared_as_reader, "note_body" => $body, "pinned" => $pinned
-        , "user_id" => $user_id]);
+    }
+    
+    
+    
+    
+
+    public function save_edit_text_note() {
+        $user = $this->get_user_or_redirect();
+    
+        // Vérifiez si les données POST sont présentes
+        if (isset($_POST['note_id'], $_POST['title'], $_POST['content'])) {
+            $note_id = (int)$_POST['note_id'];
+            echo $note_id;
+
+            if ($note_id > 0) {
+                $note = TextNote::get_note_by_id($note_id);
+    
+                // Vérifiez si la note existe et si l'utilisateur est le propriétaire
+                if ($note && $note->owner == $user->id) {
+                    // Validez le titre et le contenu
+                    $note->title = htmlspecialchars(trim($_POST['title']));
+                    $note->set_content(htmlspecialchars(trim($_POST['content'])));
+                    $note->update();
+    
+                    // Redirection vers la vue de la note
+                    $this->redirect("openNote", "index", $note_id);
+                } else {
+                    echo "Note introuvable ou vous n'avez pas la permission de la modifier.";
+                }
+            } else {
+                echo "ID de note invalide.";
+            }
+        } else {
+            echo "Les informations requises sont manquantes.";
+        }
     }
 }
