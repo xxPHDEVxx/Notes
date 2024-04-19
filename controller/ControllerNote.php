@@ -66,19 +66,8 @@ class ControllerNote extends Controller
                 throw new Exception("Undefined note");
             }
 
-            if (isset($_POST['title']) && $_POST['title'] != "" ) {
-                $title = Tools::sanitize($_POST["title"]);
-                $note = Note::get_note_by_id($id);
-                $errors = $note->validate();
-                if(empty($errors)){
-    
-                    $note->title = $title;
-                    $note->persist();           
-                }
 
-            }
-
-            if (isset($_POST['delete']) && $_POST['delete'] ) {
+            if (isset($_POST['delete']) && $_POST['delete']) {
                 $item_id = $_POST["delete"];
                 $item = CheckListNoteItem::get_item_by_id($item_id);
                 if ($item === false) {
@@ -86,15 +75,29 @@ class ControllerNote extends Controller
                 }
                 // Supprime l'élément de la liste de contrôle
                 $item->delete();
+                $this->redirect("openNote", "edit/$id");
             }
             if (isset($_POST['new']) && $_POST["new"] != "") {
                 $new_item_content = Tools::sanitize($_POST['new']);
                 $new_item = new CheckListNoteItem(5, $note->note_id, $new_item_content, 0);
                 $new_item->persist();
+                $this->redirect("openNote", "edit/$id");
             }
-            $this->redirect("openNote", "edit/$id");
         }
     }
+    public function update_title(): void
+    {
+        var_dump($_GET['param1']);
+    //     if (isset($_POST["title"]) && $_POST["title"] != "") {
+    //         $title = Tools::sanitize($_POST["title"]);
+    //         $note = Note::get_note_by_id($id);
+    //         $errors = $note->validate();
+    //         if (empty($errors)) {
 
-
+    //             $note->title = $title;
+    //             $note->persist();
+    //         }
+    //     }
+    //     $this->redirect("openNote", "index/$id");
+    }
 }

@@ -112,6 +112,8 @@ class ControllerOpenNote extends Controller
 
     public function edit(): void
     {
+        $errors = [];
+
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
             $note = Note::get_note_by_id($note_id);
@@ -124,6 +126,6 @@ class ControllerOpenNote extends Controller
         }
         ($note->get_type() == "TextNote" ? new View("edit_text_note") : new View("edit_checklist_note"))->show([
             "note" => $note, "note_id" => $note_id, "created" => $this->get_created_time($note_id), "edited" => $this->get_edited_time($note_id), "archived" => $archived, "isShared_as_editor" => $isShared_as_editor, "isShared_as_reader" => $isShared_as_reader, "note_body" => $body, "pinned" => $pinned
-        , "user_id" => $user_id]);
+        , "user_id" => $user_id, "errors"=>$errors]);
     }
 }

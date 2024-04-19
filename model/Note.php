@@ -4,6 +4,8 @@ require_once "framework/Model.php";
 require_once "User.php";
 require_once "TextNote.php";
 require_once "ChecklistNote.php";
+require_once "framework/Configuration.php";
+
 
 enum TypeNote
 {
@@ -217,9 +219,9 @@ abstract class Note extends Model
     {
         $errors = [];
 
-        $minLength = intval(Configuration::get('MIN_TITLE_LENGTH'));
-        $maxLength = intval(Configuration::get('MAX_TITLE_LENGTH'));
-        if (strlen($this->title) < $minLength || strlen($this->title) > $maxLength) {
+        $minLength = 3;
+        $maxLength =Configuration::get('title_max_lenght');
+        if (strlen($this->title) < 3 || strlen($this->title) > 25) {
             $errors[] = "Le titre doit avoir au minimum $minLength caractères et au maximum $maxLength caractères.";
         }
 
