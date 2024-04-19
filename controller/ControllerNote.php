@@ -3,6 +3,7 @@
 require_once "framework/Controller.php";
 require_once "framework/View.php";
 require_once "model/User.php";
+require_once "framework/Tools.php";
 
 class ControllerNote extends Controller
 {
@@ -51,4 +52,43 @@ class ControllerNote extends Controller
         $user = $this->get_user_or_redirect();
         (new View("share"))->show();
     }
+
+    public function edit_checklist_note(): void
+    {
+        $user = $this->get_user_or_redirect();
+        if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
+            $id = $_GET['param1'];
+
+            $note = CheckListNote::get_note_by_id($id);
+            // Vérifie si la note existe
+            if ($note === false) {
+                throw new Exception("Undefined note");
+            }
+
+            if (isset($_POST['title']) && $_POST['title'] != "" ) {
+                $title = Tools::sanitize($_POST["title"]);
+                $note = Note::get_note_by_id($id);
+                $note->title = $title;
+                $note->persist();
+            }
+
+            if (isset($_POST['delete']) && $_POST['delete'] ) {
+                $item_id = $_POST["delete"];
+                $item = CheckListNoteItem::get_item_by_id($item_id);
+                if ($item === false) {
+                    throw new Exception("Undefined checklist item");
+                }
+                // Supprime l'élément de la liste de contrôle
+                $item->delete();
+            }
+            if (isset($_POST['new']) && $_POST["new"] != "") {
+                $new_item_content = Tools::sanitize($_POST['new']);
+                $new_item = new CheckListNoteItem(5, $note->note_id, $new_item_content, 0);
+                $new_item->persist();
+            }
+            $this->redirect("openNote", "edit/$id");
+        }
+    }
+
+
 }

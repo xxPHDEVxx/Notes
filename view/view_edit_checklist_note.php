@@ -15,26 +15,33 @@
 </head>
 
 <body>
-    <?php include("edit_note.php"); ?>
-    <form method="post">
+    <form method="post" action="note/edit_checklist_note/<?= $note_id ?>">
+    <div class="edit">
+        <a class="back" href="<?= $_SESSION['previous_page'] ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
+
+        <button class="save" type="submit"><span class="material-symbols-outlined">save</span></button>
+    </div>
+    <div class="dates">Created <?= $created ?><?= ($edited ? " Edited " . $edited : " Not edited yet") ?></div>
         <label for="title" class="title_note_title">Title</label>
-        <input type="text" class="title_edit_note" id="title" value="<?= $note->title ?>">
+        <input type="text" class="title_edit_note" id="title" name="title" value="<?= $note->title ?>">
         <label for="items" class="note_body_title">Items</label>
         <div class="note_body_checklist">
             <?php foreach ($note_body as $row) : ?>
                 <div class="edit_checklist_form">
                     <div class="edit_check_div">
-                        <input class="check_square" type="checkbox" value="" id='item<?= $row["id"] ?>'>
+                        <input class="check_square" type="checkbox" value="<?= $row["id"] ?>" id='<?= $row["id"] ?>' name="box" <?= $row["checked"] ? 'checked' : '' ?> disabled>
                     </div>
-                    <label class="checklist_elements" id='item<?= $row["id"] ?>'>
+                    <label class="checklist_elements <?= $row["checked"] ? 'check_label' : '' ?>" id='<?= $row["id"] ?>'>
                         <?= $row["content"] ?>
                     </label>
-                    <button class="icone-delete">-</button>
+                    <input type="hidden" name="remove" value="<?= $row['id'] ?>">
+                    <button type="submit" name="delete" value="<?= $row["id"] ?>" id="<?= $row['id'] ?>" class="icone-delete">-</button>
                 </div>
             <?php endforeach; ?>
             <label for="new">New item</label>
             <div class="edit_checklist_form">
-                <input type="text" class="form-control-edit" id = "new" name="new">
+                <input type="text" class="form-control-edit" id="new" name="new">
+                <button type="submit" class="icone-add">+</button>
             </div>
         </div>
     </form>

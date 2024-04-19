@@ -707,10 +707,10 @@ nav a:hover{
 .edit_checklist_form{
   margin-bottom: 10px;
   position: relative;
+  align-items: stretch;
   
 }
-.edit_check_div {
-  
+.edit_check_div { 
   border-radius: 5px 0 0 5px;
   border: 1.7px solid  #494c51;         
   position: absolute;
@@ -725,15 +725,34 @@ nav a:hover{
   width: 10%;
   color: white;
   border: none;
-  border-radius: 4%;
+  border-radius: 0 5px 5px 0;
+  width: 14%;
+  height: 100%;
+  padding: 7px;
+  margin-left: -4%;
 }
+
+.icone-add {
+  background-color: blue;
+  width: 10%;
+  color: white;
+  border: none;
+  border-radius: 0 5px 5px 0;
+  width: 14%;
+  height: 100%;
+  padding: 7px;
+  margin-left: -4%;
+}
+
+
 .form-control-edit {
   border: 1.6px solid #494c51;
-  padding: 7px;
-  width: 80%;
+  padding: 6px;
+  width: 85%;
   background-color: transparent;
   border-radius: 5px;
-
+  color: lightgray;
+  border-right: none;
 }
 
 .check_square {
@@ -744,7 +763,6 @@ nav a:hover{
   margin: 10px;
   border: 1.5px solid rgb(75, 75, 73);
   background-color: #262829;
- 
   border-radius: 3px;
 }
 .checklist_elements{
