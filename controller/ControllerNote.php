@@ -96,5 +96,35 @@ class ControllerNote extends Controller
         }
     }
 
+    public function save_edit_text_note() {
+        $user = $this->get_user_or_redirect();
+    
+        // Vérifiez si les données POST sont présentes
+        if (isset($_GET['param1'], $_POST['title'], $_POST['content'])) {
+            $note_id = (int)$_GET['param1'];
+
+            if ($note_id > 0) {
+                $note = TextNote::get_note_by_id($note_id);
+    
+                // Vérifiez si la note existe et si l'utilisateur est le propriétaire
+                if ($note && $note->owner == $user->id) {
+                    // Validez le titre et le contenu
+                    $note->title = (Tools::sanitize($_POST['title']));
+                    $note->set_content((Tools::sanitize($_POST['content'])));
+                    $note->update();
+    
+                    // Redirection vers la vue de la note
+                    $this->redirect("openNote", "index", $note_id);
+                } else {
+                    echo "Note introuvable ou vous n'avez pas la permission de la modifier.";
+                }
+            } else {
+                echo "ID de note invalide.";
+            }
+        } else {
+            echo "Les informations requises sont manquantes.";
+        }
+    }
+
 
 }

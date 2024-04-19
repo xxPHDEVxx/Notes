@@ -52,4 +52,6 @@ class CheckListNote extends Note
     {
         return $this->pinned;
     }
+
+    public function update(){}
 }
