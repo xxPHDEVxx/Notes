@@ -692,6 +692,8 @@ nav a:hover{
 .save{
   position: absolute;
   right: 0;
+  border: none;
+  background-color: transparent;
 }
 .title_edit_note {
   position: absolute;
