@@ -172,7 +172,7 @@ class ControllerOpenNote extends Controller
                     // Validez le titre et le contenu
                     $note->title = htmlspecialchars(trim($_POST['title']));
                     $note->set_content(htmlspecialchars(trim($_POST['content'])));
-                    $note->update();
+                    //$note->update();
     
                     // Redirection vers la vue de la note
                     $this->redirect("openNote", "index", $note_id);
