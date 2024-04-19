@@ -11,18 +11,6 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
     <link href="css/style.css" rel="stylesheet" type="text/css"/></head>
 <body>
-<<<<<<< HEAD
-=======
-    
-    <?php include("open_note.php"); ?>
-    <div class="title_note_title">Title</div>
-    <div class="title_edit_note"><?= $note->title ?></div>
-    <div class="note_body_title">Text</div>
-   
-        <div class="note_body_text">
-        <?=$note_body; ?> 
->>>>>>> develop
-
 <div class="container mt-5">
     <?php if (!empty($errors)): ?>
         <div class="alert alert-danger" role="alert">
