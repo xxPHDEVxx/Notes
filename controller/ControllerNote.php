@@ -109,7 +109,7 @@ class ControllerNote extends Controller
                 $new_item = new CheckListNoteItem(5, $note->note_id, $new_item_content, 0);
                 $new_item->persist();
             }
-            $this->redirect("openNote", "edit/$id");
+            $this->redirect("openNote", "index/$id");
         }
     }
 
