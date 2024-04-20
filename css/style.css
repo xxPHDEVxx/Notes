@@ -626,6 +626,12 @@ nav a:hover{
   left: 3%;
 }
 
+#contentError {
+  position: absolute;
+  top: 250px;
+  left: 3%;
+}
+
 /*open_checklist_note*/
 
 .note_body_checklist {

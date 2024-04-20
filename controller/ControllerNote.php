@@ -140,9 +140,13 @@ class ControllerNote extends Controller
     
                     // Valider le titre
                     $titleErrors = $note->validate_title();
-                    if (!empty($titleErrors)) {
+                    $contentErrors = $note->validate_content();
+                    $errors = array_merge($titleErrors);
+                    $_SESSION['edit_errors'] = []; // Réinitialiser les erreurs de session avant la validation
+
+                    if (!empty($errors)) {
                         // Stocker l'erreur de titre dans la session
-                        $_SESSION['edit_errors'] = $titleErrors;
+                        $_SESSION['edit_errors'] = $errors;
                         $this->redirect("openNote", "edit", $note_id);
                         exit();
                     }

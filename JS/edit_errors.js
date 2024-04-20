@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('Encoded title:', encodedTitle);
             console.log('Encoded user Id:', encodedUserId);
             // Si la longueur du titre est valide, vérifiez son unicité
-            fetch('model/Note/validate_title.php', {
+            fetch('model/Note.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',

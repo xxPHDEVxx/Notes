@@ -26,6 +26,7 @@
 
         <label for="content" class="note_body_title">Text</label>
         <textarea class="note_body_text" id="content" name="content"><?= $note->get_content() ?></textarea>
+        <div id="contentError" class="error" style="display: none;"></div>
     </form>
     
     <script>
