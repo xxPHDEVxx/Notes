@@ -70,7 +70,7 @@ class ControllerMain extends Controller
             $errors = User::validate_unicity($mail);
             $errors = array_merge($errors, $user->validate());
             $errors = array_merge($errors, $user->validate_name());
-            $errors = array_merge($errors, User::validate_passwords($password, $password_confirm));
+            $errors = array_merge($errors, User::validate_passwords($password, $password_confirm, $user));
 
             if (count($errors) == 0) {
                 $user->persist();

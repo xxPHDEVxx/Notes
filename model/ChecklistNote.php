@@ -14,6 +14,8 @@ class CheckListNote extends Note
         return $data;
     }
 
+    public function set_content($data){}
+
     public function get_type(): string
     {
         return TypeNote::CLN;
@@ -50,4 +52,6 @@ class CheckListNote extends Note
     {
         return $this->pinned;
     }
+
+    public function update(){}
 }

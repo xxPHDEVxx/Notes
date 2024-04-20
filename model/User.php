@@ -84,24 +84,36 @@ class User extends Model
         return $errors;
     }
 
-    public static function validateEdit($email, $fullname): array
-    {
-
-        $errors = [];
-        if (!strlen($email) > 0) {
-            $errors[] = "⚠Mail is requiered.";
-        }
-        if (!(preg_match("/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/", $email))) {
-            $errors[] = "⚠Email must have a valid structure.";
-        }
-        if (!strlen($fullname) > 0) {
-            $errors[] = "⚠Full Name is required.";
-        }
-        if (!(strlen($fullname) >= 3)) {
-            $errors[] = "⚠Full Name must have mutch than 3 char";
-        }
-        return $errors;
+    public static function validateEdit($email, $fullname,$currentUser): array
+{
+    $errors = [];
+    if (!strlen($email) > 0) {
+        $errors[] = "⚠Mail is required.";
     }
+    if (!(preg_match("/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/", $email))) {
+        $errors[] = "⚠Email must have a valid structure.";
+    }
+    if (!strlen($fullname) > 0) {
+        $errors[] = "⚠Full Name is required.";
+    }
+    if (!(strlen($fullname) >= 3)) {
+        $errors[] = "⚠Full Name must have more than 3 characters.";
+    }
+
+    $currentUserId = $currentUser ? $currentUser->id : null;
+
+    // Vérifier l'unicité de l'email uniquement si l'email est modifié par rapport à celui de l'utilisateur actuel
+    if ($currentUser && $currentUser->mail === $email) {
+        $errors[] = "⚠The email entered is identical to the current email.";
+    } else {
+        $existingUser = User::get_user_by_mail($email);
+        if ($existingUser && $existingUser->id != $currentUserId) {
+            $errors[] = "⚠This email is already used by another user.";
+        }
+    }
+
+    return $errors;
+}
 
     private static function check_password($clear_password, string $hash): bool
     {
@@ -121,7 +133,7 @@ class User extends Model
         }
         return $errors;
     }
-    private static function validate_password(string $password): array
+    private static function validate_password(string $password, $currentUser): array
     {
         $errors = [];
         if (strlen($password) < 8) {
@@ -130,11 +142,16 @@ class User extends Model
         if (!((preg_match("/[A-Z]/", $password)) && preg_match("/\d/", $password) && preg_match("/['\";:,.\/?!\\-]/", $password))) {
             $errors[] = "⚠Password must contain one uppercase letter, one number and punctuation mark.";
         }
+
+        // Récupérer le mot de passe actuel de l'utilisateur
+    if ($currentUser && Tools::my_hash($password) === $currentUser->getHashedPassword()) {
+        $errors[] = "⚠The new password cannot be the same as the current password.";
+    }
         return $errors;
     }
-    public static function validate_passwords(string $password, string $password_confirm): array
+    public static function validate_passwords(string $password, string $password_confirm, $currentPassword): array
     {
-        $errors = User::validate_password($password);
+        $errors = User::validate_password($password, $currentPassword);
         if ($password != $password_confirm) {
             $errors[] = "⚠You have to enter twice the same password.";
         }
