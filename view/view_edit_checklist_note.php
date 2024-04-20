@@ -16,20 +16,18 @@
 
 <body>
     <form method="post" action="note/edit_checklist_note/<?= $note_id ?>">
-    <div class="edit">
-        <a class="back" href="<?= $_SESSION['previous_page'] ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
-        <form action="note/update_title<?=$note_id?>" method="post">
-        <button class="save" type="submit"  ><span class="material-symbols-outlined">save</span></button>
-    </div>
-    <div class="dates">Created <?= $created ?><?= ($edited ? " Edited " . $edited : " Not edited yet") ?></div>
-    <label for="title" class="title_note_title">Title</label>
-    <input type="text" class="title_edit_note" id="title" name="title" value="<?= $note->title ?>">
-</form>
-        <?php if (count($errors) != 0) :?>
-            <?php foreach ($errors as $error): ?>
-                            <li class="erreur_edit"><?= $error ?></li>
+        <div class="edit">
+            <a class="back" href="<?= $_SESSION['previous_page'] ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
+            <button class="save" type="submit"><span class="material-symbols-outlined">save</span></button>
+        </div>
+        <div class="dates">Created <?= $created ?><?= ($edited ? "  Edited  " . $edited : " Not edited yet") ?></div>
+        <label for="title" class="title_note_title">Title</label>
+        <input type="text" class="title_edit_note" id="title" name="title" value="<?= $note->title ?>">
+        <?php if (count($errors) != 0) : ?>
+            <?php foreach ($errors as $error) : ?>
+                <li class="erreur_edit"><?= $error ?></li>
             <?php endforeach; ?>
-            <?php endif; ?>
+        <?php endif; ?>
         <label for="items" class="note_body_title">Items</label>
         <div class="note_body_checklist">
             <?php foreach ($note_body as $row) : ?>
@@ -51,7 +49,6 @@
             </div>
         </div>
     </form>
-    </div>
 </body>
 
 </html>
