@@ -15,6 +15,8 @@
 
 <body>
 
+
+
     <div class="title">
         <div>
             <h1>Settings</h1>
@@ -27,16 +29,17 @@
         <h2>Edit Profile</h2>
 
         <form class="edit_form" action="settings/edit_profile" method="post">
-            <div class="mb-3">
-                <label for="email" class="form-label">Mail</label>
-                <input type="email" class="form-control" id="email" name="email" value="<?= $user->mail ?>" required>
-            </div>
-            <div class="mb-3">
-                <label for="fullName" class="form-label">Name</label>
-                <input type="text" class="form-control" id="fullName" name="fullName" value="<?= $user->full_name ?>" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-        </form>
+    <div class="mb-3">
+        <label for="email" class="form-label">Mail</label>
+        <input type="email" class="form-control" id="email" name="email" value="<?= isset($_POST['email']) ? htmlspecialchars($_POST['email']) : htmlspecialchars($user->mail) ?>" required>
+    </div>
+    <div class="mb-3">
+        <label for="fullName" class="form-label">Name</label>
+        <input type="text" class="form-control" id="fullName" name="fullName" value="<?= isset($_POST['fullName']) ? htmlspecialchars($_POST['fullName']) : htmlspecialchars($user->full_name) ?>" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>
+
     </div>
 
     <?php if (!empty($errors)) : ?>
@@ -53,6 +56,7 @@
             <p><?= $successMessage ?></p>
         </div>
     <?php endif; ?>
+
 
 
 </body>

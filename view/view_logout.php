@@ -12,7 +12,9 @@
 </head>
 
 <body>
-    <?php include('view/menu.php'); ?>
+
+<?php include("menu.php"); ?>
+
     <div class="title">
         <h1>Settings</h1>
     </div>
@@ -32,6 +34,7 @@
             <button type="submit" name="no" class="btn btn-primary">No</button>
         </form>
     </div>
+
 </body>
 
 </html>
