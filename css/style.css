@@ -621,40 +621,16 @@ nav a {
 }
 
 .note_body_title {
-<<<<<<< HEAD
   position: absolute;
   top: 205px;
   left: 3.5%;
   color: white;
   font-size: 18px;
-=======
-    position: absolute;
-    top: 200px;
-    left: 3.5%;
-    color: white;
-    font-size: 18px;
->>>>>>> 13ba4e5f0db4fa4aa845f721000d27464bc8393c
 }
 
 /*open_text_note*/
 
 .note_body_text {
-<<<<<<< HEAD
-  color: lightgray;
-  position: absolute;
-  top: 200px;
-  left: 3%;
-  padding: 15px;
-  width: 94%;
-  border-radius: 7PX;
-  border: 1.7px solid #53575e;
-  background-color: #383c44;
-  overflow-y: auto;
-  max-height: 500px;
-
-}
-
-=======
     color : lightgray;
     position: absolute;
     top: 230px;
@@ -677,7 +653,6 @@ nav a {
   left: 3%;
 }
 
->>>>>>> 13ba4e5f0db4fa4aa845f721000d27464bc8393c
 /*open_checklist_note*/
 
 .note_body_checklist {
@@ -855,4 +830,18 @@ nav a {
   padding: 7px;
   margin-left: 14%;
   width: 70%;
+}
+.input_add {
+  background-color: transparent;
+
+}
+.adapt_height {
+  
+  height: 500px;
+}
+.pointer {
+  cursor: pointer;
+}
+.form-control {
+  background: transparent;
 }

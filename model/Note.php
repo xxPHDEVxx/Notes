@@ -19,8 +19,8 @@ abstract class Note extends Model
         public String $title,
         public int $owner,
         public string $created_at,
-        public bool $pinned,
-        public bool $archived,
+        public int $pinned,
+        public int $archived,
         public int $weight,
         public ?string $edited_at = NULL
     ) {
@@ -196,6 +196,7 @@ abstract class Note extends Model
         $user = User::get_user_by_id($this->owner);
         // permet la suppression en cascade pour éviter problèmes suite aux dépendances
         if($user == $initiator) {
+            self::execute("DELETE FROM checklist_note_items WHERE checklist_note = :note_id", ['note_id' => $this->note_id]);
             self::execute("DELETE FROM text_notes WHERE id = :note_id", ['note_id' => $this->note_id]);
             self::execute("DELETE FROM checklist_notes WHERE id = :note_id", ['note_id' => $this->note_id]);
             self::execute("DELETE FROM note_shares WHERE note = :note_id", ['note_id' => $this->note_id]);
@@ -231,7 +232,7 @@ abstract class Note extends Model
 
 
     public function persist() : Note|array {
-        if ($this->note_id === null) {
+        if ($this->note_id == null) {
             $errors = $this->validate();
             if (empty($errors)) {
                 // Execute the INSERT operation
