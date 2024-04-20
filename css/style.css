@@ -596,7 +596,7 @@ nav a:hover{
 }
 .note_body_title {
     position: absolute;
-    top: 170px;
+    top: 200px;
     left: 3.5%;
     color: white;
     font-size: 18px;
@@ -606,7 +606,7 @@ nav a:hover{
 .note_body_text {
     color : lightgray;
     position: absolute;
-    top: 200px;
+    top: 230px;
     left: 3%;
     padding: 15px;
     width: 94%;
@@ -617,6 +617,15 @@ nav a:hover{
     max-height: 500px;
     
 }
+
+/*error edit and add text_note*/
+
+#titleError {
+  position: absolute;
+  top: 170px;
+  left: 3%;
+}
+
 /*open_checklist_note*/
 
 .note_body_checklist {
