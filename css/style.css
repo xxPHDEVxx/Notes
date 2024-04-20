@@ -842,6 +842,43 @@ nav a {
 .pointer {
   cursor: pointer;
 }
-.form-control {
+/* .form-control {
   background: transparent;
+} */
+
+/* add checklist note */
+.add_checklist {
+  margin: 20% auto ;
+  width: 90%;
 }
+.item_add {
+  margin: 5% 0 ;
+  background: transparent;
+  color: lightgrey;
+
+}
+.add_header {
+  position: absolute;
+  left: 3%;
+  width: 94%;
+  top: 40px;
+}
+.item_add:focus {
+  background-color: transparent;
+  color: lightgrey;
+}
+
+.title_add {
+  background: transparent;
+  color: lightgrey;
+
+}
+
+.title_add:focus {
+
+  background-color: transparent;
+
+  color: lightgrey;
+
+}
+
