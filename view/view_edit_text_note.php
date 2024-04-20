@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +11,9 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
     <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <script src="JS/edit_errors.js"></script>
 </head>
+
 <body>
     <form method="post" action="note/save_edit_text_note/<?= $note_id ?>">
         <div class="edit">
@@ -20,9 +23,11 @@
         <div class="dates">Created <?= $created ?><?= ($edited ? " Edited " . $edited : " Not edited yet") ?></div>
         <label for="title" class="title_note_title">Title</label>
         <input type="text" class="title_edit_note" id="title" name="title" value="<?= $note->title ?>">
-           
+        <div id="titleError" class="invalid-feedback" style="display: none;"></div>
+
         <label for="content" class="note_body_title">Text</label>
         <textarea class="note_body_text" id="content" name="content"><?= $note->get_content() ?></textarea>
     </form>
+
 </body>
 </html>

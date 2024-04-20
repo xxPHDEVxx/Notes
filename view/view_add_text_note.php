@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
     <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <script src="JS/edit_errors.js" ></script>
 </head>
 <body>
     <form method="post" action="note/save_add_text_note">
@@ -20,7 +21,8 @@
         <div class="dates">Today's Date: <?= date("Y-m-d H:i:s") ?></div>
         <label for="title" class="title_note_title">Title</label>
         <input type="text" class="title_edit_note" id="title" name="title" placeholder="Enter note title">
-           
+        <div id="titleError" class="invalid-feedback" style="display: none;"></div>
+
         <label for="content" class="note_body_title">Text</label>
         <textarea class="note_body_text" id="content" name="content" placeholder="Type your note here..."></textarea>
     </form>

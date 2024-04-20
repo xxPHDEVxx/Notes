@@ -119,19 +119,31 @@ class ControllerNote extends Controller
         // Vérifiez si les données POST sont présentes
         if (isset($_GET['param1'], $_POST['title'], $_POST['content'])) {
             $note_id = (int)$_GET['param1'];
-
+    
             if ($note_id > 0) {
                 $note = TextNote::get_note_by_id($note_id);
     
                 // Vérifiez si la note existe et si l'utilisateur est le propriétaire
                 if ($note && $note->owner == $user->id) {
-                    // Validez le titre et le contenu
-                    $note->title = (Tools::sanitize($_POST['title']));
-                    $note->set_content((Tools::sanitize($_POST['content'])));
+                    // Sanitize input
+                    $note->title = Tools::sanitize($_POST['title']);
+                    $note->set_content(Tools::sanitize($_POST['content']));
+    
+                    // Valider le titre
+                    $titleErrors = $note->validateTitle();
+                    if (!empty($titleErrors)) {
+                        // Stocker l'erreur de titre dans la session
+                        $_SESSION['edit_errors'] = $titleErrors;
+                        $this->redirect("openNote", "edit", $note_id);
+                        exit();
+                    }
+    
+                    // Si tout est correct, mettre à jour la note
                     $note->update();
     
                     // Redirection vers la vue de la note
                     $this->redirect("openNote", "index", $note_id);
+                    exit();
                 } else {
                     echo "Note introuvable ou vous n'avez pas la permission de la modifier.";
                 }
@@ -142,6 +154,8 @@ class ControllerNote extends Controller
             echo "Les informations requises sont manquantes.";
         }
     }
+    
+    
 
     public function save_add_text_note() {
         $user = $this->get_user_or_redirect();
@@ -149,6 +163,7 @@ class ControllerNote extends Controller
         // Vérifiez si les données POST pour le titre et le contenu sont présentes
         if (isset($_POST['title'], $_POST['content'])) {
             // Création d'une nouvelle instance de TextNote sans note_id initial (ou null)
+            
             $note = new TextNote(
                 note_id: 0,
                 title: Tools::sanitize($_POST['title']),
@@ -159,6 +174,15 @@ class ControllerNote extends Controller
                 weight: 0,
                 edited_at: null
             );
+
+            // Valider le titre
+            $titleErrors = $note->validateTitle();
+            if (!empty($titleErrors)) {
+                // Stocker l'erreur de titre dans la session
+                $_SESSION['edit_errors'] = $titleErrors;
+                $this->redirect("openNote", "index");
+                exit();
+            }
     
             // Appeler persist pour insérer ou mettre à jour la note
             $result = $note->persist();

@@ -209,6 +209,17 @@ abstract class Note extends Model
         return $errors;
     }
 
+    public function validateTitle() {
+        $errors = [];
+        if (strlen($this->title) < 3) {
+            $errors[] = "Le titre doit contenir entre 3 et 25 caractères.";
+        }
+        if (strlen($this->title) > 25) {
+            $errors[] = "Le titre doit contenir entre 3 et 25 caractères.";
+        }
+        return $errors;
+    }
+
 
     public function persist() : Note|array {
         if ($this->note_id === null) {

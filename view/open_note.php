@@ -4,12 +4,12 @@
        
         <a class="back" href="<?=$_SESSION['previous_page']?>"><span class="material-symbols-outlined">arrow_back_ios</span></a> 
         <?php if($archived == 1):?>
-            <a class="delete" href="note/delete_note/<?=$note_id?>"><span class="material-symbols-outlined" id ="delete_icon">delete_forever</span></a>
+            <a class="delete" href="#"><span class="material-symbols-outlined" id ="delete_icon">delete_forever</span></a>
             <a class="unarchive" href="openNote/unarchive/<?=$note_id?>"><span class="material-symbols-outlined">unarchive</span></a>
            
         
         <?php elseif($isShared_as_editor == 1): ?>
-            <a class="isShared" href="openNote/edit/<?=$note_id?>"><span class="material-symbols-outlined">edit</span></a>
+            <a class="isShared" href="openNote/edit/"><span class="material-symbols-outlined">edit</span></a>
         <?php elseif($archived == 0 && $isShared_as_editor == 0 && $isShared_as_reader == 0):?>
             <a class="share" href="#"><span class="material-symbols-outlined">share</span></a>
             <?php if($pinned): ?>
