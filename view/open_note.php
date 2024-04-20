@@ -4,7 +4,7 @@
        
         <a class="back" href="<?=$_SESSION['previous_page']?>"><span class="material-symbols-outlined">arrow_back_ios</span></a> 
         <?php if($archived == 1):?>
-            <a class="delete" href="#"><span class="material-symbols-outlined" id ="delete_icon">delete_forever</span></a>
+            <a class="delete" href="note/delete_note/<?=$note_id?>"><span class="material-symbols-outlined" id ="delete_icon">delete_forever</span></a>
             <a class="unarchive" href="openNote/unarchive/<?=$note_id?>"><span class="material-symbols-outlined">unarchive</span></a>
            
         

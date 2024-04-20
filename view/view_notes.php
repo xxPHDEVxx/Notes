@@ -22,7 +22,7 @@
     <div class="view_notes_header">
     <h1>My notes</h1>
     </div>
-    <p class="title_note_pinned">Pinned coucou aouatif </p> 
+    <p class="title_note_pinned">Pinned</p> 
     <div class="view_notes_pinned">
         <?php if (count($notes_pinned) != 0 && count($notes_unpinned) != 0) :  ?>
             <?php for ($i=0; $i < count($notes_pinned); $i++) { ?>
@@ -156,7 +156,7 @@
                 
                 <span class="material-symbols-outlined text-warning text-lg  text-lg-end m-2 float-end">checklist</span>
             </a>
-                <a href="note/add_note">
+                <a href="openNote/add_text_note">
                  <!--   <i class="fa-solid fa-note-sticky text-lg  text-lg-end m-2 float-end text-warning"></i>-->
                     <span class="material-symbols-outlined text-warning text-lg  text-lg-end m-2 float-end">draft</span>
                 </a>

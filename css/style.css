@@ -692,24 +692,31 @@ nav a:hover{
 .save{
   position: absolute;
   right: 0;
+  border: none;
+  background-color: transparent;
 }
 .title_edit_note {
   position: absolute;
   top: 125px;
   left: 3%;
   color: lightgray;
+  background-color: transparent;
   width: 94%;
   padding: 7px 7px 7px 10px;
   border: 1.7px solid  #494c51;
   border-radius: 7px;
 }
+.erreur_edit {
+  color: red;
+
+}
 .edit_checklist_form{
   margin-bottom: 10px;
   position: relative;
+  align-items: stretch;
   
 }
-.edit_check_div {
-  
+.edit_check_div { 
   border-radius: 5px 0 0 5px;
   border: 1.7px solid  #494c51;         
   position: absolute;
@@ -718,7 +725,40 @@ nav a:hover{
   display: flex;
   justify-content: center;
   background-color: #2f323a;
+}
+.icone-delete {
+  background-color: red;
+  width: 10%;
+  color: white;
+  border: none;
+  border-radius: 0 5px 5px 0;
+  width: 14%;
+  height: 100%;
+  padding: 7px;
+  margin-left: -4%;
+}
 
+.icone-add {
+  background-color: blue;
+  width: 10%;
+  color: white;
+  border: none;
+  border-radius: 0 5px 5px 0;
+  width: 14%;
+  height: 100%;
+  padding: 7px;
+  margin-left: -4%;
+}
+
+
+.form-control-edit {
+  border: 1.6px solid #494c51;
+  padding: 6px;
+  width: 85%;
+  background-color: transparent;
+  border-radius: 5px;
+  color: lightgray;
+  border-right: none;
 }
 
 .check_square {
@@ -729,11 +769,11 @@ nav a:hover{
   margin: 10px;
   border: 1.5px solid rgb(75, 75, 73);
   background-color: #262829;
- 
   border-radius: 3px;
 }
 .checklist_elements{
   border: 1.6px solid #494c51;
+  border-radius: 0 5px 5px 0;
   border-left: none;
   padding: 7px;
   margin-left: 14%;
