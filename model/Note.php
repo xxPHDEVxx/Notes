@@ -18,8 +18,8 @@ abstract class Note extends Model
         public String $title,
         public int $owner,
         public string $created_at,
-        public bool $pinned,
-        public bool $archived,
+        public int $pinned,
+        public int $archived,
         public int $weight,
         public ?string $edited_at = NULL
     ) {
@@ -223,7 +223,7 @@ abstract class Note extends Model
 
 
     public function persist() : Note|array {
-        if ($this->note_id === null) {
+        if ($this->note_id == null) {
             $errors = $this->validate();
             if (empty($errors)) {
                 // Execute the INSERT operation

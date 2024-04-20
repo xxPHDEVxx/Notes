@@ -163,16 +163,15 @@ class ControllerNote extends Controller
         // Vérifiez si les données POST pour le titre et le contenu sont présentes
         if (isset($_POST['title'], $_POST['content'])) {
             // Création d'une nouvelle instance de TextNote sans note_id initial (ou null)
-            
             $note = new TextNote(
-                note_id: 0,
-                title: Tools::sanitize($_POST['title']),
-                owner: $user->id,
-                created_at: date("Y-m-d H:i:s"),
-                pinned: false,
-                archived: false,
-                weight: 0,
-                edited_at: null
+                0,
+                Tools::sanitize($_POST['title']),
+                $user->id,
+                date("Y-m-d H:i:s"),
+                0,
+                0,
+                0,  
+                null
             );
 
             // Valider le titre
@@ -183,13 +182,13 @@ class ControllerNote extends Controller
                 $this->redirect("openNote", "index");
                 exit();
             }
-    
+            
             // Appeler persist pour insérer ou mettre à jour la note
             $result = $note->persist();
             // Définir le contenu de la note
             $note->set_content(Tools::sanitize($_POST['content']));
             $note->update();
-            if ($result instanceof Note) {
+            if ($result instanceof TextNote) {
                 $this->redirect("openNote", "index", $result->note_id);
             } else {
                 // Gérer les erreurs de persistance

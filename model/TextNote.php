@@ -46,21 +46,31 @@ class TextNote extends Note {
     }
 
 
-public function update() {
-    // Mettre à jour la note dans la base de données
-    self::execute("UPDATE notes SET title=:title, edited_at=NOW() WHERE id=:id", [
-        'title' => $this->title,
-        'id' => $this->note_id
-    ]);
-    // Mettre à jour les informations dans la table des notes
-    self::execute("UPDATE notes SET edited_at=NOW() WHERE id=:id", [
-        'id' => $this->note_id
-    ]);
-        // Mettre à jour la text_note dans la base de données
-    self::execute("UPDATE text_notes SET content=:content WHERE id=:id", [
-        'content' => $this->content,
-        'id' => $this->note_id
-    ]);
-}
+    public function update() {
+        // Mettre à jour la note dans la table 'notes'
+        self::execute("UPDATE notes SET title=:title, edited_at=NOW() WHERE id=:id", [
+            'title' => $this->title,
+            'id' => $this->note_id
+        ]);
+    
+        // Vérifiez si une entrée existe dans la table 'text_notes'
+        $query = self::execute("SELECT COUNT(*) FROM text_notes WHERE id=:id", ['id' => $this->note_id]);
+        $count = $query->fetchColumn();
+    
+        if ($count > 0) {
+            // Si l'entrée existe, mettez à jour le contenu
+            self::execute("UPDATE text_notes SET content=:content WHERE id=:id", [
+                'content' => $this->content,
+                'id' => $this->note_id
+            ]);
+        } else {
+            // Si l'entrée n'existe pas, insérez le nouveau contenu
+            self::execute("INSERT INTO text_notes (id, content) VALUES (:id, :content)", [
+                'id' => $this->note_id,
+                'content' => $this->content
+            ]);
+        }
+    }
+    
 
 }
