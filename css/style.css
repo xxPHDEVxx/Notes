@@ -694,7 +694,7 @@ nav a:hover{
   position: absolute;
   left: 3%;
   width: 94%;
-  top: 30px;
+  top: 15px;
  
 
 }
@@ -787,4 +787,18 @@ nav a:hover{
   padding: 7px;
   margin-left: 14%;
   width: 70%;
+}
+.input_add {
+  background-color: transparent;
+
+}
+.adapt_height {
+  
+  height: 500px;
+}
+.pointer {
+  cursor: pointer;
+}
+.form-control {
+  background: transparent;
 }

@@ -53,6 +53,15 @@ class ControllerNote extends Controller
         (new View("share"))->show();
     }
 
+    
+    public function add_note() : void {  
+        (new view("add_text_note"))->show();  
+    }
+    public function add_checklist_note() {
+        (new view("add_checklist_note")) ->show();
+    }
+
+
     // Supprime une note
     public function delete_note() {
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
@@ -207,6 +216,5 @@ class ControllerNote extends Controller
     
     
     
-
 
 }
