@@ -195,6 +195,7 @@ abstract class Note extends Model
         $user = User::get_user_by_id($this->owner);
         // permet la suppression en cascade pour éviter problèmes suite aux dépendances
         if($user == $initiator) {
+            self::execute("DELETE FROM checklist_note_items WHERE checklist_note = :note_id", ['note_id' => $this->note_id]);
             self::execute("DELETE FROM text_notes WHERE id = :note_id", ['note_id' => $this->note_id]);
             self::execute("DELETE FROM checklist_notes WHERE id = :note_id", ['note_id' => $this->note_id]);
             self::execute("DELETE FROM note_shares WHERE note = :note_id", ['note_id' => $this->note_id]);
