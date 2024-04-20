@@ -207,36 +207,39 @@ abstract class Note extends Model
 
 
     public function persist() : Note|array {
-        if($this->note_id == NULL) {
+        if ($this->note_id === null) {
             $errors = $this->validate();
-            if(empty($errors)){
-                self::execute('INSERT INTO Notes (title, owner, pinned, archived, weight) VALUES (:author,:recipient,:body,:private)', 
-                               ['title' => $this->title,
-                                'owner' => $this->owner,
-                                'pinned' => $this->pinned? 1 : 0,
-                                'archived' => $this->archived? 1 : 0,
-                                'weight' => $this->weight,
-                               ]);
-                $note = self::get_note(self::lastInsertId());
+            if (empty($errors)) {
+                // Execute the INSERT operation
+                self::execute(
+                    "INSERT INTO Notes(title,owner,created_at,edited_at,pinned,archived,weight) VALUES (:title,:owner,:created_at,:edited_at,:pinned,:archived,:weight)", [
+                    "title" => $this->title,
+                    "owner" => $this->owner,
+                    "created_at" => $this->created_at,
+                    "edited_at" => $this->edited_at,
+                    "pinned" => $this->pinned,
+                    "archived" => $this->archived,
+                    "weight" => $this->weight,
+                ]);
+                $note = self::get_note_by_id(self::lastInsertId());
                 $this->note_id = $note->note_id;
                 return $this;
             } else {
-                return $errors; 
+                return $errors;
             }
         } else {
-            self::execute(
-                'UPDATE Notes SET title = :title, pinned = :pinned, archived = :archived, weight = :weight WHERE id = :note_id',
-                [
-                    'title' => $this->title,
-                    'pinned' => $this->pinned ? 1 : 0,
-                    'archived' => $this->archived ? 1 : 0,
-                    'weight' => $this->weight,
-                    'note_id' => $this->note_id,
-                ]
-            );
+            self::execute('UPDATE Notes SET title = :title, pinned = :pinned, archived = :archived, weight = :weight, edited_at = NOW() WHERE id = :note_id', [
+                'title' => $this->title,
+                'pinned' => $this->pinned ? 1 : 0,
+                'archived' => $this->archived ? 1 : 0,
+                'weight' => $this->weight,
+                'note_id' => $this->note_id,
+            ]);
             return $this;
         }
     }
+    
+    
 
     
 
@@ -320,7 +323,7 @@ abstract class Note extends Model
                    $data['archived'], 
                    $data['weight'],
                    $data['edited_at']); 
-       
+
     }  
 
     }

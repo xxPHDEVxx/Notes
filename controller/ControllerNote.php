@@ -126,5 +126,47 @@ class ControllerNote extends Controller
         }
     }
 
+    public function save_add_text_note() {
+        $user = $this->get_user_or_redirect();
+    
+        // Vérifiez si les données POST pour le titre et le contenu sont présentes
+        if (isset($_POST['title'], $_POST['content'])) {
+            // Création d'une nouvelle instance de TextNote sans note_id initial (ou null)
+            $note = new TextNote(
+                note_id: 0,
+                title: Tools::sanitize($_POST['title']),
+                owner: $user->id,
+                created_at: date("Y-m-d H:i:s"),
+                pinned: false,
+                archived: false,
+                weight: 0,
+                edited_at: null
+            );
+    
+            // Appeler persist pour insérer ou mettre à jour la note
+            $result = $note->persist();
+            // Définir le contenu de la note
+            $note->set_content(Tools::sanitize($_POST['content']));
+            $note->update();
+            if ($result instanceof Note) {
+                $this->redirect("openNote", "index", $result->note_id);
+            } else {
+                // Gérer les erreurs de persistance
+                if (is_array($result)) {
+                    echo "Erreur lors de la sauvegarde de la note : <br/>";
+                    foreach ($result as $error) {
+                        echo ($error) . "<br/>";
+                    }
+                }
+            }
+        } else {
+            echo "Les informations requises pour le titre ou le contenu sont manquantes.";
+        }
+    }
+    
+    
+    
+    
+
 
 }
