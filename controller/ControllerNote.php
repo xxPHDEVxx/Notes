@@ -139,7 +139,7 @@ class ControllerNote extends Controller
                     $note->set_content(Tools::sanitize($_POST['content']));
     
                     // Valider le titre
-                    $titleErrors = $note->validateTitle();
+                    $titleErrors = $note->validate_title();
                     if (!empty($titleErrors)) {
                         // Stocker l'erreur de titre dans la session
                         $_SESSION['edit_errors'] = $titleErrors;
@@ -184,7 +184,7 @@ class ControllerNote extends Controller
             );
 
             // Valider le titre
-            $titleErrors = $note->validateTitle();
+            $titleErrors = $note->validate_title();
             if (!empty($titleErrors)) {
                 // Stocker l'erreur de titre dans la session
                 $_SESSION['edit_errors'] = $titleErrors;

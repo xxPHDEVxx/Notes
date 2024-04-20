@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
     <link href="css/style.css" rel="stylesheet" type="text/css" />
-    <script src="JS/edit_errors.js"></script>
 </head>
 
 <body>
@@ -28,6 +27,12 @@
         <label for="content" class="note_body_title">Text</label>
         <textarea class="note_body_text" id="content" name="content"><?= $note->get_content() ?></textarea>
     </form>
-
+    
+    <script>
+    // Assurez-vous que ce script est dans le fichier .php où $note->owner est défini
+    var userId = <?= json_encode($note->owner); ?>;
+    console.log(userId); // Pour vérifier que la valeur est correctement passée
+</script>
+    <script src="JS/edit_errors.js"></script>
 </body>
 </html>

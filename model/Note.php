@@ -211,16 +211,27 @@ abstract class Note extends Model
         return $errors;
     }
 
-    public function validateTitle() {
+    public function validate_title() {
         $errors = [];
-        if (strlen($this->title) < 3) {
+        
+        // Vérifie la longueur du titre
+        if (strlen($this->title) < 3 || strlen($this->title) > 25) {
             $errors[] = "Le titre doit contenir entre 3 et 25 caractères.";
         }
-        if (strlen($this->title) > 25) {
-            $errors[] = "Le titre doit contenir entre 3 et 25 caractères.";
+    
+        // Vérifie si le titre est unique pour cet utilisateur
+        $query = self::execute("SELECT COUNT(*) FROM notes WHERE title = :title AND owner = :owner AND id != :id", [
+            'title' => $this->title,
+            'owner' => $this->owner,
+            'id' => $this->note_id ?? 0
+        ]);
+        if ($query->fetchColumn() > 0) {
+            $errors[] = "Une autre note avec le même titre existe déjà.";
         }
+    
         return $errors;
     }
+    
 
 
     public function persist() : Note|array {
