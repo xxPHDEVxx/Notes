@@ -190,9 +190,13 @@ abstract class Note extends Model
     }
 
 
-
+    // Supprime une note
     public function delete(User $initiator) : Note |false {
-        if($this->owner == $initiator) {
+        $user = User::get_user_by_id($this->owner);
+        // permet la suppression en cascade pour éviter problèmes suite aux dépendances
+        if($user == $initiator) {
+            self::execute("DELETE FROM text_notes WHERE id = :note_id", ['note_id' => $this->note_id]);
+            self::execute("DELETE FROM checklist_notes WHERE id = :note_id", ['note_id' => $this->note_id]);
             self::execute("DELETE FROM Notes WHERE id = :note_id", ['note_id' => $this->note_id]);
             return $this;
         }
@@ -238,13 +242,6 @@ abstract class Note extends Model
             return $this;
         }
     }
-    
-    
-
-    
-
-
-
 
     public function is_weight_unique(int $id): int {
         $query = self::execute("SELECT id, MAX(weight) from notes where id = :note_id group by id" , ["note_id" => $id]);
