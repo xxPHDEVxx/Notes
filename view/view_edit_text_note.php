@@ -35,6 +35,6 @@
     console.log(userId); // Pour vérifier que la valeur est correctement passée
 </script>
     <script src="JS/edit_errors.js"></script>
-    <script src="JS/confirmation_edit.js" ></script>
+    <script src="JS/confirmation_edit_text.js" ></script>
 </body>
 </html>

@@ -301,8 +301,9 @@ h2 {
   font-style: italic;
 }
 
-.view_notes_pinned,
-.view_notes_unpinned {
+
+.view_notes_pinned_unpinned{
+
   display: flex;
   flex-wrap: wrap;
   top: 3px;
@@ -904,11 +905,15 @@ input:focus, textarea:focus {
 
   color: lightgrey;
 
+
 }
+
+
 
 /* Modal */
 
 .modal-content {
   background-color: #313538;
 }
+
 

@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
         content: document.getElementById('content').value
     };
 
-    const backButton = document.querySelector('.back'); // Remplacer par le sélecteur correct de votre icône
+    const backButton = document.querySelector('.back');
     const modal = new bootstrap.Modal(document.getElementById('unsavedChangesModal'));
     const confirmExitButton = document.getElementById('confirmExitButton');
 
@@ -15,13 +15,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     backButton.addEventListener('click', function(event) {
         if (dataHasChanged()) {
-            event.preventDefault(); // Empêcher la navigation
-            modal.show(); // Afficher la modal
+            event.preventDefault(); 
+            modal.show(); 
         }
     });
 
     confirmExitButton.addEventListener('click', function() {
-        // L'utilisateur confirme vouloir quitter, continuez la navigation
-        window.location.href = backButton.href; // Assurez-vous que l'attribut href de backButton est correctement défini
+        
+        window.location.href = backButton.href; 
     });
 });
