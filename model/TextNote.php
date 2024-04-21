@@ -3,10 +3,11 @@ require_once "framework/Model.php";
 require_once "Note.php";
 require_once "User.php";
 
-class TextNote extends Note
-{
 
-    public ?string $content = null;
+
+class TextNote extends Note {
+  
+    private $content;
 
     public function get_type(): string
     {
@@ -22,15 +23,16 @@ class TextNote extends Note
             return new TextNote($data['id'], $data['title'], $data['owner'], $data['created_at'], $data['pinned'], $data['archived'], $data['weight'], $data['edited_at']);
         }
     }
-    public function get_content(): String | null
-    {
-        $dataQuery = self::execute("SELECT content FROM text_notes WHERE id = :note_id", ["note_id" => $this->note_id]);
-        $content = $dataQuery->fetchColumn();
-        return $content;
+
+    public function get_content() : String | null {
+        if ($this->content === null) {
+            $dataQuery = self::execute("SELECT content FROM text_notes WHERE id = :note_id", ["note_id" => $this->note_id]);
+            $this->content = $dataQuery->fetchColumn();
+        }
+        return $this->content;
     }
 
-    public function set_content(?string $content): void
-    {
+    public function set_content($content): void {
         $this->content = $content;
     }
 
