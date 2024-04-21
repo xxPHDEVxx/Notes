@@ -17,24 +17,41 @@
    
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link href="css/style.css" rel="stylesheet" type="text/css">
-   <script>
+    <script>
         $(document).ready(function() {
-            $("#pinned", "#unpinned").sortable({
-                connectWith:".view_notes_pinned_unpinned",
-                opacity: 0.8,
-                cursor: 'move',
+             $("#pinned").sortable({ 
+                connectWith: "#unpinned",
                 update: function(event, ui) {
                     var order = $(this).sortable("serialize") + '&update=update';
                     $.ajax({
-                        url: "note/drad_and_drop",
+                        url: "note/drag_and_drop",
                         type: "POST",
                         data: order,
                         success: function(response) {
-                         
+                            console.log(response); 
+                           
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(error);
                         }
-                    });
+                });
                 }
             });
+             $("#unpinned").sortable({
+                 connectWith: "#pinned",
+                 update: function(event, ui) {
+                    var order = $(this).sortable("serialize") + '&update=update';
+                    $.ajax({
+                        url: "note/drag_and_drop",
+                        type: "POST",
+                        data: order,
+                        success: function(response) {
+                            console.log(response); 
+                        }
+                    });
+                } 
+                });
+        
         });
     </script>
    
