@@ -26,7 +26,7 @@
                 update: function(event, ui) {
                     var order = $(this).sortable("serialize") + '&update=update';
                     $.ajax({
-                        url: "#",
+                        url: "note/drad_and_drop",
                         type: "POST",
                         data: order,
                         success: function(response) {
