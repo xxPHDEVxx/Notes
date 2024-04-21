@@ -16,10 +16,19 @@
 
 <body>
     <form method="post" action="note/edit_checklist_note/<?= $note_id ?>">
-        <?php include("edit_note.php"); ?>
+        <div class="edit">
+            <a class="back" href="<?= $_SESSION['previous_page'] ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
+            <button class="save" type="submit"><span class="material-symbols-outlined">save</span></button>
+        </div>
+        <div class="dates">Created <?= $created ?><?= ($edited ? "  Edited  " . $edited : " Not edited yet") ?></div>
         <label for="title" class="title_note_title">Title</label>
         <input type="text" class="title_edit_note" id="title" name="title" value="<?= $note->title ?>">
-         <label for="items" class="note_body_title">Items</label>
+        <?php if (count($errors) != 0) : ?>
+            <?php foreach ($errors as $error) : ?>
+                <li class="erreur_edit"><?= $error ?></li>
+            <?php endforeach; ?>
+        <?php endif; ?>
+        <label for="items" class="note_body_title">Items</label>
         <div class="note_body_checklist">
             <?php foreach ($note_body as $row) : ?>
                 <div class="edit_checklist_form">
@@ -40,7 +49,8 @@
             </div>
         </div>
     </form>
-    </div>
+    <?php include("view_modal.php"); ?>
+    <script src="JS/confirmation_edit_check.js" ></script>
 </body>
 
 </html>

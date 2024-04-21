@@ -54,4 +54,10 @@ class CheckListNote extends Note
     }
 
     public function update(){}
+
+    public function new(): void
+    {
+        self::execute("INSERT INTO `checklist_notes`(`id`) VALUES (:id)",
+        ["id"=> $this->note_id]);
+    }
 }

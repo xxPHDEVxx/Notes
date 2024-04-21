@@ -53,13 +53,12 @@ class ControllerNote extends Controller
         (new View("share"))->show();
     }
 
+
     
     public function add_note() : void {  
         (new view("add_text_note"))->show();  
     }
-    public function add_checklist_note() {
-        (new view("add_checklist_note")) ->show();
-    }
+  
     public function drag_and_drop() {
         
         if(isset($_POST['arrayorder'] , $_POST['update'])) {
@@ -77,13 +76,91 @@ class ControllerNote extends Controller
     }
 
 
+  
+    public function add_checklist_note()
+    {
+        $user = $this->get_user_or_redirect();
+        $errors = [];
+        // Vérification des doublons pour les éléments
+        $duplicateErrors = [];
+        $duplicateItems = [];
+
+        if(isset($_POST['title']) && $_POST['title'] == "") {
+            $errors['title'] = "Title required";
+        }
+        if (isset($_POST['title'], $_POST['items']) && $_POST['title'] != "") {
+            $title = Tools::sanitize($_POST['title']);
+            $items = $_POST['items'];
+            // Initialisation d'un tableau pour les éléments non vides
+            $non_empty_items = [];
+
+            // Parcours des éléments pour ne sauvegarder que les non vides
+            foreach ($items as $item) {
+                if (!empty($item)) {
+                    $non_empty_items[] = $item;
+                }
+            }
+            $note = new ChecklistNote(
+                0,
+                $title,
+                $user->id,
+                date("Y-m-d H:i:s"),
+                false,
+                false,
+                0
+            );
+            $errors = $note->validate_title();
+
+
+            foreach ($non_empty_items as $key => $item) {
+                if (in_array($item, $duplicateItems)) {
+                    // Stocker l'erreur de doublon avec l'indice correspondant
+                    $duplicateErrors["item_$key"] = "Items must be unique.";
+                }
+                $duplicateItems[] = $item;
+            }
+
+
+                        // Combinaison des erreurs de doublons avec d'autres erreurs
+            $errors = array_merge($errors, $duplicateErrors);
+        } 
+        if (empty($errors) && isset($_POST['title'], $_POST['items']) && $_POST['title'] != "") {
+            $note->persist();
+            $note->new();
+                // Parcours des erreurs de doublons
+            foreach ($non_empty_items as $key ) {
+                // Création d'une nouvelle instance de CheckListNoteItem
+                $content = $key; // Récupération du contenu de l'élément
+                $checklistNoteId = $note->note_id; // Récupération de l'identifiant de la note de checklist
+                $checked = false; // Par défaut, l'élément n'est pas coché
+                
+                // Création de l'instance CheckListNoteItem
+                $checklistItem = new CheckListNoteItem(
+                    0, // L'identifiant sera généré automatiquement par la base de données
+                    $checklistNoteId,
+                    $content,
+                    $checked
+                );
+                
+                // Enregistrement de l'élément dans la base de données
+                $checklistItem->persist();
+                }
+            
+            $this->redirect("openNote", "index", $note->note_id);
+        }
+
+        // Afficher la vue avec les erreurs
+        (new View("add_checklist_note"))->show(["errors" => $errors]);
+    }
+
     // Supprime une note
-    public function delete_note() {
+    public function delete_note()
+    {
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET['param1'];
             $note = Note::get_note_by_id($note_id);
             $user = $this->get_user_or_redirect();
-            if ($note->delete($user)){
+            if ($note->delete($user)) {
                 // Rediriger l'utilisateur vers la liste des notes après la suppression
                 $this->redirect("user", "my_archives");
             } else {
@@ -106,20 +183,17 @@ class ControllerNote extends Controller
             if ($note === false) {
                 throw new Exception("Undefined note");
             }
-
-            if (isset($_POST['title']) && $_POST['title'] != "" ) {
+            if (isset($_POST["title"]) && $_POST["title"] != "") {
                 $title = Tools::sanitize($_POST["title"]);
                 $note = Note::get_note_by_id($id);
                 $errors = $note->validate();
-                if(empty($errors)){
-    
+                if (empty($errors)) {
+
                     $note->title = $title;
-                    $note->persist();           
+                    $note->persist();
                 }
-
             }
-
-            if (isset($_POST['delete']) && $_POST['delete'] ) {
+            if (isset($_POST['delete']) && $_POST['delete']) {
                 $item_id = $_POST["delete"];
                 $item = CheckListNoteItem::get_item_by_id($item_id);
                 if ($item === false) {
@@ -127,11 +201,13 @@ class ControllerNote extends Controller
                 }
                 // Supprime l'élément de la liste de contrôle
                 $item->delete();
+                $this->redirect("openNote", "edit/$id");
             }
             if (isset($_POST['new']) && $_POST["new"] != "") {
                 $new_item_content = Tools::sanitize($_POST['new']);
                 $new_item = new CheckListNoteItem(5, $note->note_id, $new_item_content, 0);
                 $new_item->persist();
+                $this->redirect("openNote", "edit/$id");
             }
             $this->redirect("openNote", "index/$id");
         }
@@ -139,11 +215,10 @@ class ControllerNote extends Controller
 
     public function save_edit_text_note() {
         $user = $this->get_user_or_redirect();
-    
+        $errors = []; 
         // Vérifiez si les données POST sont présentes
         if (isset($_GET['param1'], $_POST['title'], $_POST['content'])) {
             $note_id = (int)$_GET['param1'];
-    
             if ($note_id > 0) {
                 $note = TextNote::get_note_by_id($note_id);
     
@@ -153,11 +228,15 @@ class ControllerNote extends Controller
                     $note->title = Tools::sanitize($_POST['title']);
                     $note->set_content(Tools::sanitize($_POST['content']));
     
-                    // Valider le titre
-                    $titleErrors = $note->validateTitle();
-                    if (!empty($titleErrors)) {
+                    // Valider le titre et contenu
+                    $_SESSION['edit_errors'] = []; // Réinitialiser les erreurs de session avant la validation
+                    $titleErrors = $note->validate_title();
+                    $contentErrors = $note->validate_content();
+                    $errors = array_merge($titleErrors, $contentErrors);
+                    
+                    if (!empty($errors)) {
                         // Stocker l'erreur de titre dans la session
-                        $_SESSION['edit_errors'] = $titleErrors;
+                        $_SESSION['edit_errors'] = $errors;
                         $this->redirect("openNote", "edit", $note_id);
                         exit();
                     }
@@ -182,50 +261,48 @@ class ControllerNote extends Controller
     public function save_add_text_note() {
         $user = $this->get_user_or_redirect();
     
-        // Vérifiez si les données POST pour le titre et le contenu sont présentes
         if (isset($_POST['title'], $_POST['content'])) {
-            // Création d'une nouvelle instance de TextNote sans note_id initial (ou null)
-            $note = new TextNote(
-                0,
-                Tools::sanitize($_POST['title']),
-                $user->id,
-                date("Y-m-d H:i:s"),
-                0,
-                0,
-                0,  
-                null
-            );
-
-            // Valider le titre
-            $titleErrors = $note->validateTitle();
-            if (!empty($titleErrors)) {
-                // Stocker l'erreur de titre dans la session
-                $_SESSION['edit_errors'] = $titleErrors;
-                $this->redirect("openNote", "index");
-                exit();
-            }
+            $title = Tools::sanitize($_POST['title']);
+            $content = Tools::sanitize($_POST['content']);
             
-            // Appeler persist pour insérer ou mettre à jour la note
-            $result = $note->persist();
-            // Définir le contenu de la note
-            $note->set_content(Tools::sanitize($_POST['content']));
-            $note->update();
-            if ($result instanceof TextNote) {
-                $this->redirect("openNote", "index", $result->note_id);
-            } else {
-                // Gérer les erreurs de persistance
-                if (is_array($result)) {
+            // Vérifier la longueur du titre avant de procéder
+            
+            if ((strlen($title) > 2) && (((strlen($content) > 4 && strlen($content) <= 800)) || strlen($content) == 0)){
+                $note = new TextNote(
+                    0,
+                    $title,
+                    $user->id,
+                    date("Y-m-d H:i:s"),
+                    0,
+                    0,
+                    0,
+                    null
+                );
+    
+                // Appeler persist pour insérer ou mettre à jour la note
+                $result = $note->persist();
+                $note->set_content($content);
+                $note->update();
+                if ($result instanceof TextNote) {
+                    $this->redirect("openNote", "index", $result->note_id);
+                    exit();
+                } else {
+                    // Gérer les erreurs de persistance
                     echo "Erreur lors de la sauvegarde de la note : <br/>";
                     foreach ($result as $error) {
-                        echo ($error) . "<br/>";
+                        echo $error . "<br/>";
                     }
                 }
+            } else {
+                // Gérer l'erreur de longueur du titre
+                $_SESSION['edit_errors'] = ['Respectez les validations.'];
+                $this->redirect("note", "add_note");
+                exit();
             }
         } else {
             echo "Les informations requises pour le titre ou le contenu sont manquantes.";
         }
     }
     
-
 
 }
