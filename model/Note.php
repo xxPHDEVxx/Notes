@@ -219,16 +219,42 @@ abstract class Note extends Model
         return $errors;
     }
 
-    public function validateTitle() {
+    public function validate_title() {
         $errors = [];
-        if (strlen($this->title) < 3) {
-            $errors[] = "Le titre doit contenir entre 3 et 25 caractères.";
+        $minLength = Configuration::get('title_min_length');
+        $maxLength = Configuration::get('title_max_length');
+
+        // Vérifie la longueur du titre
+        if (strlen($this->title) < $minLength || strlen($this->title) > $maxLength) {
+            $errors[] = "Le titre doit avoir au minimum $minLength caractères et au maximum $maxLength caractères.";
         }
-        if (strlen($this->title) > 25) {
-            $errors[] = "Le titre doit contenir entre 3 et 25 caractères.";
+    
+        // Vérifie si le titre est unique pour cet utilisateur
+        $query = self::execute("SELECT COUNT(*) FROM notes WHERE title = :title AND owner = :owner AND id != :id", [
+            'title' => $this->title,
+            'owner' => $this->owner,
+            'id' => $this->note_id ?? 0
+        ]);
+        if ($query->fetchColumn() > 0) {
+            $errors[] = "Une autre note avec le même titre existe déjà.";
         }
+    
         return $errors;
     }
+
+    public function validate_content() {
+        $minLength = Configuration::get('description_min_length');
+        $maxLength = Configuration::get('description_max_length');
+        $errors = [];
+        // Vérifie la longueur du contenu
+        if ((strlen($this->get_content()) < $minLength && strlen($this->get_content()) > 0) || strlen($this->get_content()) > $maxLength) {
+            $errors[] = "Le contenu de la note doit contenir entre 5 et 800 caractères.";
+        }
+    
+        return $errors;
+    }
+    
+    
 
 
     public function persist() : Note|array {

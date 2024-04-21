@@ -8,7 +8,7 @@ class CheckListNoteItem extends Model
         public int $id,
         public int $checklist_note,
         public string $content,
-        public bool $checked
+        public int $checked
     ) {
     }
 

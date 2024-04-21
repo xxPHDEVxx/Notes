@@ -11,14 +11,13 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
     <link href="css/style.css" rel="stylesheet" type="text/css" />
-    <script src="JS/edit_errors.js"></script>
 </head>
 
 <body>
     <form method="post" action="note/save_edit_text_note/<?= $note_id ?>">
         <div class="edit">
             <a class="back" href="<?= $_SESSION['previous_page'] ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
-            <button class="save" type="submit"><span class="material-symbols-outlined">save</span></button>
+            <button class="save" type="submit" id="saveButton"><span class="material-symbols-outlined">save</span></button>
         </div>
         <div class="dates">Created <?= $created ?><?= ($edited ? " Edited " . $edited : " Not edited yet") ?></div>
         <label for="title" class="title_note_title">Title</label>
@@ -26,8 +25,16 @@
         <div id="titleError" class="invalid-feedback" style="display: none;"></div>
 
         <label for="content" class="note_body_title">Text</label>
-        <textarea class="note_body_text" id="content" name="content"><?= $note->get_content() ?></textarea>
+        <textarea class="note_body_text" id="content" name="content"><?= $note_body ?></textarea>
+        <div id="contentError" class="invalid-feedback" style="display: none;"></div>
     </form>
 
+    <?php include("view_modal.php"); ?>
+    <script>
+    var userId = <?= json_encode($note->owner); ?>;
+    console.log(userId); // Pour vérifier que la valeur est correctement passée
+</script>
+    <script src="JS/edit_errors.js"></script>
+    <script src="JS/confirmation_edit.js" ></script>
 </body>
 </html>
