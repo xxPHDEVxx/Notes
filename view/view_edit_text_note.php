@@ -28,11 +28,13 @@
         <textarea class="note_body_text" id="content" name="content"><?= $note_body ?></textarea>
         <div id="contentError" class="invalid-feedback" style="display: none;"></div>
     </form>
-    
+
+    <?php include("view_modal.php"); ?>
     <script>
     var userId = <?= json_encode($note->owner); ?>;
     console.log(userId); // Pour vérifier que la valeur est correctement passée
 </script>
     <script src="JS/edit_errors.js"></script>
+    <script src="JS/confirmation_edit_text.js" ></script>
 </body>
 </html>

@@ -58,7 +58,7 @@ class ControllerNote extends Controller
     {
         (new view("add_text_note"))->show();
     }
-    public function add_checklist_note(): void
+    public function add_checklist_note()
     {
         $user = $this->get_user_or_redirect();
         $errors = [];

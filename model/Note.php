@@ -226,7 +226,7 @@ abstract class Note extends Model
 
         // Vérifie la longueur du titre
         if (strlen($this->title) < $minLength || strlen($this->title) > $maxLength) {
-            $errors[] = "Le titre doit contenir entre 3 et 25 caractères.";
+            $errors[] = "Le titre doit avoir au minimum $minLength caractères et au maximum $maxLength caractères.";
         }
     
         // Vérifie si le titre est unique pour cet utilisateur
