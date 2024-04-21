@@ -4,6 +4,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const titleErrorDiv = document.getElementById('titleError');
     const contentErrorDiv = document.getElementById('contentError');  // Div pour les erreurs de contenu
 
+    // Désactiver le bouton save si une des classes 'is-invalid' est présente
+    function updateSaveButtonState() {
+        saveButton.disabled = titleInput.classList.contains('is-invalid') || contentInput.classList.contains('is-invalid');
+    }
+
     titleInput.addEventListener('input', function () {
         const title = titleInput.value;
         let errorMessage = '';
@@ -21,17 +26,19 @@ document.addEventListener('DOMContentLoaded', function () {
             titleInput.classList.remove('is-valid');
         } else {
             //checkTitleUniqueness(title); soucis acces (403)
+            titleErrorDiv.textContent = ""; //petit soucis nettoyage div
             contentErrorDiv.style.display = 'none';
             titleInput.classList.remove('is-invalid');
             titleInput.classList.add('is-valid');
         }
+        updateSaveButtonState();
     });
 
     contentInput.addEventListener('input', function () {
         const content = contentInput.value;
         let errorMessage = '';
 
-        if (content.length < 5) {
+        if (content.length < 5 && content.length > 0) {
             errorMessage = 'Le contenu de la note doit contenir au moins 5 caractères.';
         } else if (content.length > 800) {
             errorMessage = 'Le contenu de la note ne doit pas dépasser 800 caractères.';
@@ -47,6 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
             contentInput.classList.remove('is-invalid');
             contentInput.classList.add('is-valid');
         }
+        updateSaveButtonState();
     });
 
     function checkTitleUniqueness(title) {
@@ -84,5 +92,6 @@ document.addEventListener('DOMContentLoaded', function () {
             titleErrorDiv.textContent = 'Erreur de vérification du titre: ' + error.message;
             titleErrorDiv.style.display = 'block';
         });
+        updateSaveButtonState();
     }
 });

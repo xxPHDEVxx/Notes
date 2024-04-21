@@ -17,7 +17,7 @@
     <form method="post" action="note/save_edit_text_note/<?= $note_id ?>">
         <div class="edit">
             <a class="back" href="<?= $_SESSION['previous_page'] ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
-            <button class="save" type="submit"><span class="material-symbols-outlined">save</span></button>
+            <button class="save" type="submit" id="saveButton"><span class="material-symbols-outlined">save</span></button>
         </div>
         <div class="dates">Created <?= $created ?><?= ($edited ? " Edited " . $edited : " Not edited yet") ?></div>
         <label for="title" class="title_note_title">Title</label>

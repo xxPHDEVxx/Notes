@@ -178,7 +178,8 @@ class ControllerNote extends Controller
             $content = Tools::sanitize($_POST['content']);
             
             // Vérifier la longueur du titre avant de procéder
-            if (strlen($title) > 2 && strlen($content) > 4) {
+            if ((strlen($title) > 2) && (((strlen($content) > 4 && strlen($content) <= 800)) || strlen($content) == 0))
+ {
                 $note = new TextNote(
                     0,
                     $title,

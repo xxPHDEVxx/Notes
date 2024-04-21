@@ -213,9 +213,11 @@ abstract class Note extends Model
 
     public function validate_title() {
         $errors = [];
-        
+        $minLength = Configuration::get('title_min_length');
+        $maxLength = Configuration::get('title_max_length');
+
         // Vérifie la longueur du titre
-        if (strlen($this->title) < 3 || strlen($this->title) > 25) {
+        if (strlen($this->title) < $minLength || strlen($this->title) > $maxLength) {
             $errors[] = "Le titre doit contenir entre 3 et 25 caractères.";
         }
     
@@ -233,9 +235,11 @@ abstract class Note extends Model
     }
 
     public function validate_content() {
+        $minLength = Configuration::get('description_min_length');
+        $maxLength = Configuration::get('description_max_length');
         $errors = [];
         // Vérifie la longueur du contenu
-        if (strlen($this->get_content()) < 5 || strlen($this->get_content()) > 800) {
+        if ((strlen($this->get_content()) < $minLength && strlen($this->get_content()) > 0) || strlen($this->get_content()) > $maxLength) {
             $errors[] = "Le contenu de la note doit contenir entre 5 et 800 caractères.";
         }
     
