@@ -336,6 +336,9 @@ abstract class Note extends Model
 
     }  
 }
+public static function update_drag_and_drop($count, $idval) {
+    self::execute("UPDATE dragdrop SET listorder = :count, WHERE id = :id", ['count' => $count, 'id' =>$idval]);
+}
 
 
 
