@@ -38,8 +38,9 @@
 
         <?php endforeach; ?>
     </div>
-
+    <?php include("view/view_modal_delete.php"); ?>
     <script src="JS/check_uncheck.js"></script>
+    <script src="JS/confirmation_delete.js"></script>
 </body>
 
 </html>

@@ -554,9 +554,14 @@ nav a {
 }
 
 #delete_icon {
-  color: red;
   position: absolute;
   right: 40px;
+  background-color: transparent;
+  border: none;
+}
+#delete_icon span {
+  color: red;
+
 }
 
 
