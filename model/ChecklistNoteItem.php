@@ -33,6 +33,7 @@ class CheckListNoteItem extends Model
 
     public function persist(): CheckListNoteItem
     {
+        var_dump("oke");
         self::execute("INSERT INTO checklist_note_items (checklist_note, content, checked) VALUES (:checklist_note, :content, :checked)", [
             "checklist_note" => $this->checklist_note,
             "content" => $this->content,

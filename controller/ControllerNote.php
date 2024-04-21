@@ -58,11 +58,78 @@ class ControllerNote extends Controller
     {
         (new view("add_text_note"))->show();
     }
-    public function add_checklist_note()
+    public function add_checklist_note(): void
     {
-        (new view("add_checklist_note"))->show();
-    }
+        $user = $this->get_user_or_redirect();
+        $errors = [];
+                    // Vérification des doublons pour les éléments
+                    $duplicateErrors = [];
+                    $duplicateItems = [];
 
+        if (isset($_POST['title'], $_POST['items']) && $_POST['title'] !== "") {
+            $title = Tools::sanitize($_POST['title']);
+            $items = $_POST['items'];
+            // Initialisation d'un tableau pour les éléments non vides
+            $non_empty_items = [];
+
+            // Parcours des éléments pour ne sauvegarder que les non vides
+            foreach ($items as $item) {
+                if (!empty($item)) {
+                    $non_empty_items[] = $item;
+                }
+            }
+            $note = new ChecklistNote(
+                0,
+                $title,
+                $user->id,
+                date("Y-m-d H:i:s"),
+                false,
+                false,
+                0
+            );
+            $errors = $note->validateTitle();
+
+
+            foreach ($non_empty_items as $key => $item) {
+                if (in_array($item, $duplicateItems)) {
+                    // Stocker l'erreur de doublon avec l'indice correspondant
+                    $duplicateErrors["item_$key"] = "Ce champ a un doublon.";
+                }
+                $duplicateItems[] = $item;
+            }
+
+
+                        // Combinaison des erreurs de doublons avec d'autres erreurs
+            $errors = array_merge($errors, $duplicateErrors);
+        }
+        if (empty($errors) && count($_POST) > 0) {
+            $note->persist();
+            $note->new();
+                // Parcours des erreurs de doublons
+            foreach ($non_empty_items as $key ) {
+                // Création d'une nouvelle instance de CheckListNoteItem
+                $content = $key; // Récupération du contenu de l'élément
+                $checklistNoteId = $note->note_id; // Récupération de l'identifiant de la note de checklist
+                $checked = false; // Par défaut, l'élément n'est pas coché
+                
+                // Création de l'instance CheckListNoteItem
+                $checklistItem = new CheckListNoteItem(
+                    0, // L'identifiant sera généré automatiquement par la base de données
+                    $checklistNoteId,
+                    $content,
+                    $checked
+                );
+                
+                // Enregistrement de l'élément dans la base de données
+                $checklistItem->persist();
+                }
+            
+            $this->redirect("openNote", "index", $note->note_id);
+        }
+
+        // Afficher la vue avec les erreurs
+        (new View("add_checklist_note"))->show(["errors" => $errors]);
+    }
 
     // Supprime une note
     public function delete_note()
