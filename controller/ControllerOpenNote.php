@@ -9,7 +9,7 @@ class ControllerOpenNote extends Controller
     {
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
-            $note = Note1::get_note($note_id);
+            $note = Note::get_note_by_id($note_id);
             $user_id = $this->get_user_or_redirect()->id;
             $archived = $note->in_My_archives($user_id);
             $pinned = $note->is_pinned($user_id);
@@ -25,12 +25,12 @@ class ControllerOpenNote extends Controller
 
     public function get_created_time(int $note_id): String
     {
-        $created_date = Note1::get_created_at($note_id);
+        $created_date = Note::get_created_at($note_id);
         return $this->get_elapsed_time($created_date);
     }
     public function get_edited_time(int $note_id): String | bool
     {
-        $edited_date = Note1::get_edited_at($note_id);
+        $edited_date = Note::get_edited_at($note_id);
         return $edited_date != null ? $this->get_elapsed_time($edited_date) : false;
     }
 
@@ -60,23 +60,23 @@ class ControllerOpenNote extends Controller
     {
         if (isset($_POST["check"])) {
             $checklist_item_id = $_POST["check"];
-            $note_id = CheckListNoteItem1::get_checklist_note($checklist_item_id);
+            $note_id = CheckListNoteItem::get_checklist_note($checklist_item_id);
             $checked = true;
-            CheckListNoteItem1::update_checked($checklist_item_id, $checked);
+            CheckListNoteItem::update_checked($checklist_item_id, $checked);
         } elseif (isset($_POST["uncheck"])) {
             $checklist_item_id = $_POST["uncheck"];
-            $note_id = CheckListNoteItem1::get_checklist_note($checklist_item_id);
+            $note_id = CheckListNoteItem::get_checklist_note($checklist_item_id);
             $checked = false;
-            CheckListNoteItem1::update_checked($checklist_item_id, $checked);
+            CheckListNoteItem::update_checked($checklist_item_id, $checked);
         }
         $this->redirect("openNote", "index/$note_id");
     }
-
+    
     public function pin(): void
     {
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
-            $note = Note1::get_note($note_id);
+            $note = Note::get_note_by_id($note_id);
             $note->pin();
             $this->index();
         }
@@ -85,7 +85,7 @@ class ControllerOpenNote extends Controller
     {
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
-            $note = Note1::get_note($note_id);
+            $note = Note::get_note_by_id($note_id);
             $note->unpin();
             $this->index();
         }
@@ -94,9 +94,9 @@ class ControllerOpenNote extends Controller
     {
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
-            $note = Note1::get_note($note_id);
+            $note = Note::get_note_by_id($note_id);
             $note->archive();
-            $this->redirect();
+            $this->redirect("openNote", "index", $note_id);
         }
     }
 
@@ -104,7 +104,7 @@ class ControllerOpenNote extends Controller
     {
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
-            $note = Note1::get_note($note_id);
+            $note = Note::get_note_by_id($note_id);
             $note->unarchive();
             $this->redirect();
         }
@@ -112,9 +112,11 @@ class ControllerOpenNote extends Controller
 
     public function edit(): void
     {
+        $errors = [];
+
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
-            $note = Note1::get_note($note_id);
+            $note = Note::get_note_by_id($note_id);
             $user_id = $this->get_user_or_redirect()->id;
             $archived = $note->in_My_archives($user_id);
             $pinned = $note->is_pinned($user_id);
@@ -124,6 +126,33 @@ class ControllerOpenNote extends Controller
         }
         ($note->get_type() == "TextNote" ? new View("edit_text_note") : new View("edit_checklist_note"))->show([
             "note" => $note, "note_id" => $note_id, "created" => $this->get_created_time($note_id), "edited" => $this->get_edited_time($note_id), "archived" => $archived, "isShared_as_editor" => $isShared_as_editor, "isShared_as_reader" => $isShared_as_reader, "note_body" => $body, "pinned" => $pinned
-        , "user_id" => $user_id]);
+        , "user_id" => $user_id, "errors"=>$errors]);
     }
+
+    // Ouvre la vue d'ajout d'une note
+    public function add_text_note(): void
+{
+    $user_id = $this->get_user_or_redirect()->id;
+
+    // Créez une instance de vue pour l'ajout de note texte
+    $view = new View("add_text_note");
+
+    // Prépare les données par défaut pour initialiser la vue
+    $data = [
+        "user_id" => $user_id,
+        "note_id" => null,
+        "created" => date("Y-m-d H:i:s"),
+        "edited" => null,
+        "archived" => 0,
+        "isShared_as_editor" => 0,
+        "isShared_as_reader" => 0,
+        "content" => "",
+        "pinned" => 0
+    ];
+
+    $view->show($data);
 }
+
+
+}
+
