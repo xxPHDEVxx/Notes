@@ -60,6 +60,21 @@ class ControllerNote extends Controller
     public function add_checklist_note() {
         (new view("add_checklist_note")) ->show();
     }
+    public function drag_and_drop() {
+        
+        if(isset($_POST['arrayorder'] , $_POST['update'])) {
+            $array = $_POST['arrayorder'];
+            if($_POST['update'] == "update") {
+                $count = 1;
+                foreach ($array as $idval) {
+                    NOTE::update_drag_and_drop($count, $idval);
+                    $count++;
+    }
+
+}
+    }
+        
+    }
 
 
     // Supprime une note
@@ -163,8 +178,6 @@ class ControllerNote extends Controller
             echo "Les informations requises sont manquantes.";
         }
     }
-    
-    
 
     public function save_add_text_note() {
         $user = $this->get_user_or_redirect();
@@ -213,8 +226,6 @@ class ControllerNote extends Controller
         }
     }
     
-    
-    
-    
+
 
 }

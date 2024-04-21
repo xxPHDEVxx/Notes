@@ -1,4 +1,4 @@
--- MariaDB dump 10.19  Distrib 10.4.28-MariaDB, for Win64 (AMD64)
+-- MariaDB dump 10.19  Distrib 10.4.28-MariaDB, for osx10.10 (x86_64)
 --
 -- Host: 127.0.0.1    Database: prwb_2324_a03
 -- ------------------------------------------------------
@@ -113,6 +113,8 @@ CREATE TABLE `notes` (
   `archived` tinyint(1) NOT NULL DEFAULT 0,
   `weight` double NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_title_owner` (`title`,`owner`),
+  UNIQUE KEY `unique_weigh_owner` (`weight`,`owner`),
   KEY `fk_notes_users` (`owner`),
   CONSTRAINT `fk_notes_users` FOREIGN KEY (`owner`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -124,7 +126,7 @@ CREATE TABLE `notes` (
 
 LOCK TABLES `notes` WRITE;
 /*!40000 ALTER TABLE `notes` DISABLE KEYS */;
-INSERT INTO `notes` VALUES (20,'Note archivée',1,'2023-10-11 11:51:37','2023-11-21 09:18:46',1,1,2),(21,'Code alarme',1,'2023-10-11 11:51:43','2023-11-20 21:33:47',1,0,6),(22,'Pensées',1,'2023-10-11 11:51:50','2023-11-21 09:17:15',1,0,1),(23,'Note avec un long texte',1,'2023-10-11 13:19:30','2023-11-20 21:36:02',0,0,5),(24,'Colruyt tartiflette',1,'2023-10-12 20:16:52','2023-11-20 21:37:12',1,0,4),(25,'Urgent',1,'2023-10-19 21:01:06','2023-11-20 21:34:34',1,0,3),(26,'Netflix password',4,'2023-11-06 23:03:42','2023-11-21 09:20:40',1,0,1),(27,'Courses',4,'2023-11-06 23:04:52','2023-11-21 09:19:34',0,0,2),(28,'Git clean',2,'2023-11-13 15:50:19',NULL,0,0,1),(29,'Prépa EPFC',2,'2023-11-13 16:08:37','2023-11-21 09:22:07',0,0,2),(30,'Note vide',1,'2023-11-20 18:42:04',NULL,0,0,7),(31,'Note archivée',4,'2023-11-21 09:21:07',NULL,0,1,3);
+INSERT INTO `notes` VALUES (20,'Note archivée',1,'2023-10-11 11:51:37','2023-11-21 09:18:46',0,1,1),(21,'Code alarme',1,'2023-10-11 11:51:43','2023-11-20 21:33:47',1,0,7),(22,'Pensées',1,'2023-10-11 11:51:50','2023-11-21 09:17:15',1,0,4),(23,'Note avec un long texte',1,'2023-10-11 13:19:30','2023-11-20 21:36:02',0,0,2),(24,'Colruyt tartiflette',1,'2023-10-12 20:16:52','2023-11-20 21:37:12',1,0,6),(25,'Urgent',1,'2023-10-19 21:01:06','2023-11-20 21:34:34',1,0,5),(26,'Netflix password',4,'2023-11-06 23:03:42','2023-11-21 09:20:40',1,0,3),(27,'Courses',4,'2023-11-06 23:04:52','2023-11-21 09:19:34',0,0,2),(28,'Git clean',2,'2023-11-13 15:50:19',NULL,0,0,1),(29,'Prépa EPFC',2,'2023-11-13 16:08:37','2023-11-21 09:22:07',0,0,2),(30,'Note vide',1,'2023-11-20 18:42:04',NULL,0,0,3),(31,'Note archivée',4,'2023-11-21 09:21:07',NULL,0,1,1);
 /*!40000 ALTER TABLE `notes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -190,4 +192,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-04 11:37:38
+-- Dump completed on 2024-03-04 18:09:57
