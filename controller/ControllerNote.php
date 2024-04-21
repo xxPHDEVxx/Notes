@@ -163,8 +163,6 @@ class ControllerNote extends Controller
             echo "Les informations requises sont manquantes.";
         }
     }
-    
-    
 
     public function save_add_text_note() {
         $user = $this->get_user_or_redirect();
@@ -212,9 +210,5 @@ class ControllerNote extends Controller
             echo "Les informations requises pour le titre ou le contenu sont manquantes.";
         }
     }
-    
-    
-    
-    
 
 }
