@@ -90,7 +90,7 @@ class ControllerNote extends Controller
                 false,
                 0
             );
-            $errors = $note->validateTitle();
+            $errors = $note->validate_title();
 
 
             foreach ($non_empty_items as $key => $item) {
