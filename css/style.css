@@ -653,6 +653,25 @@ nav a {
   left: 3%;
 }
 
+#contentError {
+  position: absolute;
+  top: 330px;
+  left: 3%;
+}
+
+.is-invalid {
+  border: 2px solid red !important;
+}
+
+.is-valid {
+  border: 2px solid rgb(27, 197, 27) !important;
+}
+
+input:focus, textarea:focus {
+  outline: none;  /* Supprime l'outline par défaut */
+  box-shadow: 0 0 5px rgba(81, 203, 238, 1);  /* Ajoute une légère box-shadow pour un effet de focus */
+}
+
 /*open_checklist_note*/
 
 .note_body_checklist {
