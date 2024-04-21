@@ -219,7 +219,6 @@ abstract class Note extends Model
             $errors[] = "Le titre doit contenir entre 3 et 25 caractères.";
         }
     
-        
         // Vérifie si le titre est unique pour cet utilisateur
         $query = self::execute("SELECT COUNT(*) FROM notes WHERE title = :title AND owner = :owner AND id != :id", [
             'title' => $this->title,
@@ -235,7 +234,6 @@ abstract class Note extends Model
 
     public function validate_content() {
         $errors = [];
-    
         // Vérifie la longueur du contenu
         if (strlen($this->get_content()) < 5 || strlen($this->get_content()) > 800) {
             $errors[] = "Le contenu de la note doit contenir entre 5 et 800 caractères.";

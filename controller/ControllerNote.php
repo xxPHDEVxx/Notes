@@ -124,11 +124,11 @@ class ControllerNote extends Controller
 
     public function save_edit_text_note() {
         $user = $this->get_user_or_redirect();
-    
+        $errors = []; 
+
         // Vérifiez si les données POST sont présentes
         if (isset($_GET['param1'], $_POST['title'], $_POST['content'])) {
             $note_id = (int)$_GET['param1'];
-    
             if ($note_id > 0) {
                 $note = TextNote::get_note_by_id($note_id);
     
@@ -138,12 +138,12 @@ class ControllerNote extends Controller
                     $note->title = Tools::sanitize($_POST['title']);
                     $note->set_content(Tools::sanitize($_POST['content']));
     
-                    // Valider le titre
+                    // Valider le titre et contenu
+                    $_SESSION['edit_errors'] = []; // Réinitialiser les erreurs de session avant la validation
                     $titleErrors = $note->validate_title();
                     $contentErrors = $note->validate_content();
-                    $errors = array_merge($titleErrors);
-                    $_SESSION['edit_errors'] = []; // Réinitialiser les erreurs de session avant la validation
-
+                    $errors = array_merge($titleErrors, $contentErrors);
+                    
                     if (!empty($errors)) {
                         // Stocker l'erreur de titre dans la session
                         $_SESSION['edit_errors'] = $errors;
@@ -173,49 +173,50 @@ class ControllerNote extends Controller
     public function save_add_text_note() {
         $user = $this->get_user_or_redirect();
     
-        // Vérifiez si les données POST pour le titre et le contenu sont présentes
         if (isset($_POST['title'], $_POST['content'])) {
-            // Création d'une nouvelle instance de TextNote sans note_id initial (ou null)
-            $note = new TextNote(
-                0,
-                Tools::sanitize($_POST['title']),
-                $user->id,
-                date("Y-m-d H:i:s"),
-                0,
-                0,
-                0,  
-                null
-            );
-
-            // Valider le titre
-            $titleErrors = $note->validate_title();
-            if (!empty($titleErrors)) {
-                // Stocker l'erreur de titre dans la session
-                $_SESSION['edit_errors'] = $titleErrors;
-                $this->redirect("openNote", "index");
-                exit();
-            }
+            $title = Tools::sanitize($_POST['title']);
+            $content = Tools::sanitize($_POST['content']);
             
-            // Appeler persist pour insérer ou mettre à jour la note
-            $result = $note->persist();
-            // Définir le contenu de la note
-            $note->set_content(Tools::sanitize($_POST['content']));
-            $note->update();
-            if ($result instanceof TextNote) {
-                $this->redirect("openNote", "index", $result->note_id);
-            } else {
-                // Gérer les erreurs de persistance
-                if (is_array($result)) {
+            // Vérifier la longueur du titre avant de procéder
+            if (strlen($title) > 2 && strlen($content) > 4) {
+                $note = new TextNote(
+                    0,
+                    $title,
+                    $user->id,
+                    date("Y-m-d H:i:s"),
+                    0,
+                    0,
+                    0,
+                    null
+                );
+    
+                // Appeler persist pour insérer ou mettre à jour la note
+                $result = $note->persist();
+
+                $note->set_content($content);
+                $note->update();
+
+                if ($result instanceof TextNote) {
+                    $this->redirect("openNote", "index", $result->note_id);
+                    exit();
+                } else {
+                    // Gérer les erreurs de persistance
                     echo "Erreur lors de la sauvegarde de la note : <br/>";
                     foreach ($result as $error) {
-                        echo ($error) . "<br/>";
+                        echo $error . "<br/>";
                     }
                 }
+            } else {
+                // Gérer l'erreur de longueur du titre
+                $_SESSION['edit_errors'] = ['Respectez les validations.'];
+                $this->redirect("note", "add_note");
+                exit();
             }
         } else {
             echo "Les informations requises pour le titre ou le contenu sont manquantes.";
         }
     }
+    
     
     
     

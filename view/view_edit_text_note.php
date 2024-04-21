@@ -25,12 +25,11 @@
         <div id="titleError" class="invalid-feedback" style="display: none;"></div>
 
         <label for="content" class="note_body_title">Text</label>
-        <textarea class="note_body_text" id="content" name="content"><?= $note->get_content() ?></textarea>
-        <div id="contentError" class="error" style="display: none;"></div>
+        <textarea class="note_body_text" id="content" name="content"><?= $note_body ?></textarea>
+        <div id="contentError" class="invalid-feedback" style="display: none;"></div>
     </form>
     
     <script>
-    // Assurez-vous que ce script est dans le fichier .php où $note->owner est défini
     var userId = <?= json_encode($note->owner); ?>;
     console.log(userId); // Pour vérifier que la valeur est correctement passée
 </script>

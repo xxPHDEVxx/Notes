@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     const titleInput = document.getElementById('title');
+    const contentInput = document.getElementById('content');  // Ajout du champ de contenu
     const titleErrorDiv = document.getElementById('titleError');
+    const contentErrorDiv = document.getElementById('contentError');  // Div pour les erreurs de contenu
 
     titleInput.addEventListener('input', function () {
         const title = titleInput.value;
@@ -12,47 +14,75 @@ document.addEventListener('DOMContentLoaded', function () {
             errorMessage = 'Le titre ne doit pas dépasser 25 caractères.';
         }
 
-        if (!errorMessage) {
-
-            const encodedTitle = encodeURIComponent(title);
-            const encodedUserId = encodeURIComponent(userId);
-            console.log('Encoded title:', encodedTitle);
-            console.log('Encoded user Id:', encodedUserId);
-            // Si la longueur du titre est valide, vérifiez son unicité
-            fetch('model/Note.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `title=${encodeURIComponent(title)}&userId=${encodeURIComponent(userId)}`
-            })
-            .then(response => {
-                if (response.headers.get("content-type").includes("application/json")) {
-                    return response.json();
-                } else {
-                    throw new Error('Réponse non-JSON reçue');
-                }
-            })
-            .then(data => {
-                if (data.isUnique === false) {
-                    titleErrorDiv.textContent = 'Une note avec ce titre existe déjà pour cet utilisateur.';
-                    titleErrorDiv.style.display = 'block';
-                    titleInput.classList.add('is-invalid');
-                } else {
-                    titleErrorDiv.style.display = 'none';
-                    titleInput.classList.remove('is-invalid');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                titleErrorDiv.textContent = 'Erreur de vérification du titre: ' + error.message;
-                titleErrorDiv.style.display = 'block';
-            });
-            
-        } else {
+        if (errorMessage) {
             titleErrorDiv.textContent = errorMessage;
             titleErrorDiv.style.display = 'block';
             titleInput.classList.add('is-invalid');
+            titleInput.classList.remove('is-valid');
+        } else {
+            //checkTitleUniqueness(title); soucis acces (403)
+            contentErrorDiv.style.display = 'none';
+            titleInput.classList.remove('is-invalid');
+            titleInput.classList.add('is-valid');
         }
     });
+
+    contentInput.addEventListener('input', function () {
+        const content = contentInput.value;
+        let errorMessage = '';
+
+        if (content.length < 5) {
+            errorMessage = 'Le contenu de la note doit contenir au moins 5 caractères.';
+        } else if (content.length > 800) {
+            errorMessage = 'Le contenu de la note ne doit pas dépasser 800 caractères.';
+        }
+
+        if (errorMessage) {
+            contentErrorDiv.textContent = errorMessage;
+            contentErrorDiv.style.display = 'block';
+            contentInput.classList.add('is-invalid');
+            contentInput.classList.remove('is-valid');
+        } else {
+            contentErrorDiv.style.display = 'none';
+            contentInput.classList.remove('is-invalid');
+            contentInput.classList.add('is-valid');
+        }
+    });
+
+    function checkTitleUniqueness(title) {
+        const encodedTitle = encodeURIComponent(title);
+        const userId = document.getElementById('userId').value;  // Assurez-vous que cet élément existe
+        console.log('Encoded title:', encodedTitle);
+        console.log('Encoded user Id:', userId);
+
+        fetch('model/Note.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `title=${encodedTitle}&userId=${encodeURIComponent(userId)}`
+        })
+        .then(response => {
+            if (response.headers.get("content-type").includes("application/json")) {
+                return response.json();
+            } else {
+                throw new Error('Réponse non-JSON reçue');
+            }
+        })
+        .then(data => {
+            if (data.isUnique === false) {
+                titleErrorDiv.textContent = 'Une note avec ce titre existe déjà pour cet utilisateur.';
+                titleErrorDiv.style.display = 'block';
+                titleInput.classList.add('is-invalid');
+            } else {
+                titleErrorDiv.style.display = 'none';
+                titleInput.classList.remove('is-invalid');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            titleErrorDiv.textContent = 'Erreur de vérification du titre: ' + error.message;
+            titleErrorDiv.style.display = 'block';
+        });
+    }
 });

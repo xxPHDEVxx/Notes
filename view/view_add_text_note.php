@@ -26,7 +26,7 @@
         <div id="titleError" class="invalid-feedback" style="display: none;"></div>
 
         <label for="content" class="note_body_title">Text</label>
-        <textarea class="note_body_text" id="content" name="content" placeholder="Type your note here..."></textarea>
+        <textarea class="note_body_text" id="content" name="content"></textarea>
     </form>
 </body>
 </html>
