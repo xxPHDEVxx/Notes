@@ -71,7 +71,7 @@ class ControllerOpenNote extends Controller
         }
         $this->redirect("openNote", "index/$note_id");
     }
-
+    
     public function pin(): void
     {
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {

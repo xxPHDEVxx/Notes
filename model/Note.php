@@ -212,7 +212,7 @@ abstract class Note extends Model
         $minLength = Configuration::get('title_min_length');
         $maxLength = Configuration::get('title_max_length');
         if (strlen($this->title) < $minLength || strlen($this->title) > $maxLength) {
-            $errors[] = "Le titre doit avoir au minimum $minLength caractères et au maximum $maxLength caractères.";
+            $errors[] = "Le titre doit contenir entre $minLength et $maxLength caractères.";
         }
 
 

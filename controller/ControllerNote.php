@@ -62,9 +62,9 @@ class ControllerNote extends Controller
     {
         $user = $this->get_user_or_redirect();
         $errors = [];
-                    // Vérification des doublons pour les éléments
-                    $duplicateErrors = [];
-                    $duplicateItems = [];
+        // Vérification des doublons pour les éléments
+        $duplicateErrors = [];
+        $duplicateItems = [];
 
         if (isset($_POST['title'], $_POST['items']) && $_POST['title'] !== "") {
             $title = Tools::sanitize($_POST['title']);
@@ -93,13 +93,13 @@ class ControllerNote extends Controller
             foreach ($non_empty_items as $key => $item) {
                 if (in_array($item, $duplicateItems)) {
                     // Stocker l'erreur de doublon avec l'indice correspondant
-                    $duplicateErrors["item_$key"] = "Ce champ a un doublon.";
+                    $duplicateErrors["item_$key"] = "Items must be unique.";
                 }
                 $duplicateItems[] = $item;
             }
 
 
-                        // Combinaison des erreurs de doublons avec d'autres erreurs
+            // Combinaison des erreurs de doublons avec d'autres erreurs
             $errors = array_merge($errors, $duplicateErrors);
         }
         if (empty($errors) && count($_POST) > 0) {
