@@ -58,7 +58,7 @@ class ControllerNote extends Controller
     {
         (new view("add_text_note"))->show();
     }
-    public function add_checklist_note(): void
+    public function add_checklist_note()
     {
         $user = $this->get_user_or_redirect();
         $errors = [];
@@ -102,7 +102,7 @@ class ControllerNote extends Controller
             }
 
 
-                        // Combinaison des erreurs de doublons avec d'autres erreurs
+            // Combinaison des erreurs de doublons avec d'autres erreurs
             $errors = array_merge($errors, $duplicateErrors);
         } 
         if (empty($errors) && isset($_POST['title'], $_POST['items']) && $_POST['title'] != "") {

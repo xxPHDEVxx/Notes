@@ -49,6 +49,8 @@
             </div>
         </div>
     </form>
+    <?php include("view_modal.php"); ?>
+    <script src="JS/confirmation_edit.js" ></script>
 </body>
 
 </html>
