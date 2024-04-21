@@ -17,10 +17,10 @@
    
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link href="css/style.css" rel="stylesheet" type="text/css">
-    <script>
+   <script>
         $(document).ready(function() {
             $("#pinned", "#unpinned").sortable({
-                connectWith: ".connectedSortable",
+                connectWith:".view_notes_pinned_unpinned",
                 opacity: 0.8,
                 cursor: 'move',
                 update: function(event, ui) {
@@ -37,7 +37,9 @@
             });
         });
     </script>
+   
 </head>
+
 
 <body>
     <?php include('view/menu.php'); ?>
@@ -45,7 +47,7 @@
     <h1>My notes</h1>
     </div>
     <p class="title_note_pinned">Pinned</p> 
-    <div id="pinned" class="view_notes_pinned">
+    <div id="pinned" class="view_notes_pinned_unpinned">
         <?php if (count($notes_pinned) != 0 && count($notes_unpinned) != 0) :  ?>
             <?php for ($i=0; $i < count($notes_pinned); $i++) { ?>
                 <div class="note">
@@ -104,7 +106,7 @@
 
 
             <p class="title_note_unpinned">Others</p> 
-            <div id="unpinned" class="view_notes_unpinned">
+            <div id="unpinned" class="view_notes_pinned_unpinned">
             <?php for ($i=0; $i < count($notes_unpinned); $i++) { ?>
                 <div class="note">
 
