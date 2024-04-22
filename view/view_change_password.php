@@ -59,9 +59,6 @@
             <p><?= $successMessage ?></p>
         </div>
     <?php endif; ?>
-
-
-
 </body>
 
 </html>
