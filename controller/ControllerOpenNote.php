@@ -71,7 +71,7 @@ class ControllerOpenNote extends Controller
         }
         $this->redirect("openNote", "index/$note_id");
     }
-
+    
     public function pin(): void
     {
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
@@ -96,7 +96,7 @@ class ControllerOpenNote extends Controller
             $note_id = $_GET["param1"];
             $note = Note::get_note_by_id($note_id);
             $note->archive();
-            $this->redirect();
+            $this->redirect("openNote", "index", $note_id);
         }
     }
 
@@ -112,6 +112,8 @@ class ControllerOpenNote extends Controller
 
     public function edit(): void
     {
+        $errors = [];
+
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
             $note = Note::get_note_by_id($note_id);
@@ -179,4 +181,31 @@ class ControllerOpenNote extends Controller
             "note" => $note, "note_id" => $note_id, "created" => $this->get_created_time($note_id), "edited" => $this->get_edited_time($note_id), "archived" => $archived, "isShared_as_editor" => $isShared_as_editor, "isShared_as_reader" => $isShared_as_reader, "note_body" => $body, "pinned" => $pinned, "user_id" => $user_id, "errors" => $errors
         ]);
     }
+
+    // Ouvre la vue d'ajout d'une note
+    public function add_text_note(): void
+{
+    $user_id = $this->get_user_or_redirect()->id;
+
+    // Créez une instance de vue pour l'ajout de note texte
+    $view = new View("add_text_note");
+
+    // Prépare les données par défaut pour initialiser la vue
+    $data = [
+        "user_id" => $user_id,
+        "note_id" => null,
+        "created" => date("Y-m-d H:i:s"),
+        "edited" => null,
+        "archived" => 0,
+        "isShared_as_editor" => 0,
+        "isShared_as_reader" => 0,
+        "content" => "",
+        "pinned" => 0
+    ];
+
+    $view->show($data);
 }
+
+
+}
+

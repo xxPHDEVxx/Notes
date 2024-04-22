@@ -14,6 +14,8 @@ class CheckListNote extends Note
         return $data;
     }
 
+    public function set_content($data){}
+
     public function get_type(): string
     {
         return TypeNote::CLN;
@@ -49,5 +51,13 @@ class CheckListNote extends Note
     public function isPinned(): bool
     {
         return $this->pinned;
+    }
+
+    public function update(){}
+
+    public function new(): void
+    {
+        self::execute("INSERT INTO `checklist_notes`(`id`) VALUES (:id)",
+        ["id"=> $this->note_id]);
     }
 }

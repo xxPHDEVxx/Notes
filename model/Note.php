@@ -4,6 +4,7 @@ require_once "framework/Model.php";
 require_once "User.php";
 require_once "TextNote.php";
 require_once "ChecklistNote.php";
+require_once "framework/Configuration.php";
 
 enum TypeNote
 {
@@ -19,8 +20,8 @@ abstract class Note extends Model
         public String $title,
         public int $owner,
         public string $created_at,
-        public bool $pinned,
-        public bool $archived,
+        public int $pinned,
+        public int $archived,
         public int $weight,
         public ?string $edited_at = NULL
     ) {
@@ -28,8 +29,10 @@ abstract class Note extends Model
 
     public abstract function get_type();
     public abstract function get_content();
+    public abstract function set_content(?string $data);
     public abstract function get_note();
     public abstract function isPinned();
+    public abstract function update();
 
 
 
@@ -202,10 +205,16 @@ abstract class Note extends Model
     }
 
 
-
+    // Supprime une note
     public function delete(User $initiator): Note |false
     {
-        if ($this->owner == $initiator) {
+        $user = User::get_user_by_id($this->owner);
+        // permet la suppression en cascade pour éviter problèmes suite aux dépendances
+        if ($user == $initiator) {
+            self::execute("DELETE FROM checklist_note_items WHERE checklist_note = :note_id", ['note_id' => $this->note_id]);
+            self::execute("DELETE FROM text_notes WHERE id = :note_id", ['note_id' => $this->note_id]);
+            self::execute("DELETE FROM checklist_notes WHERE id = :note_id", ['note_id' => $this->note_id]);
+            self::execute("DELETE FROM note_shares WHERE note = :note_id", ['note_id' => $this->note_id]);
             self::execute("DELETE FROM Notes WHERE id = :note_id", ['note_id' => $this->note_id]);
             return $this;
         }
@@ -216,9 +225,17 @@ abstract class Note extends Model
     {
         $errors = [];
 
+        $minLength = Configuration::get('title_min_length');
+        $maxLength = Configuration::get('title_max_length');
+        if (strlen($this->title) < $minLength || strlen($this->title) > $maxLength) {
+            $errors[] = "Le titre doit contenir entre $minLength et $maxLength caractères.";
+        }
+
+
         return $errors;
     }
-    public function validate_title() {
+    public function validate_title()
+    {
         $errors = [];
         $minLength = Configuration::get('title_min_length');
         $maxLength = Configuration::get('title_max_length');
@@ -227,7 +244,7 @@ abstract class Note extends Model
         if (strlen($this->title) < $minLength || strlen($this->title) > $maxLength) {
             $errors[] = "Le titre doit avoir au minimum $minLength caractères et au maximum $maxLength caractères.";
         }
-    
+
         // Vérifie si le titre est unique pour cet utilisateur
         $query = self::execute("SELECT COUNT(*) FROM notes WHERE title = :title AND owner = :owner AND id != :id", [
             'title' => $this->title,
@@ -237,50 +254,61 @@ abstract class Note extends Model
         if ($query->fetchColumn() > 0) {
             $errors[] = "Une autre note avec le même titre existe déjà.";
         }
-    
+
         return $errors;
     }
 
+    public function validate_content()
+    {
+        $minLength = Configuration::get('description_min_length');
+        $maxLength = Configuration::get('description_max_length');
+        $errors = [];
+        // Vérifie la longueur du contenu
+        if ((strlen($this->get_content()) < $minLength && strlen($this->get_content()) > 0) || strlen($this->get_content()) > $maxLength) {
+            $errors[] = "Le contenu de la note doit contenir entre 5 et 800 caractères.";
+        }
+
+        return $errors;
+    }
+
+
+
+
     public function persist(): Note|array
     {
-        if ($this->note_id == NULL) {
+        if ($this->note_id == null) {
             $errors = $this->validate();
             if (empty($errors)) {
+                // Execute the INSERT operation
                 self::execute(
-                    'INSERT INTO Notes (title, owner, pinned, archived, weight) VALUES (:author,:recipient,:body,:private)',
+                    "INSERT INTO Notes(title,owner,created_at,edited_at,pinned,archived,weight) VALUES (:title,:owner,:created_at,:edited_at,:pinned,:archived,:weight)",
                     [
-                        'tilte' => $this->title,
-                        'owner' => $this->owner,
-                        'pinned' => $this->pinned ? 1 : 0,
-                        'archived' => $this->archived ? 1 : 0,
-                        'weight' => $this->weight,
+                        "title" => $this->title,
+                        "owner" => $this->owner,
+                        "created_at" => $this->created_at,
+                        "edited_at" => $this->edited_at,
+                        "pinned" => $this->pinned,
+                        "archived" => $this->archived,
+                        "weight" => $this->weight,
                     ]
                 );
-                $note = self::get_note(self::lastInsertId());
+                $note = self::get_note_by_id(self::lastInsertId());
                 $this->note_id = $note->note_id;
                 return $this;
             } else {
                 return $errors;
             }
         } else {
-            self::execute(
-                'UPDATE Notes SET title = :title, pinned = :pinned, archived = :archived, weight = :weight WHERE id = :note_id',
-                [
-                    'title' => $this->title,
-                    'pinned' => $this->pinned ? 1 : 0,
-                    'archived' => $this->archived ? 1 : 0,
-                    'weight' => $this->weight,
-                    'note_id' => $this->note_id,
-                ]
-            );
+            self::execute('UPDATE Notes SET title = :title, pinned = :pinned, archived = :archived, weight = :weight, edited_at = NOW() WHERE id = :note_id', [
+                'title' => $this->title,
+                'pinned' => $this->pinned ? 1 : 0,
+                'archived' => $this->archived ? 1 : 0,
+                'weight' => $this->weight,
+                'note_id' => $this->note_id,
+            ]);
             return $this;
         }
     }
-
-
-
-
-
 
     public function is_weight_unique(int $id): int
     {
@@ -367,5 +395,9 @@ abstract class Note extends Model
                     $data['edited_at']
                 );
         }
+    }
+    public static function update_drag_and_drop($count, $idval)
+    {
+        self::execute("UPDATE notes SET weight = :count, WHERE id = :id", ['count' => $count, 'id' => $idval]);
     }
 }
