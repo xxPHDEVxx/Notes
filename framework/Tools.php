@@ -7,12 +7,8 @@ class Tools
 
     //nettoie le string donné
     public static function sanitize(string $var) : string {
-        $var = stripslashes($var);
-        $var = strip_tags($var);
-        $var = htmlspecialchars($var);
-        $var = trim($var);
-        return $var;
-    }
+        return trim(filter_var($var, FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+        }
 
     //dirige vers la page d'erreur
     public static function abort(string $err) : void {

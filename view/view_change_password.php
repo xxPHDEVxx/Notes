@@ -14,6 +14,8 @@
 </head>
 
 <body>
+
+
 <div class="title">
         <div>
             <h1>Settings</h1>
@@ -21,7 +23,9 @@
         <div class="back-icon">
             <a href="settings/settings"><span class="material-symbols-outlined">arrow_back_ios</span></a>
         </div>
-    </div>
+
+
+   
     <div class="container mt-5">
         <h2>Change Password</h2>
         <form class="edit_form" action="settings/change_password" method="post">
@@ -55,6 +59,7 @@
             <p><?= $successMessage ?></p>
         </div>
     <?php endif; ?>
+
 
 
 </body>
