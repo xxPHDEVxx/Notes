@@ -95,26 +95,14 @@
                         </div>
 
                     </a>
-                    <div class="card-footer">
-                        <?php if ($i > 0) : ?>
 
-                            <form action="note/move_up" class="left" method="post">
-                                <input name="up" type="number" value='<?= $notes_pinned[$i]["id"] ?>' hidden>
-                                <input class="material-symbols-outlined" type='submit' value="keyboard_double_arrow_left">
-                            </form>
-                        <?php endif; ?>
-                        <?php if ($i < count($notes_pinned) - 1) : ?>
-                            <form action="note/move_down" class="right" method="post">
-                                <input name="down" type="number" value='<?= $notes_pinned[$i]["id"] ?>' hidden>
-                                <input class="material-symbols-outlined" type='submit' value="keyboard_double_arrow_right">
+                 
+                </div>                
+               <?php }             ?>
 
+        
+            </div>
 
-
-                            </form>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            <?php }             ?>
 
 
     </div>
@@ -124,22 +112,13 @@
     <div id="unpinned" class="view_notes_pinned_unpinned">
         <?php for ($i = 0; $i < count($notes_unpinned); $i++) { ?>
             <div class="note">
-
-
-
-
                 <p class="note-title"><?= $notes_unpinned[$i]["title"];  ?></p>
                 <a class="link-note-archivee" href='openNote/index/<?= $notes_unpinned[$i]["id"]; ?>'>
-
-
-                    <div class="note-content">
-                        <?php if ($notes_unpinned[$i]["content"]) : ?>
-                            <div class="content_text">
-
-                                <?= $notes_unpinned[$i]["content"] ?>
-
-                            </div>
-
+                <div class="note-content">
+                    <?php if ($notes_unpinned[$i]["content"]) : ?>
+                        <div class="content_text">
+                            <?= $notes_unpinned[$i]["content"] ?>
+                        </div>
                         <?php else : ?>
                             <div class="content_check">
                                 <div class="check_item">
@@ -161,52 +140,34 @@
 
                     </div>
 
+                    </a>
+                
+                </div>                
+               <?php }             ?>
+
+
+
+               </div>
+        <?php else: ?>
+            <p class="title-empty">Your notes are empty</p>
+        <?php endif; ?>
+    </div>
+    <footer class="">
+            <div class="position-absolute bottom-0 w-100 float-end">
+            <a href="note/add_checklist_note">
+                
+                <span class="material-symbols-outlined text-warning text-lg  text-lg-end m-2 float-end">checklist</span>
+            </a>
+                <a href="openNote/add_text_note">
+                 <!--   <i class="fa-solid fa-note-sticky text-lg  text-lg-end m-2 float-end text-warning"></i>-->
+                    <span class="material-symbols-outlined text-warning text-lg  text-lg-end m-2 float-end">draft</span>
                 </a>
-                <div class="card-footer">
-                    <?php if ($i > 0) : ?>
-
-
-                        <form action="note/move_up" class="left" method="post">
-                            <input name="up" type="number" value='<?= $notes_unpinned[$i]["id"] ?>' hidden>
-                            <input class="material-symbols-outlined" type='submit' value="keyboard_double_arrow_left">
-                        </form>
-                    <?php endif; ?>
-                    <?php if ($i < count($notes_unpinned) - 1) : ?>
-                        <form action="note/move_down" class="right" method="post">
-                            <input name="down" type="number" value='<?= $notes_unpinned[$i]["id"] ?>' hidden>
-                            <input class="material-symbols-outlined" type='submit' value="keyboard_double_arrow_right">
-
-                        </form>
-                    <?php endif; ?>
-                </div>
-            </div>
-        <?php }             ?>
-
-
-
-    </div>
-<?php else : ?>
-    <p class="title-empty">Your notes are empty</p>
-<?php endif; ?>
-</div>
-<footer class="">
-    <div class="position-absolute bottom-0 w-100 float-end">
-        <a href="note/add_checklist_note">
-
-            <span class="material-symbols-outlined text-warning text-lg  text-lg-end m-2 float-end">checklist</span>
-        </a>
-        <a href="openNote/add_text_note">
-            <!--   <i class="fa-solid fa-note-sticky text-lg  text-lg-end m-2 float-end text-warning"></i>-->
-            <span class="material-symbols-outlined text-warning text-lg  text-lg-end m-2 float-end">draft</span>
-        </a>
-
-
-    </div>
+           </div>
 
 
 
 
-</footer>
+    </footer>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 
