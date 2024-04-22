@@ -97,24 +97,7 @@
                         </div>
 
                     </a>
-                    <div class="card-footer">
-                    <?php if ($i > 0) : ?>
-
-                        <form action="note/move_up" class="left" method="post">
-                            <input name="up" type="number" value='<?=$notes_pinned[$i]["id"] ?>' hidden>
-                            <input class="material-symbols-outlined"type='submit' value="keyboard_double_arrow_left">
-                        </form>
-                        <?php endif; ?>
-                    <?php if ($i < count($notes_pinned) - 1) : ?>
-                        <form action="note/move_down" class="right" method="post">
-                            <input name="down" type="number" value='<?=$notes_pinned[$i]["id"] ?>' hidden>
-                          <input class="material-symbols-outlined"type='submit' value="keyboard_double_arrow_right">
-
-                            
-
-                        </form>
-                        <?php endif; ?>
-                    </div>
+                 
                 </div>                
                <?php }             ?>
 
@@ -164,23 +147,7 @@
                         </div>
 
                     </a>
-                    <div class="card-footer">
-                    <?php if ($i > 0) : ?>
-
- 
-                        <form action="note/move_up" class="left" method="post">
-                            <input name="up" type="number" value='<?=$notes_unpinned[$i]["id"] ?>' hidden>
-                            <input class="material-symbols-outlined"type='submit' value="keyboard_double_arrow_left">
-                        </form>
-                        <?php endif; ?>
-                    <?php if ($i < count($notes_unpinned) - 1) : ?>
-                        <form action="note/move_down" class="right" method="post">
-                            <input name="down" type="number" value='<?=$notes_unpinned[$i]["id"] ?>' hidden>
-                            <input class="material-symbols-outlined"type='submit' value="keyboard_double_arrow_right">
-
-                        </form>
-                        <?php endif; ?>
-                    </div>
+                
                 </div>                
                <?php }             ?>
 
