@@ -15,17 +15,20 @@
 </head>
 
 <body>
-    <form method="post" action="note/edit_checklist_note/<?= $note_id ?>">
-    <div class="edit">
-        <a class="back" href="<?= $_SESSION['previous_page'] ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
+    <form method="post" action="openNote/edit_checklist/<?= $note_id ?>">
+        <div class="edit">
+            <a class="back" href="<?= $_SESSION['previous_page'] ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
 
-        <button class="save" type="submit"><span class="material-symbols-outlined">save</span></button>
-    </div>
-    <div class="dates">Created <?= $created ?><?= ($edited ? " Edited " . $edited : " Not edited yet") ?></div>
+            <button class="save" type="submit"><span class="material-symbols-outlined">save</span></button>
+        </div>
+        <div class="dates">Created <?= $created ?><?= ($edited ? " Edited " . $edited : " Not edited yet") ?></div>
         <label for="title" class="title_note_title">Title</label>
         <input type="text" class="title_edit_note" id="title" name="title" value="<?= $note->title ?>">
-        <label for="items" class="note_body_title">Items</label>
-        <div class="note_body_checklist">
+        <?php if (!empty($errors)) : ?>
+            <span class="erreur_edit text-danger"><?= $errors[0] ?></span>
+        <?php endif; ?>
+        <label for="items" class="note_body_edit">Items</label>
+        <div class="note_body_checklist_edit">
             <?php foreach ($note_body as $row) : ?>
                 <div class="edit_checklist_form">
                     <div class="edit_check_div">

@@ -54,7 +54,9 @@ class ControllerNote extends Controller
     }
 
     public function edit_checklist_note(): void
+
     {
+        
         $user = $this->get_user_or_redirect();
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $id = $_GET['param1'];

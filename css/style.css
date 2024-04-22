@@ -685,13 +685,34 @@ nav a:hover{
   position: absolute;
   left: 3%;
   width: 94%;
-  top: 30px;
- 
+  top: 30px; 
+}
 
+.note_body_edit {
+  position: absolute;
+  top: 220px;
+  left: 3.5%;
+  color: white;
+  font-size: 18px;
+}
+.note_body_checklist_edit {
+  color : lightgray;
+  position: absolute;
+  top: 260px;
+  left: 3%;
+  width: 94%;
+  
+}
+.erreur_edit {
+  position: absolute;
+  left: 3%;
+  top: 166px;
 }
 .save{
   position: absolute;
   right: 0;
+  background-color: transparent;
+  border: none;
 }
 .title_edit_note {
   position: absolute;
