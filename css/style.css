@@ -1,45 +1,3 @@
-<<<<<<< HEAD
-
-
-
-body, html{
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    background-color: #252729;
-   color: white;
- }
-
- /* My archives */
- 
- h1{
-     position: absolute;
-     top:2%;
-     right: 5%;
-     color: white;
-     font-size: 18px;
-     font-weight: 500;
- }
- h2{
-     color: white;     
-    position: fixed;
-     font-size: 15px;
-     font-weight: 500;
-     top: 70px;
-     left: 20px;
-     
-     
- }
- 
- .my-archives{
-    display:flex;
-    flex-wrap: wrap;
-    margin: 5px;
-    position:absolute;
-    top: 85px;
-    left: 5px;
-    margin-left: 0;
-=======
 body,
 html {
   height: 100%;
@@ -47,7 +5,6 @@ html {
   padding: 0;
   background-color: #202325;
   color: white;
->>>>>>> develop
 }
 
 /*login et signup*/
@@ -396,107 +353,12 @@ h2 {
   position: relative;
 }
 
-<<<<<<< HEAD
-/*view share*/
-=======
 /* share note*/
 
->>>>>>> develop
 .share-empty {
   font-style: italic;
 }
 
-<<<<<<< HEAD
-  /*  menu burger */ 
-   .menu {
-     position: fixed;
-     height: 100%;
-     top: 0;
-     z-index: 2;
-     visibility: hidden;
- }
-   #hamburger {
-     display: none;
-   }
-   
-   #hamburger-logo{
-     cursor: pointer;
-     background-color: #252729;
-     width: 200px;
-     display: block;
-     color: darkgrey;
-     /* Pour que le menu hamburger s'affiche toujours */
-     text-align: right;
-     /* Pour que le menu hamburger soit "rangé" par défaut */
-     transform: translateX(-120px);
-     padding:10px;
- }
- 
-   #hamburger-logo::before{
-     content: '☰' ;
-     border: 0.5px solid  darkgray;
-     padding: 3px 12px 5px 12px;
-     border-radius: 5px;
-     font-size: 25px;
-     line-height: 1; display: inline-block;
-    }
- 
-   #hamburger:checked ~ #hamburger-logo::before{
-     content: '✕';
-     border: none;
- }
- 
- #hamburger:checked ~ #hamburger-logo {
-     background-color: #2f3542;
- }
-   
- #burger-title{
-     color:#f39c12;
-     font-weight: 600;
-     font-size: 20px;
-     position: absolute;
-     top: 10px;
-     left: 10px;
-  }
- 
-   nav {
-     display: flex;
-     flex-direction: column;
-     background:#2f3542;
-     overflow: hidden;
-     width: 200px;
-     height: 100%;
-     transform: translateX(-200px);
-   }
-   
-   #hamburger-logo, nav {
-     transition: 0.1s;
-   }
-   
-   #hamburger:checked ~ #hamburger-logo,
-   #hamburger:checked ~ nav {
-     transform: translate(0);
-     visibility: visible;
-   }
-   
-   nav a {
-     color: white;
-     text-decoration: none;
-     padding: 10px;
-   }
-   
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-=======
 /*  menu burger */
 
 .menu {
@@ -1074,4 +936,3 @@ input:focus, textarea:focus {
 }
 
 
->>>>>>> develop
