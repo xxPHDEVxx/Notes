@@ -11,30 +11,8 @@ class ControllerUser extends Controller {
     public function my_archives() : void {
         $user = $this->get_user_or_redirect();
         $archives = $user->get_archives();
-        (new View("archives"))->show(["archives"=>$archives, "sharers"=>$this->shared_by()]);
-    }
-
-
-    
-    public function shared_by() : array {
-        $user = $this->get_user_or_redirect();
-        $shared = $user->get_shared_note();
-        $ids = [];
-        foreach($shared as $shared_note) {
-            $id = $shared_note->owner;
-            $ids[]= $id;
-        }
-        $idsUnique = array_unique($ids);
-        $sharers = [];
-        foreach($idsUnique as $userid) {
-            $user = User::get_user_by_id($userid);
-            $sharers[] = $user;
-        }
-        return $sharers;
-        
-
-       
-
+        $_SESSION['previous_page'] = $_SERVER['REQUEST_URI'];
+        (new View("archives"))->show(["currentPage"=> "my_archives","archives"=>$archives, "sharers"=>$user->shared_by()]);
     }
 
     public function get_shared_by() : void {
@@ -53,8 +31,9 @@ class ControllerUser extends Controller {
                     $shared_notes_as_reader[] = $shared;
             }
         }
-        (new View("shared_notes"))->show(["shared_by_name"=>$shared_by_name, "shared_notes_as_editor" =>$shared_notes_as_editor,
-        "shared_notes_as_reader" =>$shared_notes_as_reader,"sharers"=>$this->shared_by()]);
+        $_SESSION['previous_page'] = $_SERVER['REQUEST_URI'];
+        (new View("shared_notes"))->show(["currentPage" => $shared_by_name, "shared_by_name"=>$shared_by_name, "shared_notes_as_editor" =>$shared_notes_as_editor,
+        "shared_notes_as_reader" =>$shared_notes_as_reader,"sharers"=>$user->shared_by()]);
     }
   
 

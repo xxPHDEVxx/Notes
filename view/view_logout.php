@@ -12,6 +12,9 @@
 </head>
 
 <body>
+
+<?php include("menu.php"); ?>
+
     <div class="title">
         <h1>Settings</h1>
     </div>
@@ -22,18 +25,15 @@
         <a href="settings/edit_profile"><i class="fas fa-pen"></i>Edit Profile</a>
         <a href="settings/change_password"><i class="fas fa-key"></i>Change password</a>
         <a href="main/logout"><i class="fas fa-door-open"></i>Logout</a>
-    </div> 
+    </div>
 
     <div class="logout">
         <p>Are you sure you want to logout ?</p>
         <form id="logout_form" action="" method="post">
-            <input type="submit" name="logout" value="Logout" class="btn btn-danger">
-            <input type="submit" name="no" value="No" class="btn btn-secondary">
+            <button type="submit" name="logout" class="btn btn-danger">Logout</button>
+            <button type="submit" name="no" class="btn btn-primary">No</button>
         </form>
     </div>
-
-    <?php (new View("menu"))->show(["sharers"=>$sharers]); ?>
-
 
 </body>
 

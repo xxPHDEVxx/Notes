@@ -2,6 +2,7 @@
 require_once "framework/Controller.php";
 require_once "framework/View.php";
 require_once "model/User.php";
+require_once "controller/ControllerUser.php";
 
 
 
@@ -11,6 +12,7 @@ class ControllerMain extends Controller
     public function index(): void
     {
         if ($this->user_logged()) {
+
             $this->redirect("note", "index");
         } else {
             $this->login();
@@ -37,16 +39,15 @@ class ControllerMain extends Controller
     public function logout(): void
     {
         $user = $this->get_user_or_redirect();
-
+        $sharers = $user->shared_by();
 
         if (isset($_POST['logout'])) {
-            $this->logout();
-        } else if (isset($_POST['no'])){
+            Controller::logout();
+        } else if (isset($_POST['no'])) {
             $this->redirect("settings", "settings");
+        } else {
+            (new View("logout"))->show(["user" => $user, "sharers" => $sharers]);
         }
-
-
-        (new View("logout"))->show(["user" => $user]);
     }
 
 
@@ -69,7 +70,7 @@ class ControllerMain extends Controller
             $errors = User::validate_unicity($mail);
             $errors = array_merge($errors, $user->validate());
             $errors = array_merge($errors, $user->validate_name());
-            $errors = array_merge($errors, User::validate_passwords($password, $password_confirm));
+            $errors = array_merge($errors, User::validate_passwords($password, $password_confirm, $user));
 
             if (count($errors) == 0) {
                 $user->persist();
