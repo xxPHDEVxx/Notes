@@ -2,27 +2,23 @@
 
     <a class="back" href="<?= $_SESSION['previous_page'] ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
     <?php if ($archived == 1) : ?>
-<<<<<<< HEAD
-        <a class="delete" href="#"><span class="material-symbols-outlined" id="delete_icon">delete_forever</span></a>
-=======
         <form action="note/delete_note/<?= $note_id ?>" id="deleteForm" method="post">
             <button class="delete" type="submit" id="delete_icon"><span class="material-symbols-outlined">delete_forever</span></button>
         </form>
->>>>>>> master
-        <a class="unarchive" href="openNote/unarchive/<?= $note_id ?>"><span class="material-symbols-outlined">unarchive</span></a>
+        <a class="unarchive" href="note/unarchive/<?= $note_id ?>"><span class="material-symbols-outlined">unarchive</span></a>
 
 
     <?php elseif ($isShared_as_editor == 1) : ?>
-        <a class="isShared" href="openNote/edit/<?= $note_id ?>"><span class="material-symbols-outlined">edit</span></a>
+        <a class="isShared" href="note/edit/<?= $note_id ?>"><span class="material-symbols-outlined">edit</span></a>
     <?php elseif ($archived == 0 && $isShared_as_editor == 0 && $isShared_as_reader == 0) : ?>
         <a class="share" href="#"><span class="material-symbols-outlined">share</span></a>
         <?php if ($pinned) : ?>
-            <a class="pinned" href="openNote/unpin/<?= $note_id ?>"><span class="material-symbols-rounded">push_pin</span>
+            <a class="pinned" href="note/unpin/<?= $note_id ?>"><span class="material-symbols-rounded">push_pin</span>
             <?php else : ?>
-                <a class="pinned" href="openNote/pin/<?= $note_id ?>"><span class="material-symbols-outlined">push_pin</span></a>
+                <a class="pinned" href="note/pin/<?= $note_id ?>"><span class="material-symbols-outlined">push_pin</span></a>
             <?php endif; ?>
-            <a class="archive" href="openNote/archive/<?= $note_id ?>"><span class="material-symbols-outlined">archive</span></a>
-            <a class="isShared" href="openNote/edit/<?= $note_id ?>"><span class="material-symbols-outlined">edit</span></a>
+            <a class="archive" href="note/archive/<?= $note_id ?>"><span class="material-symbols-outlined">archive</span></a>
+            <a class="isShared" href="note/edit/<?= $note_id ?>"><span class="material-symbols-outlined">edit</span></a>
         <?php endif; ?>
 
 </div>

@@ -20,7 +20,7 @@
          
             <?php foreach ($archives as $note_item): ?> 
                 <div class="note-archivee">
-                    <a class="link-note-archivee" href="openNote/index/<?=$note_item["id"]?>">   
+                    <a class="link-note-archivee" href="note/index/<?=$note_item["id"]?>">   
                         <?php include("note_in_list.php") ?>
                     </a>
                 </div>

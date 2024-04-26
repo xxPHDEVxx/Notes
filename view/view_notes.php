@@ -67,7 +67,7 @@
             <?php for ($i = 0; $i < count($notes_pinned); $i++) { ?>
                 <div class="note">
                     <p class="note-title"><?= $notes_pinned[$i]["title"]; ?></p>
-                    <a class="link-note-archivee" href='openNote/index/<?= $notes_pinned[$i]["id"]; ?>'>
+                    <a class="link-note-archivee" href='note/open_note/<?= $notes_pinned[$i]["id"]; ?>'>
                         <div class="note-content">
                             <?php if ($notes_pinned[$i]["content"]) : ?>
                                 <div class="content_text">
@@ -113,7 +113,7 @@
         <?php for ($i = 0; $i < count($notes_unpinned); $i++) { ?>
             <div class="note">
                 <p class="note-title"><?= $notes_unpinned[$i]["title"];  ?></p>
-                <a class="link-note-archivee" href='openNote/index/<?= $notes_unpinned[$i]["id"]; ?>'>
+                <a class="link-note-archivee" href='note/open_note/<?= $notes_unpinned[$i]["id"]; ?>'>
                 <div class="note-content">
                     <?php if ($notes_unpinned[$i]["content"]) : ?>
                         <div class="content_text">
@@ -158,7 +158,7 @@
                 
                 <span class="material-symbols-outlined text-warning text-lg  text-lg-end m-2 float-end">checklist</span>
             </a>
-                <a href="openNote/add_text_note">
+                <a href="note/add_text_note">
                  <!--   <i class="fa-solid fa-note-sticky text-lg  text-lg-end m-2 float-end text-warning"></i>-->
                     <span class="material-symbols-outlined text-warning text-lg  text-lg-end m-2 float-end">draft</span>
                 </a>

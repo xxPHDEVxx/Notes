@@ -21,20 +21,20 @@
     <a class="back" href="<?= $_SESSION['previous_page'] ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
     <?php if ($archived == 1) : ?>
         <a class="delete" href="#"><span class="material-symbols-outlined" id="delete_icon">delete_forever</span></a>
-        <a class="unarchive" href="openNote/unarchive/<?= $note_id ?>"><span class="material-symbols-outlined">unarchive</span></a>
+        <a class="unarchive" href="note/unarchive/<?= $note_id ?>"><span class="material-symbols-outlined">unarchive</span></a>
 
 
     <?php elseif ($isShared_as_editor == 1) : ?>
-        <a class="isShared" href="openNote/edit_checklist<?= $note_id ?>"><span class="material-symbols-outlined">edit</span></a>
+        <a class="isShared" href="note/edit_checklist<?= $note_id ?>"><span class="material-symbols-outlined">edit</span></a>
     <?php elseif ($archived == 0 && $isShared_as_editor == 0 && $isShared_as_reader == 0) : ?>
         <a class="share" href="#"><span class="material-symbols-outlined">share</span></a>
         <?php if ($pinned) : ?>
-            <a class="pinned" href="openNote/unpin/<?= $note_id ?>"><span class="material-symbols-rounded">push_pin</span>
+            <a class="pinned" href="note/unpin/<?= $note_id ?>"><span class="material-symbols-rounded">push_pin</span>
             <?php else : ?>
-                <a class="pinned" href="openNote/pin/<?= $note_id ?>"><span class="material-symbols-outlined">push_pin</span></a>
+                <a class="pinned" href="note/pin/<?= $note_id ?>"><span class="material-symbols-outlined">push_pin</span></a>
             <?php endif; ?>
-            <a class="archive" href="openNote/archive/<?= $note_id ?>"><span class="material-symbols-outlined">archive</span></a>
-            <a class="isShared" href="openNote/edit/<?= $note_id ?>"><span class="material-symbols-outlined">edit</span></a>
+            <a class="archive" href="note/archive/<?= $note_id ?>"><span class="material-symbols-outlined">archive</span></a>
+            <a class="isShared" href="note/edit/<?= $note_id ?>"><span class="material-symbols-outlined">edit</span></a>
         <?php endif; ?>
 
 </div>
@@ -48,7 +48,7 @@
 
             <?php if ($row['checked']) : ?>
 
-                <form class="check_form" action="openNote/update_checked" method="post">
+                <form class="check_form" action="note/update_checked" method="post">
 
                     <input type="text" name="uncheck" value="<?= $row["id"] ?>" hidden>
                     <input class="material-symbols-outlined" id="check_submit" type="submit" value='check_box'>
@@ -63,7 +63,7 @@
             <?php else : ?>
 
 
-                <form class="check_form" action="openNote/update_checked" method="post">
+                <form class="check_form" action="note/update_checked" method="post">
 
                     <input type="text" name="check" value="<?= $row["id"] ?>" hidden>
                     <input class="material-symbols-outlined" id="check_submit" type="submit" value="check_box_outline_blank">

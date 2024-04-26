@@ -15,7 +15,7 @@
 </head>
 
 <body>
-    <form method="post" action="openNote/edit_checklist/<?= $note_id ?>">
+    <form method="post" action="note/edit_checklist/<?= $note_id ?>">
         <div class="edit">
             <a class="back" href="<?= $_SESSION['previous_page'] ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
 

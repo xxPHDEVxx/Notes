@@ -8,7 +8,7 @@ $(document).ready(function () {
         // Envoyer la requête AJAX au serveur
         $.ajax({
             type: 'POST',
-            url: "openNote/update_checked",
+            url: "note/update_checked",
             data: formData,
             success: function (response) {
                 // Mettre à jour l'affichage selon la réponse du serveur
