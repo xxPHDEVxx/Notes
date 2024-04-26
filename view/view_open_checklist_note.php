@@ -16,63 +16,51 @@
 </head>
 
 <body>
-<div class="barre">
+    <div class="barre">
 
-    <a class="back" href="<?= $_SESSION['previous_page'] ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
-    <?php if ($archived == 1) : ?>
-        <a class="delete" href="#"><span class="material-symbols-outlined" id="delete_icon">delete_forever</span></a>
-        <a class="unarchive" href="note/unarchive/<?= $note_id ?>"><span class="material-symbols-outlined">unarchive</span></a>
+        <a class="back" href="<?= $_SESSION['previous_page'] ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
+        <?php if ($archived == 1) : ?>
+            <form action="note/delete_note/<?= $note_id ?>" id="deleteForm" method="post">
+                <button class="delete" type="submit" id="delete_icon"><span class="material-symbols-outlined">delete_forever</span></button>
+            </form>
+            <a class="unarchive" href="note/unarchive/<?= $note_id ?>"><span class="material-symbols-outlined">unarchive</span></a>
 
 
-    <?php elseif ($isShared_as_editor == 1) : ?>
-        <a class="isShared" href="note/edit_checklist<?= $note_id ?>"><span class="material-symbols-outlined">edit</span></a>
-    <?php elseif ($archived == 0 && $isShared_as_editor == 0 && $isShared_as_reader == 0) : ?>
-        <a class="share" href="#"><span class="material-symbols-outlined">share</span></a>
-        <?php if ($pinned) : ?>
-            <a class="pinned" href="note/unpin/<?= $note_id ?>"><span class="material-symbols-rounded">push_pin</span>
-            <?php else : ?>
-                <a class="pinned" href="note/pin/<?= $note_id ?>"><span class="material-symbols-outlined">push_pin</span></a>
+        <?php elseif ($isShared_as_editor == 1) : ?>
+            <a class="isShared" href="note/edit_checklist<?= $note_id ?>"><span class="material-symbols-outlined">edit</span></a>
+        <?php elseif ($archived == 0 && $isShared_as_editor == 0 && $isShared_as_reader == 0) : ?>
+            <a class="share" href="#"><span class="material-symbols-outlined">share</span></a>
+            <?php if ($pinned) : ?>
+                <a class="pinned" href="note/unpin/<?= $note_id ?>"><span class="material-symbols-rounded">push_pin</span>
+                <?php else : ?>
+                    <a class="pinned" href="note/pin/<?= $note_id ?>"><span class="material-symbols-outlined">push_pin</span></a>
+                <?php endif; ?>
+                <a class="archive" href="note/archive/<?= $note_id ?>"><span class="material-symbols-outlined">archive</span></a>
+                <a class="isShared" href="note/edit/<?= $note_id ?>"><span class="material-symbols-outlined">edit</span></a>
             <?php endif; ?>
-            <a class="archive" href="note/archive/<?= $note_id ?>"><span class="material-symbols-outlined">archive</span></a>
-            <a class="isShared" href="note/edit/<?= $note_id ?>"><span class="material-symbols-outlined">edit</span></a>
-        <?php endif; ?>
 
-</div>
-<div class="dates">Created <?= $created ?><?= ($edited ? " Edited " . $edited : " Not edited yet") ?></div>
-<div class="title_note_title">Title</div>
-<div class="title_note"> <?= $note->title ?></div>    <div class="note_body_title">Items</div>
+    </div>
+    <div class="dates">Created <?= $created ?><?= ($edited ? " Edited " . $edited : " Not edited yet") ?></div>
+    <div class="title_note_title">Title</div>
+    <div class="title_note"> <?= $note->title ?></div>
+    <div class="note_body_title">Items</div>
 
     <div class="note_body_checklist">
 
+
         <?php foreach ($note_body as $row) : ?>
-
             <?php if ($row['checked']) : ?>
-
                 <form class="check_form" action="note/update_checked" method="post">
-
-                    <input type="text" name="uncheck" value="<?= $row["id"] ?>" hidden>
-                    <input class="material-symbols-outlined" id="check_submit" type="submit" value='check_box'>
-
-
-
-                    <label class="check_label" for="uncheck"> <?= $row["content"] ?></label>
-
+                    <input type="text" name="uncheck" value="<?= $row["id"] ?>" class="item" hidden>
+                    <input class="material-symbols-outlined check_submit " id="check_submit" type="submit" value='check_box'>
+                    <label class="check_label item_label" for="uncheck"> <?= $row["content"] ?></label>
                 </form>
-
-
             <?php else : ?>
-
-
-                <form class="check_form" action="note/update_checked" method="post">
-
-                    <input type="text" name="check" value="<?= $row["id"] ?>" hidden>
-                    <input class="material-symbols-outlined" id="check_submit" type="submit" value="check_box_outline_blank">
-
-
-                    <label class="uncheck_label" for="check"> <?= $row["content"] ?></label>
+                <form class="check_form" method="post">
+                    <input type="text" name="check" value="<?= $row["id"] ?>" class="item" hidden>
+                    <input class="material-symbols-outlined check_submit" id="check_submit" type="submit" value="check_box_outline_blank">
+                    <label class="uncheck_label item_label" for="check"> <?= $row["content"] ?></label>
                 </form>
-
-
             <?php endif; ?>
 
         <?php endforeach; ?>
@@ -82,7 +70,9 @@
 
 
     </div>
-
+    <?php include("view/view_modal_delete.php"); ?>
+    <script src="JS/check_uncheck.js"></script>
+    <script src="JS/confirmation_delete.js"></script>
 </body>
 
 </html>
