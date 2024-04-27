@@ -49,7 +49,7 @@ class ControllerNote extends Controller
     }
     public function shares()
     {
-        $errors = "";
+        $errors = [];
         $note = "";
         $user = $this->get_user_or_redirect();
         $note_id = filter_var($_GET['param1'], FILTER_VALIDATE_INT);
@@ -67,10 +67,8 @@ class ControllerNote extends Controller
             $is_shared = false;
             // Vérifier si l'utilisateur est déjà partagé avec la note
             foreach ($sharers as $shared_user) {
-
                 if ($shared_user[0] == $us->id) {
                     $is_shared = true;
-                    break;
                 }
             }
             // Si l'utilisateur n'est pas partagé, l'ajouter à la liste
@@ -79,10 +77,22 @@ class ControllerNote extends Controller
             }
         }
 
-       (new View("share"))->show(["sharers" => $sharers,"others"=>$others, "user" => $user, "note" => $note]);
+
+
+        (new View("share"))->show(["sharers" => $sharers, "others" => $others, "user" => $user, "note" => $note]);
     }
 
-
+    public function add_share()
+    {
+        if (isset($_POST['user'], $_POST['editor'])) {
+            $note_id = filter_var($_GET['param1'], FILTER_VALIDATE_INT);
+            $nv_us = User::get_user_by_id($_POST['user']);
+            $editor = $_POST['editor'];
+            $note_share = new NoteShare($note_id, $nv_us->id, $editor);
+            $note_share->persist();
+        }
+        $this->redirect("note", "shares", $note_id);
+    }
 
 
     public function add_note(): void

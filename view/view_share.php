@@ -24,35 +24,33 @@
             <p class="share-empty">This note is not shared yet</p>
         <?php endif; ?>
 
+        <div class="my-2">
+        <form action="">
         <?php if (count($sharers) > 0) : ?>
-            <div class="my-2">
-                <?php foreach ($sharers as $sharer) : ?>
-                    <form action="">
-                        <input type="text" name="shares" value="<?= $sharer[1] ?> (<?= ($sharer[2] == 1) ? "editor" : "reader" ?>)" class="form-control-share my-2" disabled>
-                        <button class="btn btn-primary">
-                            <=>
-                        </button>
-                    </form>
-                    <?php endforeach; ?>
+        <?php foreach ($sharers as $sharer) : ?>
+            <input type="text" name="shares" value="<?= $sharer[1] ?> (<?= ($sharer[2] == 1) ? "editor" : "reader" ?>)" class="form-control-share my-2" disabled>
+            <button class="btn btn-primary" type="submit"><=></button>
+        <?php endforeach; ?>
+        <?php endif; ?>
+        </form>
+        </div>
+        <form class="form-box-share" method="post" action="note/add_share/<?=$note->note_id?>">
+        <div class="input-group">
+            <select class="form-select form-control-share" name="user" >
+                <option selected>-- User --</option>
+                <?php foreach ($others as $other) : ?>
+                    <?php if ($other->id != $user->id) : ?>
+                    <option value="<?= $other->id ?>"><?= $other->full_name ?></option>
                     <?php endif; ?>
-                </div>
-                <form class="form-box-share">
-                <div class="input-group">
-                    <select class="form-select form-control-share" >
-                        <option selected>-- User --</option>
-                        <?php foreach ($others as $other) : ?>
-                            <?php if ($other->id != $user->id) : ?>
-                                <option value="<?= $other->id ?>"><?= $other->full_name ?></option>
-                            <?php endif; ?>
-                        <?php endforeach; ?>
-                    </select>
-                    <select class="form-select form-control-share" >
-                        <option selected>-- Permission --</option>
-                        <option value="0">Reader</option>
-                        <option value="1">Editor</option>
-                    </select>
-                    <button class="btn btn-primary">+</button>
-                </div>
+                <?php endforeach; ?>
+            </select>
+            <select class="form-select form-control-share" name="editor">
+                <option selected>-- Permission --</option>
+                <option value="0">Reader</option>
+                <option value="1">Editor</option>
+            </select>
+            <button class="btn btn-primary" type="submit">+</button>
+        </div>
         </form>
     </div>
 

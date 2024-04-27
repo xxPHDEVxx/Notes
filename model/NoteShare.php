@@ -58,4 +58,36 @@ class NoteShare extends Model
         }
         return $shared_users;
     }
+    public function persist(): NoteShare|array
+{
+    if ($this->note == null || $this->user == null) {
+        return []; // Si la note ou l'utilisateur est manquant, retourner un tableau vide
+    }
+
+    // Vérification si une entrée avec la même note et le même utilisateur existe déjà
+    $query = self::execute("SELECT COUNT(*) FROM note_shares WHERE note = :note_id AND user = :user_id", [
+        "note_id" => $this->note,
+        "user_id" => $this->user
+    ]);
+    $existing_count = $query->fetchColumn();
+
+    // Si une entrée existe déjà, effectuer une mise à jour
+    if ($existing_count > 0) {
+        self::execute("UPDATE note_shares SET editor = :editor WHERE note = :note_id AND user = :user_id", [
+            "editor" => $this->editor ? 1 : 0,
+            "note_id" => $this->note,
+            "user_id" => $this->user
+        ]);
+    } else {
+        // Sinon, effectuer une insertion
+        self::execute("INSERT INTO note_shares (note, user, editor) VALUES (:note_id, :user_id, :editor)", [
+            "note_id" => $this->note,
+            "user_id" => $this->user,
+            "editor" => $this->editor ? 1 : 0
+        ]);
+    }
+
+    return $this;
+}
+
 }
