@@ -30,6 +30,7 @@ class NoteShare extends Model
         return $shared_by;
     }
 
+
     public static function get_shared_note(User $user): array
     {
         $shared = [];
@@ -41,5 +42,20 @@ class NoteShare extends Model
             $shared[] = $note;
         }
         return $shared;
+    }
+
+    public static function get_shared_users(Note $note): array
+    {
+        $query = self::execute("SELECT user, editor FROM note_shares WHERE note = :note_id", ["note_id" => $note->note_id]);
+        $data = $query->fetchAll();
+        $shared_users = [];
+        foreach ($data as $row) {
+            $user = User::get_user_by_id($row['user']);
+            //vérifier que l'user existe
+            if ($user) {
+                $shared_users[] = array($row['user'],$user->full_name, $row['editor']);
+            }
+        }
+        return $shared_users;
     }
 }

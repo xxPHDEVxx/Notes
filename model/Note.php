@@ -67,13 +67,13 @@ abstract class Note extends Model
 
         return $data;
     }
-    public function isShared_as_editor(int $userid): bool
+    public function is_shared_as_editor(int $userid): bool
     {
         $query = self::execute("SELECT * FROM note_shares WHERE note = :id and user =:userid and editor = 1", ["id" => $this->note_id, "userid" => $userid]);
         $data = $query->fetchAll();
         return count($data) !== 0;
     }
-    public function isShared_as_reader(int $userid): bool
+    public function is_shared_as_reader(int $userid): bool
     {
         $query = self::execute("SELECT * FROM note_shares WHERE note = :id and user =:userid and editor = 0", ["id" => $this->note_id, "userid" => $userid]);
         $data = $query->fetchAll();
@@ -131,21 +131,11 @@ abstract class Note extends Model
     }
 
 
-
-
-
-
-    /* public function setPinned(bool $pinned) : void {
-        $this->pinned = $pinned;
+    public function get_shared_users()  {
+        return NoteShare::get_shared_users($this);
     }
 
-    public function  isArchived() : bool {
-        return $this->archived;
-    }
 
-    public function  setArchived(bool $archived) : void {
-        $this->archived = $archived;
-    }*/
 
     public function  get_weight(): int
     {
@@ -156,19 +146,6 @@ abstract class Note extends Model
     {
         $this->weight = $weight;
     }
-
-    /*  public function  getEdited_at() : string {
-        return $this->edited_at;
-    }
-
-    public function setEdited_at(string $edited_at) : void {
-        $this->edited_at = $edited_at;
-    }*/
-
-
-
-
-
 
     private static function get_notes(User $user, bool $pinned): array
     {
@@ -329,22 +306,22 @@ abstract class Note extends Model
         $data = $query->fetch();
         if (!$data) {
             return false;
-        } else return Note::create_Note($data);
+        } else return Note::create_note($data);
     }
 
     public function get_note_down(User $user, int $note_id, int $weight, bool $pin): Note | false
     {
         $query = self::execute("
-         SELECT * FROM notes n
-         WHERE owner = :ownerid AND n.id <> :note_id AND archived = 0 AND pinned = :pin AND weight < :weight 
-         ORDER BY -weight LIMIT 1
-         ", ["ownerid" => $user->id, "note_id" => $note_id, "pin" => $pin, "weight" => $weight]);
+        SELECT * FROM notes n
+        WHERE owner = :ownerid AND n.id <> :note_id AND archived = 0 AND pinned = :pin AND weight < :weight 
+        ORDER BY -weight LIMIT 1
+        ", ["ownerid" => $user->id, "note_id" => $note_id, "pin" => $pin, "weight" => $weight]);
 
         $data = $query->fetch();
         if (!$data)
             return false;
 
-        else return Note::create_Note($data);
+        else return Note::create_note($data);
     }
 
     public function move_db(Note $second): Note
@@ -363,18 +340,18 @@ abstract class Note extends Model
 
     public static function get_note_by_id(int $note_id): Note |false
     {
-        return Note::is_Text_note($note_id) ? TextNote::get_note_by_id($note_id) : CheckListNote::get_note_by_id($note_id);
+        return Note::is_text_note($note_id) ? TextNote::get_note_by_id($note_id) : CheckListNote::get_note_by_id($note_id);
     }
-    public static function is_Text_note(int $id): bool
+    public static function is_text_note(int $id): bool
     {
         $query = self::execute("SELECT content FROM text_notes where id = :id", ["id" => $id]);
         $data = $query->fetchAll();
         return count($data) !== 0;
     }
-    public static function create_Note($data): Note | false
+    public static function create_note($data): Note | false
     {
         if (count($data) !== 0) {
-            return Note::is_Text_note($data['id']) ? new TextNote(
+            return Note::is_text_note($data['id']) ? new TextNote(
                 $data['id'],
                 $data['title'],
                 $data['owner'],

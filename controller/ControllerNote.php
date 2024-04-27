@@ -4,6 +4,7 @@ require_once "framework/Controller.php";
 require_once "framework/View.php";
 require_once "model/User.php";
 require_once "framework/Tools.php";
+require_once "model/NoteShare.php";
 
 class ControllerNote extends Controller
 {
@@ -46,19 +47,39 @@ class ControllerNote extends Controller
             throw new Exception("Missing ID");
         }
     }
-    public function shares() {
+    public function shares()
+    {
         $errors = "";
+        $note = "";
         $user = $this->get_user_or_redirect();
-        // $note_id = filter_var($_GET['param1'], FILTER_VALIDATE_INT);
-        // if ($note_id === false) {
-        //     $errors = "invalid note";
-        // } else {
-        //     $note = Note::get_note_by_id($note_id);
-        // }
+        $note_id = filter_var($_GET['param1'], FILTER_VALIDATE_INT);
+        if ($note_id === false) {
+            $errors = "invalid note";
+        } else {
+            $note = Note::get_note_by_id($note_id);
+        }
 
+        $sharers = $note->get_shared_users();
+        $others = [];
         $all_users = User::get_users();
-        
-        (new View("share"))->show(["all_users" => $all_users, "user" => $user]);
+        // Parcourir tous les utilisateurs
+        foreach ($all_users as $us) {
+            $is_shared = false;
+            // Vérifier si l'utilisateur est déjà partagé avec la note
+            foreach ($sharers as $shared_user) {
+
+                if ($shared_user[0] == $us->id) {
+                    $is_shared = true;
+                    break;
+                }
+            }
+            // Si l'utilisateur n'est pas partagé, l'ajouter à la liste
+            if (!$is_shared) {
+                $others[] = $us;
+            }
+        }
+
+       (new View("share"))->show(["sharers" => $sharers,"others"=>$others, "user" => $user, "note" => $note]);
     }
 
 
@@ -77,7 +98,7 @@ class ControllerNote extends Controller
             if ($_POST['update'] == "update") {
                 $count = 1;
                 foreach ($array as $idval) {
-                    NOTE::update_drag_and_drop($count, $idval);
+                    Note::update_drag_and_drop($count, $idval);
                     $count++;
                 }
             }
@@ -194,10 +215,10 @@ class ControllerNote extends Controller
             $user_id = $this->get_user_or_redirect()->id;
             $archived = $note->in_My_archives($user_id);
             $pinned = $note->is_pinned($user_id);
-            $isShared_as_editor = $note->isShared_as_editor($user_id);
-            $isShared_as_reader = $note->isShared_as_reader($user_id);
+            $is_shared_as_editor = $note->is_shared_as_editor($user_id);
+            $is_shared_as_reader = $note->is_shared_as_reader($user_id);
             $body = $note->get_content();
-            
+
 
 
 
@@ -235,9 +256,9 @@ class ControllerNote extends Controller
         }
 
         (new View("edit_checklist_note"))->show([
-            "note" => $note, "note_id" => $note_id, "created" => $this->get_created_time($note_id), "edited" => $this->get_edited_time($note_id), "archived" => $archived, "isShared_as_editor" => $isShared_as_editor, "isShared_as_reader" => $isShared_as_reader, "note_body" => $body, "pinned" => $pinned, "user_id" => $user_id, "errors" => $errors
+            "note" => $note, "note_id" => $note_id, "created" => $this->get_created_time($note_id), "edited" => $this->get_edited_time($note_id), "archived" => $archived, "is_shared_as_editor" => $is_shared_as_editor, "is_shared_as_reader" => $is_shared_as_reader, "note_body" => $body, "pinned" => $pinned, "user_id" => $user_id, "errors" => $errors
         ]);
-        }
+    }
 
     public function save_edit_text_note()
     {
@@ -332,22 +353,21 @@ class ControllerNote extends Controller
         }
     }
 
-    public function open_note() 
+    public function open_note()
     {
+        $this->get_user_or_redirect();
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
             $note = Note::get_note_by_id($note_id);
             $user_id = $this->get_user_or_redirect()->id;
             $archived = $note->in_My_archives($user_id);
             $pinned = $note->is_pinned($user_id);
-            $isShared_as_editor = $note->isShared_as_editor($user_id);
-            $isShared_as_reader = $note->isShared_as_reader($user_id);
+            $is_shared_as_editor = $note->is_shared_as_editor($user_id);
+            $is_shared_as_reader = $note->is_shared_as_reader($user_id);
             $body = $note->get_content();
-
-
         }
         ($note->get_type() == "TextNote" ? new View("open_text_note") : new View("open_checklist_note"))->show([
-            "note" => $note, "note_id" => $note_id, "created" => $this->get_created_time($note_id), "edited" => $this->get_edited_time($note_id), "archived" => $archived, "isShared_as_editor" => $isShared_as_editor, "isShared_as_reader" => $isShared_as_reader, "note_body" => $body, "pinned" => $pinned, "user_id" => $user_id
+            "note" => $note, "note_id" => $note_id, "created" => $this->get_created_time($note_id), "edited" => $this->get_edited_time($note_id), "archived" => $archived, "is_shared_as_editor" => $is_shared_as_editor, "is_shared_as_reader" => $is_shared_as_reader, "note_body" => $body, "pinned" => $pinned, "user_id" => $user_id
         ]);
     }
     public function get_edited_time(int $note_id): String | bool
@@ -368,7 +388,7 @@ class ControllerNote extends Controller
         $diff = $localDateNow->diff($dateTime);
         $res = '';
         if ($diff->y == 0 && $diff->m == 0 && $diff->d == 0 && $diff->h == 0 && $diff->i == 0) {
-            $res = $diff->s . "secondes ago.";
+            $res = $diff->s . " secondes ago.";
         } elseif ($diff->y == 0 && $diff->m == 0 && $diff->d == 0 && $diff->h == 0  && $diff->i != 0) {
             $res = $diff->i . " minutes ago.";
         } elseif ($diff->y == 0 && $diff->m == 0 && $diff->d == 0 && $diff->h != 0) {
@@ -384,6 +404,7 @@ class ControllerNote extends Controller
     }
     public function update_checked(): void
     {
+        $this->get_user_or_redirect();
         if (isset($_POST["check"])) {
             $checklist_item_id = $_POST["check"];
             $note_id = CheckListNoteItem::get_checklist_note($checklist_item_id);
@@ -397,9 +418,10 @@ class ControllerNote extends Controller
         }
         $this->redirect("note", "open_note/$note_id");
     }
-    
+
     public function pin(): void
     {
+        $this->get_user_or_redirect();
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
             $note = Note::get_note_by_id($note_id);
@@ -409,6 +431,7 @@ class ControllerNote extends Controller
     }
     public function unpin(): void
     {
+        $this->get_user_or_redirect();
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
             $note = Note::get_note_by_id($note_id);
@@ -418,6 +441,7 @@ class ControllerNote extends Controller
     }
     public function archive(): void
     {
+        $this->get_user_or_redirect();
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
             $note = Note::get_note_by_id($note_id);
@@ -428,6 +452,7 @@ class ControllerNote extends Controller
 
     public function unarchive(): void
     {
+        $this->get_user_or_redirect();
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
             $note = Note::get_note_by_id($note_id);
@@ -445,38 +470,36 @@ class ControllerNote extends Controller
             $user_id = $this->get_user_or_redirect()->id;
             $archived = $note->in_My_archives($user_id);
             $pinned = $note->is_pinned($user_id);
-            $isShared_as_editor = $note->isShared_as_editor($user_id);
-            $isShared_as_reader = $note->isShared_as_reader($user_id);
+            $is_shared_as_editor = $note->is_shared_as_editor($user_id);
+            $is_shared_as_reader = $note->is_shared_as_reader($user_id);
             $body = $note->get_content();
-            
-
         }
         ($note->get_type() == "TextNote" ? new View("edit_text_note") : new View("edit_checklist_note"))->show([
-            "note" => $note, "note_id" => $note_id, "created" => $this->get_created_time($note_id), "edited" => $this->get_edited_time($note_id), "archived" => $archived, "isShared_as_editor" => $isShared_as_editor, "isShared_as_reader" => $isShared_as_reader, "note_body" => $body, "pinned" => $pinned, "user_id" => $user_id
+            "note" => $note, "note_id" => $note_id, "created" => $this->get_created_time($note_id), "edited" => $this->get_edited_time($note_id), "archived" => $archived, "is_shared_as_editor" => $is_shared_as_editor, "is_shared_as_reader" => $is_shared_as_reader, "note_body" => $body, "pinned" => $pinned, "user_id" => $user_id
         ]);
     }
-    
+
     // Ouvre la vue d'ajout d'une note
     public function add_text_note(): void
-{
-    $user_id = $this->get_user_or_redirect()->id;
+    {
+        $user_id = $this->get_user_or_redirect()->id;
 
-    // Créez une instance de vue pour l'ajout de note texte
-    $view = new View("add_text_note");
+        // Créez une instance de vue pour l'ajout de note texte
+        $view = new View("add_text_note");
 
-    // Prépare les données par défaut pour initialiser la vue
-    $data = [
-        "user_id" => $user_id,
-        "note_id" => null,
-        "created" => date("Y-m-d H:i:s"),
-        "edited" => null,
-        "archived" => 0,
-        "isShared_as_editor" => 0,
-        "isShared_as_reader" => 0,
-        "content" => "",
-        "pinned" => 0
-    ];
+        // Prépare les données par défaut pour initialiser la vue
+        $data = [
+            "user_id" => $user_id,
+            "note_id" => null,
+            "created" => date("Y-m-d H:i:s"),
+            "edited" => null,
+            "archived" => 0,
+            "is_shared_as_editor" => 0,
+            "is_shared_as_reader" => 0,
+            "content" => "",
+            "pinned" => 0
+        ];
 
-    $view->show($data);
-}
+        $view->show($data);
+    }
 }

@@ -353,12 +353,31 @@ h2 {
   position: relative;
 }
 
-/* share note*/
+/* view shares note*/
 
 .share-empty {
   font-style: italic;
 }
-
+.box-shares {
+  margin-top: 18%;
+  margin-left: auto;
+  margin-right: auto;
+  width: 98%;
+}
+.form-control-share {
+  background-color: transparent;
+  border: 1.6px solid #494c51;
+  padding: 6px;
+  border-radius: 5px;
+  color: lightgray;
+  width: 80%;
+}
+.form-box-share {
+  width: 90%;
+}
+.form-control-share option {
+  color: black;
+}
 /*  menu burger */
 
 .menu {
