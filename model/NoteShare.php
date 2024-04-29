@@ -53,41 +53,59 @@ class NoteShare extends Model
             $user = User::get_user_by_id($row['user']);
             //vérifier que l'user existe
             if ($user) {
-                $shared_users[] = array($row['user'],$user->full_name, $row['editor']);
+                $shared_users[] = array($row['user'], $user->full_name, $row['editor']);
             }
         }
         return $shared_users;
     }
     public function persist(): NoteShare|array
-{
-    if ($this->note == null || $this->user == null) {
-        return []; // Si la note ou l'utilisateur est manquant, retourner un tableau vide
-    }
+    {
+        if ($this->note == null || $this->user == null) {
+            return []; // Si la note ou l'utilisateur est manquant, retourner un tableau vide
+        }
 
-    // Vérification si une entrée avec la même note et le même utilisateur existe déjà
-    $query = self::execute("SELECT COUNT(*) FROM note_shares WHERE note = :note_id AND user = :user_id", [
-        "note_id" => $this->note,
-        "user_id" => $this->user
-    ]);
-    $existing_count = $query->fetchColumn();
-
-    // Si une entrée existe déjà, effectuer une mise à jour
-    if ($existing_count > 0) {
-        self::execute("UPDATE note_shares SET editor = :editor WHERE note = :note_id AND user = :user_id", [
-            "editor" => $this->editor ? 1 : 0,
+        // Vérification si une entrée avec la même note et le même utilisateur existe déjà
+        $query = self::execute("SELECT COUNT(*) FROM note_shares WHERE note = :note_id AND user = :user_id", [
             "note_id" => $this->note,
             "user_id" => $this->user
         ]);
-    } else {
-        // Sinon, effectuer une insertion
-        self::execute("INSERT INTO note_shares (note, user, editor) VALUES (:note_id, :user_id, :editor)", [
-            "note_id" => $this->note,
-            "user_id" => $this->user,
-            "editor" => $this->editor ? 1 : 0
-        ]);
+        $existing_count = $query->fetchColumn();
+
+        // Si une entrée existe déjà, effectuer une mise à jour
+        if ($existing_count > 0) {
+            self::execute("UPDATE note_shares SET editor = :editor WHERE note = :note_id AND user = :user_id", [
+                "editor" => $this->editor ? 1 : 0,
+                "note_id" => $this->note,
+                "user_id" => $this->user
+            ]);
+        } else {
+            // Sinon, effectuer une insertion
+            self::execute("INSERT INTO note_shares (note, user, editor) VALUES (:note_id, :user_id, :editor)", [
+                "note_id" => $this->note,
+                "user_id" => $this->user,
+                "editor" => $this->editor ? 1 : 0
+            ]);
+        }
+
+        return $this;
     }
 
-    return $this;
-}
+    public function delete()
+    {
+        $query = self::execute("DELETE FROM note_shares WHERE user = :userid AND note = :note_id", ['userid' => $this->user, "note_id" => $this->note]);
+        return $query->rowCount() > 0;
+    }
 
+    public static function get_share_note(int $note_id, int $user_id): NoteShare | bool
+    {
+        $query = self::execute("SELECT * from note_shares WHERE user = :userid AND note = :note_id", ['userid' => $user_id, "note_id" => $note_id]);
+        $data = $query->fetchAll();
+        if (count($data) > 0) {
+            foreach ($data as $row) {
+                $ns = new NoteShare($row['note'], $row['user'], $row['editor']);
+            }
+            return $ns;
+        }
+        return false;
+    }
 }

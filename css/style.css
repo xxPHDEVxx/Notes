@@ -370,7 +370,7 @@ h2 {
   padding: 6px;
   border-radius: 5px;
   color: lightgray;
-  width: 80%;
+  width: 75%;
 }
 .form-box-share {
   width: 90%;
@@ -378,6 +378,28 @@ h2 {
 .form-control-share option {
   color: black;
 }
+
+.box-sharer {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+.btn-share {
+  padding: 3px;
+}
+.btn-toggle {
+  border-radius: 0%;
+}
+.btn-del {
+  border-radius: 0 5px 5px 0;
+}
+
+.form-share {
+  border-radius: 5px 0 0 5px;
+}
+
 /*  menu burger */
 
 .menu {

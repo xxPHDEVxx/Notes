@@ -59,6 +59,7 @@ class ControllerNote extends Controller
             $note = Note::get_note_by_id($note_id);
         }
 
+        //données visibles sur la vue
         $sharers = $note->get_shared_users();
         $others = [];
         $all_users = User::get_users();
@@ -75,25 +76,41 @@ class ControllerNote extends Controller
             if (!$is_shared) {
                 $others[] = $us;
             }
+            //vérifier qu'on a une bonne valeur pour le user et l'editor
+            if (isset($_POST['user'], $_POST['editor']) && ($_POST["user"] == "null" ||$_POST["editor"] == "null" ) ) {
+                $errors[] = "erreurs";
+            }
+            // execution du form delete et toggle
+            if(isset($_POST["action"])) {
+                $action = $_POST["action"];
+                // Exécuter les actions en fonction de la valeur soumise
+                if($action == "toggle") {
+                    $sharer = User::get_user_by_id($_POST['share']);
+                    $edit = ($_POST['edit'] == 0) ? true : false;
+                    $note_sh = NoteShare::get_share_note($note_id, $sharer->id);
+                    $note_sh->editor = $edit;
+                    $note_sh->persist();
+                    $this->redirect("note", "shares", $note_id);
+                } elseif($action == "delete") {
+                    $sharer = User::get_user_by_id($_POST['share']);
+                    $note_sh = NoteShare::get_share_note($note_id, $sharer->id);
+                    $note_sh->delete();
+                    $this->redirect("note", "shares", $note_id);
+                }
+            }
+            if (isset($_POST['user'], $_POST['editor']) && empty($errors)) {
+                $nv_us = User::get_user_by_id($_POST['user']);
+                $editor = ($_POST['editor'] == 1) ? true : false;;
+                $note_share = new NoteShare($note_id, $nv_us->id, $editor);
+                $note_share->persist();
+                $this->redirect("note", "shares", $note_id);
+            }
         }
 
 
 
         (new View("share"))->show(["sharers" => $sharers, "others" => $others, "user" => $user, "note" => $note]);
     }
-
-    public function add_share()
-    {
-        if (isset($_POST['user'], $_POST['editor'])) {
-            $note_id = filter_var($_GET['param1'], FILTER_VALIDATE_INT);
-            $nv_us = User::get_user_by_id($_POST['user']);
-            $editor = $_POST['editor'];
-            $note_share = new NoteShare($note_id, $nv_us->id, $editor);
-            $note_share->persist();
-        }
-        $this->redirect("note", "shares", $note_id);
-    }
-
 
     public function add_note(): void
     {
