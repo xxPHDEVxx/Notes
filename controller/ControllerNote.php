@@ -85,6 +85,7 @@ class ControllerNote extends Controller
                 $action = $_POST["action"];
                 // Exécuter les actions en fonction de la valeur soumise
                 if($action == "toggle") {
+                    //on récupére une note share existante et on fait la modification dessus 
                     $sharer = User::get_user_by_id($_POST['share']);
                     $edit = ($_POST['edit'] == 0) ? true : false;
                     $note_sh = NoteShare::get_share_note($note_id, $sharer->id);
@@ -92,6 +93,7 @@ class ControllerNote extends Controller
                     $note_sh->persist();
                     $this->redirect("note", "shares", $note_id);
                 } elseif($action == "delete") {
+                    //on récupére la note share existante et on la supprime
                     $sharer = User::get_user_by_id($_POST['share']);
                     $note_sh = NoteShare::get_share_note($note_id, $sharer->id);
                     $note_sh->delete();
