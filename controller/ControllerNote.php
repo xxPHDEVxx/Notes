@@ -52,13 +52,15 @@ class ControllerNote extends Controller
         $errors = [];
         $note = "";
         $user = $this->get_user_or_redirect();
+        if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
+
         $note_id = filter_var($_GET['param1'], FILTER_VALIDATE_INT);
         if ($note_id === false) {
             $errors = "invalid note";
         } else {
             $note = Note::get_note_by_id($note_id);
         }
-
+    }
         //données visibles sur la vue
         $sharers = $note->get_shared_users();
         $others = [];
@@ -80,7 +82,25 @@ class ControllerNote extends Controller
             if (isset($_POST['user'], $_POST['editor']) && ($_POST["user"] == "null" ||$_POST["editor"] == "null" ) ) {
                 $errors[] = "erreurs";
             }
-            // execution du form delete et toggle
+
+            //si pas d'erreurs on insère dans la DB la nouvelle note
+            if (isset($_POST['user'], $_POST['editor']) && empty($errors)) {
+                $nv_us = User::get_user_by_id($_POST['user']);
+                $editor = ($_POST['editor'] == 1) ? true : false;;
+                $note_share = new NoteShare($note_id, $nv_us->id, $editor);
+                $note_share->persist();
+                $this->redirect("note", "shares", $note_id);
+            }
+        }
+
+        (new View("share"))->show(["sharers" => $sharers, "others" => $others, "user" => $user, "note" => $note]);
+    }
+
+
+    public function toggle_permission() {
+
+        if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
+            $note_id = filter_var($_GET['param1'], FILTER_VALIDATE_INT);
             if(isset($_POST["action"])) {
                 $action = $_POST["action"];
                 // Exécuter les actions en fonction de la valeur soumise
@@ -100,20 +120,8 @@ class ControllerNote extends Controller
                     $this->redirect("note", "shares", $note_id);
                 }
             }
-            if (isset($_POST['user'], $_POST['editor']) && empty($errors)) {
-                $nv_us = User::get_user_by_id($_POST['user']);
-                $editor = ($_POST['editor'] == 1) ? true : false;;
-                $note_share = new NoteShare($note_id, $nv_us->id, $editor);
-                $note_share->persist();
-                $this->redirect("note", "shares", $note_id);
-            }
-        }
-
-
-
-        (new View("share"))->show(["sharers" => $sharers, "others" => $others, "user" => $user, "note" => $note]);
     }
-
+    }
     public function add_note(): void
     {
         (new view("add_text_note"))->show();
@@ -242,7 +250,7 @@ class ControllerNote extends Controller
                 throw new Exception("Undefined note");
             }
             $user_id = $this->get_user_or_redirect()->id;
-            $archived = $note->in_My_archives($user_id);
+            $archived = $note->in_my_archives($user_id);
             $pinned = $note->is_pinned($user_id);
             $is_shared_as_editor = $note->is_shared_as_editor($user_id);
             $is_shared_as_reader = $note->is_shared_as_reader($user_id);
@@ -389,7 +397,7 @@ class ControllerNote extends Controller
             $note_id = $_GET["param1"];
             $note = Note::get_note_by_id($note_id);
             $user_id = $this->get_user_or_redirect()->id;
-            $archived = $note->in_My_archives($user_id);
+            $archived = $note->in_my_archives($user_id);
             $pinned = $note->is_pinned($user_id);
             $is_shared_as_editor = $note->is_shared_as_editor($user_id);
             $is_shared_as_reader = $note->is_shared_as_reader($user_id);
@@ -497,7 +505,7 @@ class ControllerNote extends Controller
             $note_id = $_GET["param1"];
             $note = Note::get_note_by_id($note_id);
             $user_id = $this->get_user_or_redirect()->id;
-            $archived = $note->in_My_archives($user_id);
+            $archived = $note->in_my_archives($user_id);
             $pinned = $note->is_pinned($user_id);
             $is_shared_as_editor = $note->is_shared_as_editor($user_id);
             $is_shared_as_reader = $note->is_shared_as_reader($user_id);

@@ -400,6 +400,10 @@ h2 {
   border-radius: 5px 0 0 5px;
 }
 
+.role {
+  font-style: italic;
+}
+
 /*  menu burger */
 
 .menu {
