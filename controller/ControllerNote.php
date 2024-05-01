@@ -125,46 +125,6 @@ class ControllerNote extends Controller
             }
         }
     }
-
-            //si pas d'erreurs on insère dans la DB la nouvelle note
-            if (isset($_POST['user'], $_POST['editor']) && empty($errors)) {
-                $nv_us = User::get_user_by_id($_POST['user']);
-                $editor = ($_POST['editor'] == 1) ? true : false;;
-                $note_share = new NoteShare($note_id, $nv_us->id, $editor);
-                $note_share->persist();
-                $this->redirect("note", "shares", $note_id);
-            }
-        }
-
-        (new View("share"))->show(["sharers" => $sharers, "others" => $others, "user" => $user, "note" => $note]);
-    }
-
-
-    public function toggle_permission() {
-
-        if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
-            $note_id = filter_var($_GET['param1'], FILTER_VALIDATE_INT);
-            if(isset($_POST["action"])) {
-                $action = $_POST["action"];
-                // Exécuter les actions en fonction de la valeur soumise
-                if($action == "toggle") {
-                    //on récupére une note share existante et on fait la modification dessus 
-                    $sharer = User::get_user_by_id($_POST['share']);
-                    $edit = ($_POST['edit'] == 0) ? true : false;
-                    $note_sh = NoteShare::get_share_note($note_id, $sharer->id);
-                    $note_sh->editor = $edit;
-                    $note_sh->persist();
-                    $this->redirect("note", "shares", $note_id);
-                } elseif($action == "delete") {
-                    //on récupére la note share existante et on la supprime
-                    $sharer = User::get_user_by_id($_POST['share']);
-                    $note_sh = NoteShare::get_share_note($note_id, $sharer->id);
-                    $note_sh->delete();
-                    $this->redirect("note", "shares", $note_id);
-                }
-            }
-    }
-    }
     public function add_note(): void
     {
         (new view("add_text_note"))->show();
