@@ -53,35 +53,78 @@ class ControllerNote extends Controller
         $note = "";
         $user = $this->get_user_or_redirect();
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
+            $note_id = filter_var($_GET['param1'], FILTER_VALIDATE_INT);
+            if ($note_id === false) {
+                $errors = "invalid note";
+            } else {
+                $note = Note::get_note_by_id($note_id);
+            }
 
-        $note_id = filter_var($_GET['param1'], FILTER_VALIDATE_INT);
-        if ($note_id === false) {
-            $errors = "invalid note";
-        } else {
-            $note = Note::get_note_by_id($note_id);
-        }
-    }
-        //données visibles sur la vue
-        $sharers = $note->get_shared_users();
-        $others = [];
-        $all_users = User::get_users();
-        // Parcourir tous les utilisateurs
-        foreach ($all_users as $us) {
-            $is_shared = false;
-            // Vérifier si l'utilisateur est déjà partagé avec la note
-            foreach ($sharers as $shared_user) {
-                if ($shared_user[0] == $us->id) {
-                    $is_shared = true;
+
+            //données visibles sur la vue
+            $sharers = $note->get_shared_users();
+            $others = [];
+            $all_users = User::get_users();
+            // Parcourir tous les utilisateurs
+            foreach ($all_users as $us) {
+                $is_shared = false;
+                // Vérifier si l'utilisateur est déjà partagé avec la note
+                foreach ($sharers as $shared_user) {
+                    if ($shared_user[0] == $us->id) {
+                        $is_shared = true;
+                    }
+                }
+                // Si l'utilisateur n'est pas partagé, l'ajouter à la liste
+                if (!$is_shared) {
+                    $others[] = $us;
                 }
             }
-            // Si l'utilisateur n'est pas partagé, l'ajouter à la liste
-            if (!$is_shared) {
-                $others[] = $us;
-            }
+
             //vérifier qu'on a une bonne valeur pour le user et l'editor
-            if (isset($_POST['user'], $_POST['editor']) && ($_POST["user"] == "null" ||$_POST["editor"] == "null" ) ) {
+            if (isset($_POST['user'], $_POST['editor']) && ($_POST["user"] == "null" || $_POST["editor"] == "null")) {
                 $errors[] = "erreurs";
             }
+
+            if (isset($_POST['user'], $_POST['editor']) && empty($errors)) {
+                $nv_us = User::get_user_by_id($_POST['user']);
+                $editor = ($_POST['editor'] == 1) ? true : false;;
+                $note_share = new NoteShare($note_id, $nv_us->id, $editor);
+                $note_share->persist();
+                $this->redirect("note", "shares", $note_id);
+            }
+        }
+
+
+
+        (new View("share"))->show(["sharers" => $sharers, "others" => $others, "user" => $user, "note" => $note]);
+    }
+
+    public function toggle_permission()
+    {
+        if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
+            $note_id = Tools::sanitize($_GET["param1"]);
+            // execution du form delete et toggle
+            if (isset($_POST["action"])) {
+                $action = $_POST["action"];
+                // Exécuter les actions en fonction de la valeur soumise
+                if ($action == "toggle") {
+                    //on récupére une note share existante et on fait la modification dessus 
+                    $sharer = User::get_user_by_id($_POST['share']);
+                    $edit = ($_POST['edit'] == 0) ? true : false;
+                    $note_sh = NoteShare::get_share_note($note_id, $sharer->id);
+                    $note_sh->editor = $edit;
+                    $note_sh->persist();
+                    $this->redirect("note", "shares", $note_id);
+                } elseif ($action == "delete") {
+                    //on récupére la note share existante et on la supprime
+                    $sharer = User::get_user_by_id($_POST['share']);
+                    $note_sh = NoteShare::get_share_note($note_id, $sharer->id);
+                    $note_sh->delete();
+                    $this->redirect("note", "shares", $note_id);
+                }
+            }
+        }
+    }
 
             //si pas d'erreurs on insère dans la DB la nouvelle note
             if (isset($_POST['user'], $_POST['editor']) && empty($errors)) {

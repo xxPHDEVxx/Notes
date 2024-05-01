@@ -734,7 +734,7 @@ input:focus, textarea:focus {
 
 }
 
-#check_submit {
+.check_submit {
   background: #0962ea;
   border-radius: 5px 0 0 5px;
   border: 1.7px solid #0962ea;
