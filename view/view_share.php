@@ -42,14 +42,13 @@
         </div>
     <?php endforeach; ?>
 <?php endif; ?>
+<?php if (count($others)> 0) :?>
 <form class="form-box-share" method="post" action="note/shares/<?= $note->note_id ?>">
     <div class="input-group">
         <select class="form-select form-control-share" name="user">
             <option selected value="null">-- User --</option>
             <?php foreach ($others as $other) : ?>
-                <?php if ($other->id != $user->id) : ?>
                     <option value="<?= $other->id ?>"><?= $other->full_name ?></option>
-                <?php endif; ?>
             <?php endforeach; ?>
         </select>
         <select class="form-select form-control-share" name="editor">
@@ -60,6 +59,8 @@
         <button class="btn btn-primary" type="submit">+</button>
     </div>
 </form>
+<?php endif;?>
+
     </div>
     </div>
 

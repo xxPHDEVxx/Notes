@@ -46,7 +46,7 @@ class NoteShare extends Model
 
     public static function get_shared_users(Note $note): array
     {
-        $query = self::execute("SELECT user, editor FROM note_shares WHERE note = :note_id", ["note_id" => $note->note_id]);
+        $query = self::execute("SELECT user, editor FROM note_shares JOIN users ON note_shares.user = users.id WHERE note = :note_id ORDER BY users.full_name", ["note_id" => $note->note_id]);
         $data = $query->fetchAll();
         $shared_users = [];
         foreach ($data as $row) {

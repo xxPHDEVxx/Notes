@@ -36,23 +36,6 @@ abstract class Note extends Model
 
 
 
-
-    /* public function get_title() : string {
-        return $this->title;
-    }
-
-    public function setTitle(string $title) : void {
-        $this->title = $title;
-    }
-
-    public function  getOwner() {
-        return $this->owner;
-    }
-
-    public function setOwner(User $owner) {
-        $this->owner = $owner;
-    }*/
-
     public static function get_created_at(int $id): String
     {
         $query = self::execute("SELECT created_at from notes WHERE id = :id", ["id" => $id]);

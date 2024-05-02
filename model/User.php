@@ -66,7 +66,7 @@ class User extends Model
 
     public static function get_users(): array
     {
-        $query = self::execute("SELECT * FROM users", []);
+        $query = self::execute("SELECT * FROM users ORDER BY full_name" , []);
         $data = $query->fetchAll();
         $results = [];
         foreach ($data as $row) {
