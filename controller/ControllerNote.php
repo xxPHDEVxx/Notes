@@ -51,7 +51,7 @@ class ControllerNote extends Controller
     {
         $errors = [];
         $note = "";
-        $user = $this->get_user_or_redirect();
+        $connected = $this->get_user_or_redirect();
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = filter_var($_GET['param1'], FILTER_VALIDATE_INT);
             if ($note_id === false) {
@@ -60,6 +60,10 @@ class ControllerNote extends Controller
                 $note = Note::get_note_by_id($note_id);
             }
 
+            if ($note->owner != $connected->id) {
+                $err = "pas la bonne personne connecté";
+                Tools::abort($err);
+            }
 
             //données visibles sur la vue
             $sharers = $note->get_shared_users();
@@ -74,8 +78,8 @@ class ControllerNote extends Controller
                         $is_shared = true;
                     }
                 }
-                // Si l'utilisateur n'est pas partagé, l'ajouter à la liste
-                if (!$is_shared) {
+                // Si l'utilisateur n'est pas partagé et qu'il n'est pas celui connecté, l'ajouter à la liste
+                if (!$is_shared && $us->id != $connected->id) {
                     $others[] = $us;
                 }
             }
@@ -96,13 +100,24 @@ class ControllerNote extends Controller
 
 
 
-        (new View("share"))->show(["sharers" => $sharers, "others" => $others, "user" => $user, "note" => $note]);
+        (new View("share"))->show(["sharers" => $sharers, "others" => $others, "note" => $note]);
     }
 
     public function toggle_permission()
     {
+        $connected = $this->get_user_or_redirect();
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = Tools::sanitize($_GET["param1"]);
+            if ($note_id === false) {
+                $errors = "invalid note";
+            } else {
+                $note = Note::get_note_by_id($note_id);
+            }
+    
+            if ($note->owner != $connected->id) {
+                $err = "pas la bonne personne connecté";
+                Tools::abort($err);
+            }
             // execution du form delete et toggle
             if (isset($_POST["action"])) {
                 $action = $_POST["action"];

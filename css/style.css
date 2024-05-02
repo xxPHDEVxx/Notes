@@ -7,6 +7,12 @@ html {
   color: white;
 }
 
+.err-page {
+margin-top: 13%;
+margin-left: 10%;
+font-size: 20px;
+}
+
 /*login et signup*/
 .container_login_signup {
   max-width: 500px;
@@ -371,12 +377,14 @@ h2 {
   border-radius: 5px;
   color: lightgray;
   width: 75%;
+
 }
 .form-box-share {
   width: 90%;
 }
 .form-control-share option {
-  color: black;
+  color: lightgray;
+  background-color: #202325;
 }
 
 .box-sharer {
