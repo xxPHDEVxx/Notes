@@ -1,9 +1,12 @@
 $(document).ready(function () {
 
-    var p = $('#share-empty').text();
-    $('#share-empty').hide();
+    var boxSharers = $('.box-sharer:visible');
 
-    console.log(p);
+    if(boxSharers.length == 0) {
+        $('#share-empty').show();
+    } else {
+        $('#share-empty').hide();
+    }
 
     $('.form_toggle').submit(function (event) {
         event.preventDefault();
