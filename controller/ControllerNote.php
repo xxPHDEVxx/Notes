@@ -134,6 +134,8 @@ class ControllerNote extends Controller
 
     public function toggle_js()
     {
+        $this->get_user_or_redirect();
+
         $note_id = Tools::sanitize($_POST["note"]);
         $sharer = User::get_user_by_id($_POST['share']);
         $edit = ($_POST['edit'] == 0) ? true : false;
@@ -143,12 +145,44 @@ class ControllerNote extends Controller
         $this->redirect("note", "shares", $note_id);
     }
 
-    public function delete_js() {
+    public function delete_js()
+    {
+        $this->get_user_or_redirect();
         $note_id = Tools::sanitize($_POST["note"]);
         $sharer = User::get_user_by_id($_POST['share']);
         $note_sh = NoteShare::get_share_note($note_id, $sharer->id);
         $note_sh->delete();
         $this->redirect("note", "shares", $note_id);
+    }
+
+    public function noteshare_js()
+    {
+        $this->get_user_or_redirect();
+        $param1 = isset($_GET['param1']) ? $_GET['param1'] : null;
+        $param2 = isset($_GET['param2']) ? $_GET['param2'] : null;
+
+        if (!$param1 || !$param2) {
+            // Gérer les erreurs de paramètres manquants
+            http_response_code(400); // Code d'erreur Bad Request
+            echo json_encode(['error' => 'Paramètres manquants']);
+            exit;
+        }
+
+        $ns = NoteShare::get_share_note($_GET['param1'], $_GET['param2']);
+        $us = User::get_user_by_id($ns->user);
+        if (!$ns || !$us) {
+            // Gérer les erreurs de données manquantes ou invalides
+            http_response_code(404); // Code d'erreur Not Found
+            echo json_encode(['error' => 'Données non trouvées']);
+            exit;
+        }
+        $data = [
+            'us' => $us->full_name,
+            'editor' => $ns->editor,
+            'note' => $ns->note
+        ];
+        header('Content-Type: application/json');
+        echo json_encode($data);
     }
     public function add_note(): void
     {
