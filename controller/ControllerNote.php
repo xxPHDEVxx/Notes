@@ -105,19 +105,10 @@ class ControllerNote extends Controller
 
     public function toggle_permission()
     {
-        $connected = $this->get_user_or_redirect();
+        $this->get_user_or_redirect();
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = Tools::sanitize($_GET["param1"]);
-            if ($note_id === false) {
-                $errors = "invalid note";
-            } else {
-                $note = Note::get_note_by_id($note_id);
-            }
-    
-            if ($note->owner != $connected->id) {
-                $err = "pas la bonne personne connecté";
-                Tools::abort($err);
-            }
+
             // execution du form delete et toggle
             if (isset($_POST["action"])) {
                 $action = $_POST["action"];
@@ -139,6 +130,18 @@ class ControllerNote extends Controller
                 }
             }
         }
+    }
+
+    public function toggle_js()
+    {
+        var_dump('test');
+        $note_id = Tools::sanitize($_POST["note"]);
+        $sharer = User::get_user_by_id($_POST['share']);
+        $edit = ($_POST['edit'] == 0) ? true : false;
+        $note_sh = NoteShare::get_share_note($note_id, $sharer->id);
+        $note_sh->editor = $edit;
+        $note_sh->persist();
+        $this->redirect("note", "shares", $note_id);
     }
     public function add_note(): void
     {
