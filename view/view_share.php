@@ -23,7 +23,7 @@
     <div class="container box-shares">
         <h3>Shares :</h3>
         <?php if (count($sharers) == 0) : ?>
-            <p class="share-empty">This note is not shared yet</p>
+            <p class="share-empty" id="share-empty">This note is not shared yet</p>
         <?php else: ?>
             <?php foreach ($sharers as $sharer) : ?>
                 <form action="note/toggle_permission/<?=$note->note_id?>" class = "form_toggle" method="post">

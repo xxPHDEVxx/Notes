@@ -134,13 +134,20 @@ class ControllerNote extends Controller
 
     public function toggle_js()
     {
-        var_dump('test');
         $note_id = Tools::sanitize($_POST["note"]);
         $sharer = User::get_user_by_id($_POST['share']);
         $edit = ($_POST['edit'] == 0) ? true : false;
         $note_sh = NoteShare::get_share_note($note_id, $sharer->id);
         $note_sh->editor = $edit;
         $note_sh->persist();
+        $this->redirect("note", "shares", $note_id);
+    }
+
+    public function delete_js() {
+        $note_id = Tools::sanitize($_POST["note"]);
+        $sharer = User::get_user_by_id($_POST['share']);
+        $note_sh = NoteShare::get_share_note($note_id, $sharer->id);
+        $note_sh->delete();
         $this->redirect("note", "shares", $note_id);
     }
     public function add_note(): void

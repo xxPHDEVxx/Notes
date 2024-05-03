@@ -1,4 +1,10 @@
 $(document).ready(function () {
+
+    var p = $('#share-empty').text();
+    $('#share-empty').hide();
+
+    console.log(p);
+
     $('.form_toggle').submit(function (event) {
         event.preventDefault();
 
@@ -12,7 +18,6 @@ $(document).ready(function () {
             edit: $(this).find('[name="edit"]').val(),
             action: action // Ajouter l'action dans les données à envoyer
         };
-        console.log(formData);
 
         if (action == "toggle") {
             // Envoyer la requête AJAX au serveur
@@ -37,7 +42,33 @@ $(document).ready(function () {
                 }
             });
         } else {
-            console.log("delete");
+            $.ajax({
+                type: 'POST',
+                url: 'note/delete_js',
+                data: formData,
+                success: function (response) {
+                    // Mettre à jour l'affichage selon la réponse du serveur
+                    console.log('La requête a été envoyée avec succès.');
+
+                    $(event.target).find('.box-sharer').hide();
+
+                    var boxSharers = $('.box-sharer:visible');
+
+                    if(boxSharers.length == 0) {
+                        $('#share-empty').show();
+                    } else {
+                        $('#share-empty').hide();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Erreur lors de l\'envoi de la requête : ' + error);
+                }
+            });
+
+            var p = $('#share-empty').text();
+            console.log(p);
+        
         }
     })
+
 })
