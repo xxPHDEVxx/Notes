@@ -61,7 +61,7 @@
         </form>
         <?php endif; ?>
     </div>
-    <script src="JS/toggle_permission.js"></script>
+    <script src="JS/toggle_permission_delete.js"></script>
 </body>
 
 </html>
