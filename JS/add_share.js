@@ -7,9 +7,9 @@ $(document).ready(function () {
             editor: $(this).find('[name="editor"]').val()
         };
         var note = $('#note').val();
-        var user= $(this).find('[name="user"] option:selected').text();
-        var user_id= $(this).find('[name="user"] option:selected').val();
-        var editor= $(this).find('[name="editor"]').val();
+        var user = $(this).find('[name="user"] option:selected').text();
+        var user_id = $(this).find('[name="user"] option:selected').val();
+        var editor = $(this).find('[name="editor"]').val();
 
 
         // Envoyer la requête AJAX au serveur
@@ -21,6 +21,7 @@ $(document).ready(function () {
                 // Mettre à jour l'affichage selon la réponse du serveur
                 console.log('La requête a été envoyée avec succès.');
 
+                $('#add_share').find('[name="user"] option:selected').detach();
 
                 // Créer le formulaire
                 var form = $('<form>').addClass('form_toggle').attr('action', 'note/toggle_permission/' + note).attr('method', 'post');
@@ -52,10 +53,21 @@ $(document).ready(function () {
 
                 // Ajouter le formulaire à l'endroit désiré dans le DOM
                 form.appendTo('.box-shares');
+
+
             },
             error: function (xhr, status, error) {
                 console.error('Erreur lors de l\'envoi de la requête : ' + error);
             }
         });
+
+        //verifier que le select est vide 
+        var long = $('.us').children('option').length;
+
+        console.log(long);
+        if (long == 2) {
+            $('.form-box-share').hide();
+        }
+
     })
 })

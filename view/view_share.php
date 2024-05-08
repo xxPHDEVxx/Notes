@@ -48,13 +48,13 @@
 
             <form class="form-box-share" id="add_share" method="post" action="note/shares/<?= $note->note_id ?>">
                 <div class="input-group">
-                    <select class="form-select form-control-share" name="user">
+                    <select class="form-select form-control-share us" name="user">
                         <option selected value="null">-- User --</option>
                         <?php foreach ($others as $other) : ?>
                             <option value="<?= $other->id ?>"><?= $other->full_name ?></option>
                         <?php endforeach; ?>
                     </select>
-                    <select class="form-select form-control-share" name="editor">
+                    <select class="form-select form-control-share edi" name="editor">
                         <option selected value="null">-- Permission --</option>
                         <option value="0">Reader</option>
                         <option value="1">Editor</option>

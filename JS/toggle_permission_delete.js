@@ -70,6 +70,11 @@ $(document).ready(function () {
 
             var p = $('#share-empty').text();
             console.log(p);
+            var long = $('.us').children('option').length;
+            if (long > 2) {
+                $('.form-box-share').show();
+            }
+    
         
         }
     })
