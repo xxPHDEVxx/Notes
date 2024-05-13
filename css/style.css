@@ -252,10 +252,10 @@ h2 {
   overflow: hidden;
 }
 
-.content_check::after {
+/* .content_check::after {
   content: '...';
   position: relative;
-}
+} */
 
 .checked_item,
 .unchecked_item {
