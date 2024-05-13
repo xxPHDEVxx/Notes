@@ -155,35 +155,6 @@ class ControllerNote extends Controller
         $this->redirect("note", "shares", $note_id);
     }
 
-    public function noteshare_js()
-    {
-        $this->get_user_or_redirect();
-        $param1 = isset($_GET['param1']) ? $_GET['param1'] : null;
-        $param2 = isset($_GET['param2']) ? $_GET['param2'] : null;
-
-        if (!$param1 || !$param2) {
-            // Gérer les erreurs de paramètres manquants
-            http_response_code(400); // Code d'erreur Bad Request
-            echo json_encode(['error' => 'Paramètres manquants']);
-            exit;
-        }
-
-        $ns = NoteShare::get_share_note($_GET['param1'], $_GET['param2']);
-        $us = User::get_user_by_id($ns->user);
-        if (!$ns || !$us) {
-            // Gérer les erreurs de données manquantes ou invalides
-            http_response_code(404); // Code d'erreur Not Found
-            echo json_encode(['error' => 'Données non trouvées']);
-            exit;
-        }
-        $data = [
-            'us' => $us->full_name,
-            'editor' => $ns->editor,
-            'note' => $ns->note
-        ];
-        header('Content-Type: application/json');
-        echo json_encode($data);
-    }
     public function add_note(): void
     {
         (new view("add_text_note"))->show();
@@ -322,14 +293,14 @@ class ControllerNote extends Controller
 
 
             if (isset($_POST['title']) && $_POST['title'] == "") {
-                $errors = "Title required";
+                $errors["title"] = "Title required";
             }
 
             if (isset($_POST['title']) && $_POST['title'] != "") {
                 $title = Tools::sanitize($_POST["title"]);
                 $note = Note::get_note_by_id($note_id);
                 $note->title = $title;
-                $errors = $note->validate_title();
+                $errors["title"] = $note->validate_title();
             }
 
 
@@ -346,10 +317,15 @@ class ControllerNote extends Controller
             if (isset($_POST['new']) && $_POST["new"] != "") {
                 $new_item_content = Tools::sanitize($_POST['new']);
                 $new_item = new CheckListNoteItem(0, $note->note_id, $new_item_content, false);
-                $new_item->persist();
+                if (!$new_item->is_unique()) {
+                    $errors ["items"] = "item must be unique";
+                }
+                if(empty($errors['items'])) {
+                    $new_item->persist();
+                }
             }
         }
-        if (empty($errors) && (isset($_POST['title']) && $_POST['title'] != "")) {
+        if (empty($errors["title"]) && (isset($_POST['title']) && $_POST['title'] != "")) {
             $note->persist();
             $this->redirect("note", "open_note", $note->note_id);
         }

@@ -31,18 +31,31 @@ class CheckListNoteItem extends Model
         return $data;
     }
 
-    public function persist(): CheckListNoteItem
+    public function persist(): CheckListNoteItem | bool
     {
-        var_dump("oke");
-        self::execute("INSERT INTO checklist_note_items (checklist_note, content, checked) VALUES (:checklist_note, :content, :checked)", [
-            "checklist_note" => $this->checklist_note,
-            "content" => $this->content,
-            "checked" => $this->checked
-        ]);
-        $this->id = self::lastInsertId();
+        $item = $this->get_item_by_id($this->id);
+        if ($item) {
+            self::execute("INSERT INTO checklist_note_items (checklist_note, content, checked) VALUES (:checklist_note, :content, :checked)", [
+                "checklist_note" => $this->checklist_note,
+                "content" => $this->content,
+                "checked" => $this->checked
+            ]);
+            $this->id = self::lastInsertId();
+    
+    
+            return $this;
+        } else {
+            return false;
+        }
+    }
 
-
-        return $this;
+    public function is_unique() : bool {
+        $item = $this->get_item_by_id($this->id);
+        if ($item) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public function delete(): void
