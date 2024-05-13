@@ -181,6 +181,7 @@ class ControllerNote extends Controller
     {
         $user = $this->get_user_or_redirect();
         $errors = [];
+        $note = "";
         // Vérification des doublons pour les éléments
         $duplicateErrors = [];
         $duplicateItems = [];
@@ -188,7 +189,7 @@ class ControllerNote extends Controller
         if (isset($_POST['title']) && $_POST['title'] == "") {
             $errors['title'] = "Title required";
         }
-        if (isset($_POST['title'], $_POST['items']) && $_POST['title'] != "") {
+        if (isset($_POST['title']) && $_POST['title'] != "") {
             $title = Tools::sanitize($_POST['title']);
             $items = $_POST['items'];
             // Initialisation d'un tableau pour les éléments non vides
@@ -209,8 +210,7 @@ class ControllerNote extends Controller
                 false,
                 0
             );
-            $errors = $note->validate_title();
-
+            $errors['title'] = implode($note->validate_title());
 
             foreach ($non_empty_items as $key => $item) {
                 if (in_array($item, $duplicateItems)) {
@@ -224,7 +224,7 @@ class ControllerNote extends Controller
             // Combinaison des erreurs de doublons avec d'autres erreurs
             $errors = array_merge($errors, $duplicateErrors);
         }
-        if (empty($errors) && isset($_POST['title'], $_POST['items']) && $_POST['title'] != "") {
+        if (empty($errors['title']) && isset($_POST['title']) && $_POST['title'] != "") {
             $note->persist();
             $note->new();
             // Parcours des erreurs de doublons
