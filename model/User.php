@@ -100,18 +100,18 @@ class User extends Model
         $errors[] = "⚠Full Name must have more than 3 characters.";
     }
 
+    $currentEmail = $currentUser ? $currentUser->mail : null;
     $currentUserId = $currentUser ? $currentUser->id : null;
 
-    // Vérifier l'unicité de l'email uniquement si l'email est modifié par rapport à celui de l'utilisateur actuel
-    if ($currentUser && $currentUser->mail === $email) {
-        $errors[] = "⚠The email entered is identical to the current email.";
-    } else {
-        $existingUser = User::get_user_by_mail($email);
-        if ($existingUser && $existingUser->id != $currentUserId) {
-            $errors[] = "⚠This email is already used by another user.";
+    // Check if email field has been touched
+    if ($email !== $currentEmail) {
+        if ($currentEmail !== null) {
+            $existingUser = User::get_user_by_mail($email);
+            if ($existingUser && $existingUser->id != $currentUserId) {
+                $errors[] = "⚠This email is already used by another user.";
+            }
         }
     }
-
     return $errors;
 }
 
