@@ -193,6 +193,12 @@ abstract class Note extends Model
         return $notes;
     }
 
+    public static function get_max_weight(User $user){
+        $query = self::execute("SELECT MAX(weight) FROM notes WHERE owner = :user", ["user"=> $user->id]);
+        $data = $query->fetchColumn();
+        return $data + 1;
+    }
+
 
     public static function get_notes_pinned(User $user): array
     {

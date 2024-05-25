@@ -107,7 +107,7 @@ class ControllerNote extends Controller
                 date("Y-m-d H:i:s"),
                 false,
                 false,
-                0
+                $user->get_max_weight()
             );
             $errors = $note->validate_title();
 
@@ -277,7 +277,7 @@ class ControllerNote extends Controller
                     date("Y-m-d H:i:s"),
                     0,
                     0,
-                    0,
+                    $user->get_max_weight(),
                     null
                 );
     

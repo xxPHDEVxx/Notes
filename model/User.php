@@ -210,6 +210,9 @@ class User extends Model
         return $sharers;
     }
 
+    public function get_max_weight(){
+        return Note::get_max_weight($this);
+    }
     public function get_notes_pinned(): array
     {
         return Note::get_notes_pinned($this);
