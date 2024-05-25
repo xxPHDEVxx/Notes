@@ -7,6 +7,12 @@ html {
   color: white;
 }
 
+.err-page {
+margin-top: 13%;
+margin-left: 10%;
+font-size: 20px;
+}
+
 /*login et signup*/
 .container_login_signup {
   max-width: 500px;
@@ -353,9 +359,56 @@ h2 {
   position: relative;
 }
 
-/* share note*/
+/* view shares note*/
 
 .share-empty {
+  font-style: italic;
+}
+.box-shares {
+  margin-top: 18%;
+  margin-left: auto;
+  margin-right: auto;
+  width: 98%;
+}
+.form-control-share {
+  background-color: transparent;
+  border: 1.6px solid #494c51;
+  padding: 6px;
+  border-radius: 5px;
+  color: lightgray;
+  width: 75%;
+
+}
+.form-box-share {
+  width: 90%;
+}
+.form-control-share option {
+  color: lightgray;
+  background-color: #202325;
+}
+
+.box-sharer {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+.btn-share {
+  padding: 3px;
+}
+.btn-toggle {
+  border-radius: 0%;
+}
+.btn-del {
+  border-radius: 0 5px 5px 0;
+}
+
+.form-share {
+  border-radius: 5px 0 0 5px;
+}
+
+#role {
   font-style: italic;
 }
 
@@ -689,7 +742,7 @@ input:focus, textarea:focus {
 
 }
 
-#check_submit {
+.check_submit {
   background: #0962ea;
   border-radius: 5px 0 0 5px;
   border: 1.7px solid #0962ea;
