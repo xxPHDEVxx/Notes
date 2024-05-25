@@ -248,7 +248,7 @@ abstract class Note extends Model
 
         // Vérifie la longueur du titre
         if (strlen($this->title) < $minLength || strlen($this->title) > $maxLength) {
-            $errors[] = "Le titre doit avoir au minimum $minLength caractères et au maximum $maxLength caractères.";
+            $errors[] = "Le titre doit avoir au minimum 3 caractères et au maximum 25 caractères.";
         }
 
         // Vérifie si le titre est unique pour cet utilisateur
@@ -273,7 +273,7 @@ abstract class Note extends Model
 
     // Vérifie que le contenu est soit vide, soit entre minLength et maxLength caractères
     if (($contentLength > 0 && $contentLength < $minLength) || $contentLength > $maxLength) {
-        $errors[] = "Le contenu de la note doit contenir entre $minLength et $maxLength caractères ou être vide.";
+        $errors[] = "Le contenu de la note doit contenir entre 5 et 800 caractères ou être vide.";
     }
 
     return $errors;

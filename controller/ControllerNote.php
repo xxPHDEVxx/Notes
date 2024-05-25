@@ -4,6 +4,7 @@ require_once "framework/Controller.php";
 require_once "framework/View.php";
 require_once "model/User.php";
 require_once "framework/Tools.php";
+require_once "controller/ControllerOpenNote.php";
 
 class ControllerNote extends Controller
 {
@@ -217,49 +218,49 @@ class ControllerNote extends Controller
     }
 
     public function save_edit_text_note()
-    {
-        $user = $this->get_user_or_redirect();
-        $errors = [];
-        // Vérifiez si les données POST sont présentes
-        if (isset($_GET['param1'], $_POST['title'], $_POST['content'])) {
-            $note_id = (int) $_GET['param1'];
-            if ($note_id > 0) {
-                $note = TextNote::get_note_by_id($note_id);
+{
+    $user = $this->get_user_or_redirect();
+    $errors = [];
+    
+    if (isset($_GET['param1'], $_POST['title'], $_POST['content'])) {
+        $note_id = (int) $_GET['param1'];
+        if ($note_id > 0) {
+            $note = TextNote::get_note_by_id($note_id);
 
-                // Vérifiez si la note existe et si l'utilisateur est le propriétaire
-                if ($note && $note->owner == $user->id) {
-                    // Sanitize input
-                    $note->title = Tools::sanitize($_POST['title']);
-                    $note->set_content(Tools::sanitize($_POST['content']));
+            if ($note && $note->owner == $user->id) {
+                $note->title = Tools::sanitize($_POST['title']);
+                $note->set_content(Tools::sanitize($_POST['content']));
 
-                    // Valider le titre et contenu
-                    $titleErrors = $note->validate_title();
-                    $contentErrors = $note->validate_content();
-                    $errors = array_merge($titleErrors, $contentErrors);
+                $titleErrors = $note->validate_title();
+                $contentErrors = $note->validate_content();
+                $errors = array_merge($titleErrors, $contentErrors);
 
-                    if (!empty($errors)) {
-                        // Stocker l'erreur de titre dans la session
-                        $_SESSION['edit_errors'] = $errors;
-                        $this->redirect("openNote", "edit", $note_id);
-                        exit();
-                    }
-
-                    // Si tout est correct, mettre à jour la note
-                    $note->update();
-
-                    // Redirection vers la vue de la note
-                    $this->redirect("openNote", "index", $note_id);
+                if (!empty($errors)) {
+                    (new View("edit_text_note"))->show([
+                        "note" => $note,
+                        "note_id" => $note_id,
+                        "created" => ControllerOpenNote::get_created_time($note_id),
+                        "edited" => ControllerOpenNote::get_edited_time($note_id),
+                        "note_body" => $note->get_content(),
+                        'errors' => $errors,
+                    ]);
                     exit();
-                } else {
-                    echo "Note introuvable ou vous n'avez pas la permission de la modifier.";
                 }
+
+                $note->update();
+                $this->redirect("openNote", "index", $note_id);
+                exit();
             } else {
-                echo "ID de note invalide.";
+                echo "Note introuvable ou vous n'avez pas la permission de la modifier.";
             }
         } else {
-            echo "Les informations requises sont manquantes.";
+            echo "ID de note invalide.";
         }
+    } else {
+        echo "Les informations requises sont manquantes.";
     }
+}
+
 
     public function save_add_text_note()
 {

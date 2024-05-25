@@ -29,6 +29,8 @@
         <div id="contentError" class="invalid-feedback" style="display: none;"></div>
     </form>
 
+    <?php include("view_error.php")?>
+
     <?php include("view_modal.php"); ?>
     <script>
     var userId = <?= json_encode($note->owner); ?>;
