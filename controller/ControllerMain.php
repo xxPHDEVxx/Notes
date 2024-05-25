@@ -12,15 +12,11 @@ class ControllerMain extends Controller
     public function index(): void
     {
         if ($this->user_logged()) {
+
             $this->redirect("note", "index");
         } else {
             $this->login();
         }
-    }
-
-    public function merge(): void
-    {
-        (new View ("merge"))->show();
     }
 
     public function login(): void
@@ -43,7 +39,7 @@ class ControllerMain extends Controller
     public function logout(): void
     {
         $user = $this->get_user_or_redirect();
-        $sharers = "";
+        $sharers = $user->shared_by();
 
         if (isset($_POST['logout'])) {
             Controller::logout();
@@ -74,7 +70,7 @@ class ControllerMain extends Controller
             $errors = User::validate_unicity($mail);
             $errors = array_merge($errors, $user->validate());
             $errors = array_merge($errors, $user->validate_name());
-            $errors = array_merge($errors, User::validate_passwords($password, $password_confirm));
+            $errors = array_merge($errors, User::validate_passwords($password, $password_confirm, $user));
 
             if (count($errors) == 0) {
                 $user->persist();
