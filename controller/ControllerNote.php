@@ -357,8 +357,8 @@ class ControllerNote extends Controller
                     (new View("edit_text_note"))->show([
                         "note" => $note,
                         "note_id" => $note_id,
-                        "created" => ControllerOpenNote::get_created_time($note_id),
-                        "edited" => ControllerOpenNote::get_edited_time($note_id),
+                        "created" => $this->get_created_time($note_id),
+                        "edited" => $this->get_edited_time($note_id),
                         "note_body" => $note->get_content(),
                         'errors' => $errors,
                     ]);
@@ -383,9 +383,15 @@ class ControllerNote extends Controller
 public function save_add_text_note()
 {
     $user = $this->get_user_or_redirect();
+    $content_errors = [];
+    $title_errors = [];
     $errors = [];
     $title = "";
     $content = "";
+
+    if (isset($_POST['title']) && $_POST['title'] == "") {
+        array_push($title_errors,"Title required");
+    }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST['title'], $_POST['content'])) {
@@ -404,14 +410,11 @@ public function save_add_text_note()
             );
             $note->set_content($content);
 
+            $content_errors = $note->validate_content();
+            if($note->validate_title() != null)
+                array_push($title_errors,$note->validate_title()[0]);
 
-            $valid_content = $note->validate_content();
-            $title_errors = $note->validate_title();
-            if (!empty($title_errors) || !empty($valid_content)) {
-                $errors = array_merge($title_errors, $valid_content);
-            }
-
-            if (empty($errors)) {
+            if (empty($title_errors) && empty($content_errors)) {
                 $result = $note->persist();
                 if ($result instanceof TextNote) {
                     $note->update();
@@ -430,7 +433,9 @@ public function save_add_text_note()
         'user' => $user,
         'errors' => $errors,
         'title' => $title,
-        'content' => $content
+        'content' => $content,
+        'content_errors' => $content_errors,
+        'title_errors' => $title_errors
     ]);
 }
 

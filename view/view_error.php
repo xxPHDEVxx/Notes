@@ -13,12 +13,10 @@
 
 </head>
 
-<?php if (!empty($errors)): ?>
-        <div id="alertPassword" class="alert alert-danger">
+<?php if (!empty($errors)): ?> 
             <?php foreach ($errors as $error): ?>
-                <p><?= htmlspecialchars($error) ?></p>
+                <span class="text-danger"><p><?= htmlspecialchars($error) ?></p></span>
             <?php endforeach; ?>
-        </div>
     <?php endif; ?>
 
 </html>

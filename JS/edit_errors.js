@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     const titleInput = document.getElementById('title');
     const contentInput = document.getElementById('content');  // Ajout du champ de contenu
-    const titleErrorDiv = document.getElementById('titleError');
-    const contentErrorDiv = document.getElementById('contentError');  // Div pour les erreurs de contenu
+    const titleErrorDiv = document.getElementsByClassName('text-danger');
+    const contentErrorDiv = document.getElementsByClassName('text-danger');  // Div pour les erreurs de contenu
 
     // Désactiver le bouton save si une des classes 'is-invalid' est présente
     function updateSaveButtonState() {
