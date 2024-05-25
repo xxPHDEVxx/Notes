@@ -186,7 +186,7 @@ class ControllerOpenNote extends Controller
     public function add_text_note(): void
 {
     $user_id = $this->get_user_or_redirect()->id;
-
+    $title = "";
     // Créez une instance de vue pour l'ajout de note texte
     $view = new View("add_text_note");
 
@@ -200,7 +200,8 @@ class ControllerOpenNote extends Controller
         "isShared_as_editor" => 0,
         "isShared_as_reader" => 0,
         "content" => "",
-        "pinned" => 0
+        "pinned" => 0,
+        "title" => $title
     ];
 
     $view->show($data);

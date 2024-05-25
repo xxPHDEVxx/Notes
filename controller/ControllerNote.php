@@ -233,7 +233,6 @@ class ControllerNote extends Controller
                     $note->set_content(Tools::sanitize($_POST['content']));
 
                     // Valider le titre et contenu
-                    $_SESSION['edit_errors'] = []; // Réinitialiser les erreurs de session avant la validation
                     $titleErrors = $note->validate_title();
                     $contentErrors = $note->validate_content();
                     $errors = array_merge($titleErrors, $contentErrors);
@@ -265,11 +264,15 @@ class ControllerNote extends Controller
     public function save_add_text_note()
 {
     $user = $this->get_user_or_redirect();
-    if (isset($_POST['title'], $_POST['content'])) {
-        $title = Tools::sanitize($_POST['title']);
-        $content = Tools::sanitize($_POST['content']);
+    $errors = [];
+    $title = "";
+    $content = "";
 
-        if (strlen($title) > 2 && (strlen($content) > 4 && strlen($content) <= 800 || strlen($content) == 0)) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (isset($_POST['title'], $_POST['content'])) {
+            $title = Tools::sanitize($_POST['title']);
+            $content = Tools::sanitize($_POST['content']);
+
             $note = new TextNote(
                 0,
                 $title,
@@ -280,33 +283,39 @@ class ControllerNote extends Controller
                 $user->get_max_weight(),
                 null
             );
+            $note->set_content($content);
 
-            $titleErrors = $note->validate_title();
-            if (empty($titleErrors)) {
+
+            $valid_content = $note->validate_content();
+            $title_errors = $note->validate_title();
+            if (!empty($title_errors) || !empty($valid_content)) {
+                $errors = array_merge($title_errors, $valid_content);
+            }
+
+            if (empty($errors)) {
                 $result = $note->persist();
                 if ($result instanceof TextNote) {
-                    $note->set_content($content);
                     $note->update();
                     $this->redirect("openNote", "index", $result->note_id);
                     exit();
                 } else {
-                    echo "Erreur lors de la sauvegarde de la note : <br/>";
-                    foreach ($result as $error) {
-                        echo $error . "<br/>";
-                    }
+                    $errors[] = "Erreur lors de la sauvegarde de la note.";
                 }
-            } else {
-                $_SESSION['edit_errors'] = ['Respectez les validations.'];
-                $this->redirect("openNote", "add_text_note");
-                exit();
             }
         } else {
-            echo "Les informations requises pour le titre ou le contenu sont manquantes.";
+            $errors[] = "Les informations requises pour le titre ou le contenu sont manquantes.";
         }
-    } else {
-        echo "Les informations requises pour le titre ou le contenu sont manquantes.";
     }
+
+    (new View("add_text_note"))->show([
+        'user' => $user,
+        'errors' => $errors,
+        'title' => $title,
+        'content' => $content
+    ]);
 }
+
+
 
 
 

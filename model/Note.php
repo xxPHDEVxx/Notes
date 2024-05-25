@@ -265,17 +265,20 @@ abstract class Note extends Model
     }
 
     public function validate_content()
-    {
-        $minLength = Configuration::get('description_min_length');
-        $maxLength = Configuration::get('description_max_length');
-        $errors = [];
-        // Vérifie la longueur du contenu
-        if ((strlen($this->get_content()) < $minLength && strlen($this->get_content()) > 0) || strlen($this->get_content()) > $maxLength) {
-            $errors[] = "Le contenu de la note doit contenir entre 5 et 800 caractères.";
-        }
+{
+    $minLength = Configuration::get('description_min_length');
+    $maxLength = Configuration::get('description_max_length');
+    $errors = [];
+    $contentLength = strlen($this->get_content());
 
-        return $errors;
+    // Vérifie que le contenu est soit vide, soit entre minLength et maxLength caractères
+    if (($contentLength > 0 && $contentLength < $minLength) || $contentLength > $maxLength) {
+        $errors[] = "Le contenu de la note doit contenir entre $minLength et $maxLength caractères ou être vide.";
     }
+
+    return $errors;
+}
+
 
 
 

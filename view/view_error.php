@@ -8,11 +8,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body>
-    <div class="title">Error</div>
-    <div class="main">
-        <?= $error ?>
-    </div>
-</body>
+<?php if (!empty($errors)): ?>
+        <div id="alertPassword" class="alert alert-danger">
+            <?php foreach ($errors as $error): ?>
+                <p><?= htmlspecialchars($error) ?></p>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 
 </html>

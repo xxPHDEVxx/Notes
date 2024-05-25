@@ -2,13 +2,9 @@
 
     <a class="back" href="<?= $_SESSION['previous_page'] ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
     <?php if ($archived == 1) : ?>
-<<<<<<< HEAD
-        <a class="delete" href="#"><span class="material-symbols-outlined" id="delete_icon">delete_forever</span></a>
-=======
         <form action="note/delete_note/<?= $note_id ?>" id="deleteForm" method="post">
             <button class="delete" type="submit" id="delete_icon"><span class="material-symbols-outlined">delete_forever</span></button>
         </form>
->>>>>>> master
         <a class="unarchive" href="openNote/unarchive/<?= $note_id ?>"><span class="material-symbols-outlined">unarchive</span></a>
 
 
