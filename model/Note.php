@@ -36,6 +36,10 @@ abstract class Note extends Model
 
 
 
+    public function get_id(): int
+    {
+        return 5;
+    }
     public static function get_created_at(int $id): String
     {
         $query = self::execute("SELECT created_at from notes WHERE id = :id", ["id" => $id]);
@@ -319,11 +323,17 @@ abstract class Note extends Model
     {
         $weight_second = $second->get_weight();
         $second_id = $second->note_id;
-        self::execute(
-            'UPDATE notes SET weight = :weight_note2 WHERE id = :id_note1',
-            ['id_note1' => $this->note_id, 'weight_note2' => $weight_second]
-        );
-        self::execute('UPDATE notes SET weight = :weight_note1 WHERE id = :id_note2', ['id_note2' => $second_id, 'weight_note1' => $this->weight]);
+        $weight_first = $this->weight;
+        
+        // étape intermédiaire pour éviter respecter unicité des poids par owner
+        self::execute('UPDATE notes SET weight = :weight_note2 WHERE id = :id_note2',
+            ['id_note2' => $second->note_id, 'weight_note2' => 99]);
+
+        self::execute('UPDATE notes SET weight = :weight_note2 WHERE id = :id_note1',
+            ['id_note1' => $this->note_id, 'weight_note2' => $weight_second]);
+
+        self::execute('UPDATE notes SET weight = :weight_note1 WHERE id = :id_note2',
+         ['id_note2' => $second_id, 'weight_note1' => $weight_first]);
 
 
         return $this;
