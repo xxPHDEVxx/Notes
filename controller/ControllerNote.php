@@ -401,10 +401,11 @@ class ControllerNote extends Controller
                     $note->title = Tools::sanitize($_POST['title']);
                     $note->set_content(Tools::sanitize($_POST['content']));
 
-                    $title_errors = $note->validate_title();
+                    if ($note->validate_title() != null)
+                    array_push($title_errors, $note->validate_title()[0]);
                     $content_errors = $note->validate_content();
 
-                    if (!empty($content_errors) && !empty($title_errors)) {
+                    if (!empty($content_errors) || !empty($title_errors)) {
                         (new View("edit_text_note"))->show([
                             "note" => $note,
                             "note_id" => $note_id,
@@ -414,7 +415,7 @@ class ControllerNote extends Controller
                             "title" => $note->title,
                             'errors' => $errors,
                             'content_errors' => $content_errors,
-                            'title_errors' => $title_errors,
+                            'title_errors' => $title_errors
                         ]);
                         exit();
                     }

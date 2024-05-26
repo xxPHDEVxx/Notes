@@ -37,7 +37,7 @@
                 <label for="content">Text</label>
                 <textarea class="form-control title_add" id="content" name="content"><?= $content?></textarea>
                 <span id="contentError" class="text-danger" style="display: none;"></span>
-                <?php if (!empty($title_errors)): ?>
+                <?php if (!empty($content_errors)): ?>
                     <?php foreach ($content_errors as $error): ?>
                         <span class="text-danger">
                             <p><?= $error ?></p>
