@@ -30,7 +30,7 @@
         <?php endif; ?>
         <span class="note_body_edit">Items</span>
         <div class="note_body_checklist_edit">
-            <?php foreach ($note_body as $row) : ?>
+            <?php foreach ($content as $row) : ?>
                 <div class="edit_checklist_form">
                     <div class="edit_check_div">
                         <input class="check_square" type="checkbox" value="<?= $row["id"] ?>" name="box" <?= $row["checked"] ? 'checked' : '' ?> disabled>

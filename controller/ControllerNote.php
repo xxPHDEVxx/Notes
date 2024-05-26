@@ -375,7 +375,7 @@ class ControllerNote extends Controller
             "archived" => $archived, 
             "is_shared_as_editor" => $is_shared_as_editor, 
             "is_shared_as_reader" => $is_shared_as_reader, 
-            "note_body" => $body, 
+            "content" => $body, 
             "pinned" => $pinned, 
             "user_id" => $user_id, "errors" => $errors
         ]);
