@@ -13,21 +13,10 @@
 
 </head>
 
-<body>
-    <div class="barre">
-        <a class="back" href="note/"><span class="material-symbols-outlined">arrow_back_ios</span></a>
-
-    </div>
-
-    <div class="err-page">
-        <div class="title"><span class="material-symbols-outlined text-danger">
-                warning
-            </span> ERROR</div>
-        <div class="main">
-            <?= $error ?>
-        </div>
-
-    </div>
-</body>
+<?php if (!empty($errors)): ?> 
+            <?php foreach ($errors as $error): ?>
+                <span class="text-danger"><p><?= htmlspecialchars($error) ?></p></span>
+            <?php endforeach; ?>
+    <?php endif; ?>
 
 </html>

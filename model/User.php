@@ -111,20 +111,20 @@ class User extends Model
             $errors[] = "⚠Full Name must have more than 3 characters.";
         }
 
-        $currentUserId = $currentUser ? $currentUser->id : null;
+    $currentEmail = $currentUser ? $currentUser->mail : null;
+    $currentUserId = $currentUser ? $currentUser->id : null;
 
-        // Vérifier l'unicité de l'email uniquement si l'email est modifié par rapport à celui de l'utilisateur actuel
-        if ($currentUser && $currentUser->mail === $email) {
-            $errors[] = "⚠The email entered is identical to the current email.";
-        } else {
+    // Check if email field has been touched
+    if ($email !== $currentEmail) {
+        if ($currentEmail !== null) {
             $existingUser = User::get_user_by_mail($email);
             if ($existingUser && $existingUser->id != $currentUserId) {
                 $errors[] = "⚠This email is already used by another user.";
             }
         }
-
-        return $errors;
     }
+    return $errors;
+}
 
     private static function check_password($clear_password, string $hash): bool
     {
@@ -222,6 +222,9 @@ class User extends Model
         return $sharers;
     }
 
+    public function get_max_weight(){
+        return Note::get_max_weight($this);
+    }
     public function get_notes_pinned(): array
     {
         return Note::get_notes_pinned($this);

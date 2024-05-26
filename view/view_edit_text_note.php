@@ -20,13 +20,34 @@
             <button class="save" type="submit" id="saveButton"><span class="material-symbols-outlined">save</span></button>
         </div>
         <div class="dates">Created <?= $created ?><?= ($edited ? " Edited " . $edited : " Not edited yet") ?></div>
-        <label for="title" class="title_note_title">Title</label>
-        <input type="text" class="title_edit_note" id="title" name="title" value="<?= $note->title ?>">
-        <div id="titleError" class="invalid-feedback" style="display: none;"></div>
-
-        <label for="content" class="note_body_title">Text</label>
-        <textarea class="note_body_text" id="content" name="content"><?= $note_body ?></textarea>
-        <div id="contentError" class="invalid-feedback" style="display: none;"></div>
+        <div class="container add_checklist">
+            <div class="mb-3">
+                <label for="title">Title</label>
+                <input type="text" id="title" class="form-control title_add" value="<?= $note->title ?>">
+                <span id="titleError" class="text-danger" style="display: none;"></span>
+                <?php if (!empty($title_errors)): ?>
+                    <?php foreach ($title_errors as $error): ?>
+                        <span class="text-danger">
+                            <p><?= htmlspecialchars($error) ?></p>
+                        </span>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+            <div class="mb-3">
+                <label for="content">Text</label>
+                <textarea class="form-control title_add" id="content" name="content"><?= $note_body ?></textarea>
+                <span id="contentError" class="text-danger" style="display: none;"></span>
+                <?php if (!empty($title_errors)): ?>
+                    <?php foreach ($content_errors as $error): ?>
+                        <span class="text-danger">
+                            <p><?= htmlspecialchars($error) ?></p>
+                        </span>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                <!-- view_error.php -->
+                <?php include ("view_error.php"); ?>
+            </div>
+        </div>
     </form>
 
     <?php include("view_modal.php"); ?>
