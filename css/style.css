@@ -603,8 +603,11 @@ nav a {
   left: 3%;
   width: 94%;
   top: 30px;
+}
 
-
+#deleteForm  {
+  margin: unset;
+  display: unset;
 }
 
 #delete_icon {
