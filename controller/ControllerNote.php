@@ -320,7 +320,7 @@ class ControllerNote extends Controller
             if ($note === false) {
                 throw new Exception("Undefined note");
             }
-            $user_id = $this->get_user_or_redirect()->id;
+            $user_id = $user->id;
             $archived = $note->in_my_archives($user_id);
             $pinned = $note->is_pinned($user_id);
             $is_shared_as_editor = $note->is_shared_as_editor($user_id);
@@ -360,6 +360,8 @@ class ControllerNote extends Controller
                 }
                 if (empty($errors['items'])) {
                     $new_item->persist();
+                    $this->redirect("note", "edit_checklist", $note_id);
+                    exit;
                 }
             }
         }
