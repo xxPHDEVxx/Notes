@@ -40,7 +40,10 @@ class User extends Model
             return new User($data["mail"], $data["hashed_password"], $data["full_name"], $data["role"], $data["id"]);
         }
     }
-
+    
+    public function get_max_weight(){
+        return Note::get_max_weight($this);
+    }
 
 
     public function persist(): User

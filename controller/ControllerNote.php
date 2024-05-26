@@ -176,84 +176,92 @@ class ControllerNote extends Controller
         }
     }
 
-
-
     public function add_checklist_note()
     {
         $user = $this->get_user_or_redirect();
         $errors = [];
-        // Vérification des doublons pour les éléments
         $duplicateErrors = [];
         $duplicateItems = [];
-
-        if (isset($_POST['title']) && $_POST['title'] == "") {
-            $errors['title'] = "Title required";
-        }
-        if (isset($_POST['title'], $_POST['items']) && $_POST['title'] != "") {
-            $title = Tools::sanitize($_POST['title']);
-            $items = $_POST['items'];
-            // Initialisation d'un tableau pour les éléments non vides
-            $non_empty_items = [];
-
-            // Parcours des éléments pour ne sauvegarder que les non vides
-            foreach ($items as $item) {
-                if (!empty($item)) {
-                    $non_empty_items[] = $item;
-                }
-            }
-            $note = new ChecklistNote(
-                0,
-                $title,
-                $user->id,
-                date("Y-m-d H:i:s"),
-                false,
-                false,
-                $user->get_max_weight()
-            );
-            $errors = $note->validate_title();
-
-
-            foreach ($non_empty_items as $key => $item) {
-                if (in_array($item, $duplicateItems)) {
-                    // Stocker l'erreur de doublon avec l'indice correspondant
-                    $duplicateErrors["item_$key"] = "Items must be unique.";
-                }
-                $duplicateItems[] = $item;
-            }
-
-
-            // Combinaison des erreurs de doublons avec d'autres erreurs
-            $errors = array_merge($errors, $duplicateErrors);
-        }
-        if (empty($errors) && isset($_POST['title'], $_POST['items']) && $_POST['title'] != "") {
-            $note->persist();
-            $note->new();
-            // Parcours des erreurs de doublons
-            foreach ($non_empty_items as $key) {
-                // Création d'une nouvelle instance de CheckListNoteItem
-                $content = $key; // Récupération du contenu de l'élément
-                $checklistNoteId = $note->note_id; // Récupération de l'identifiant de la note de checklist
-                $checked = false; // Par défaut, l'élément n'est pas coché
-
-                // Création de l'instance CheckListNoteItem
-                $checklistItem = new CheckListNoteItem(
-                    0, // L'identifiant sera généré automatiquement par la base de données
-                    $checklistNoteId,
-                    $content,
-                    $checked
+    
+        // Initialisation du tableau pour les éléments non vides
+        $non_empty_items = [];
+    
+        // Vérification du titre
+        if (isset($_POST['title'])) {
+            if ($_POST['title'] == "") {
+                $errors['title'] = "Title required";
+            } else {
+                $title = Tools::sanitize($_POST['title']);
+                $note = new ChecklistNote(
+                    0,
+                    $title,
+                    $user->id,
+                    date("Y-m-d H:i:s"),
+                    false,
+                    false,
+                    $user->get_max_weight()
                 );
-
-                // Enregistrement de l'élément dans la base de données
-                $checklistItem->persist();
+                $titleErrors = $note->validate_title();
+                if (!empty($titleErrors)) {
+                    $errors['title'] = implode($titleErrors);
+                }
             }
-
-            $this->redirect("note", "open_note", $note->note_id);
         }
-
+    
+        // Vérification des éléments
+        if (isset($_POST['items'])) {
+            $items = $_POST['items'];
+            foreach ($items as $key => $item) {
+                if (!empty($item)) {
+                    //on crée une instance pour vérifier la longueur de l'item
+                    $checklistItem = new CheckListNoteItem(0, 0, $item, 0); 
+                    $contentErrors = $checklistItem->validate_item();
+                    if (!empty($contentErrors)) {
+                        $errors["item_$key"] = implode($contentErrors);
+                    } else {
+                        if (in_array($item, $duplicateItems)) {
+                            $duplicateErrors["item_$key"] = "Items must be unique.";
+                        } else {
+                            $non_empty_items[$key] = $item;
+                            $duplicateItems[] = $item;
+                        }
+                    }
+                }
+            }
+        }
+    
+        // Combinaison des erreurs de doublons avec les autres erreurs
+        $errors = array_merge($errors, $duplicateErrors);
+    
+        // Vérification finale et persistance
+        if (empty($errors)) {
+            if (isset($note)) {
+                $note->persist();
+                $note->new();
+    
+                foreach ($non_empty_items as $key => $content) {
+                    $checklistNoteId = $note->note_id;
+                    $checked = false;
+    
+                    $checklistItem = new CheckListNoteItem(
+                        0,
+                        $checklistNoteId,
+                        $content,
+                        $checked
+                    );
+    
+                    $checklistItem->persist();
+                }
+    
+                $this->redirect("note", "open_note", $note->note_id);
+            }
+        }
+    
         // Afficher la vue avec les erreurs
         (new View("add_checklist_note"))->show(["errors" => $errors]);
     }
-
+    
+    
     // Supprime une note
     public function delete_note()
     {
@@ -360,17 +368,16 @@ class ControllerNote extends Controller
         }
 
         (new View("edit_checklist_note"))->show([
-            "note" => $note,
-            "note_id" => $note_id,
-            "created" => $this->get_created_time($note_id),
-            "edited" => $this->get_edited_time($note_id),
-            "archived" => $archived,
-            "is_shared_as_editor" => $is_shared_as_editor,
-            "is_shared_as_reader" => $is_shared_as_reader,
-            "note_body" => $body,
-            "pinned" => $pinned,
-            "user_id" => $user_id,
-            "errors" => $errors
+            "note" => $note, 
+            "note_id" => $note_id, 
+            "created" => $this->get_created_time($note_id), 
+            "edited" => $this->get_edited_time($note_id), 
+            "archived" => $archived, 
+            "is_shared_as_editor" => $is_shared_as_editor, 
+            "is_shared_as_reader" => $is_shared_as_reader, 
+            "note_body" => $body, 
+            "pinned" => $pinned, 
+            "user_id" => $user_id, "errors" => $errors
         ]);
     }
 

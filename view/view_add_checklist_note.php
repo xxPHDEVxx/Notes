@@ -23,17 +23,18 @@
         <div class="container add_checklist">
             <div class="mb-3">
                 <label for="title">Title</label>
-                <input type="text" id="title" class="form-control title_add <?= (!empty($errors['title']) ? "border border-danger" : (isset($_POST["title"]) && !empty($_POST["title"]) ? "border border-success" : "")) ?>" name="title" value="<?= isset($_POST["title"]) ? htmlspecialchars($_POST["title"]) : "" ?>">
+                <input type="text" id="title" class="form-control title_add <?= (!empty($errors['title'])) ? "border border-danger" : "" ?>" name="title" value="<?= isset($_POST["title"]) ? htmlspecialchars($_POST["title"]) : "" ?>">
                 <?php if (!empty($errors['title'])) : ?>
-                    <span class="text-danger"><?= $errors['title'] ?></span>
+                    <span class="text-danger"><?= $errors['title']?></span>
                 <?php endif; ?>
+
             </div>
             <div class="mb-3">
-                <span >Items</span>   
+                <label for="items">Items</label>   
                 <ul>
                     <?php for ($i = 0; $i < 5; $i++) : ?>
                         <li>
-                            <input type="text" class="form-control item_add <?= (!empty($errors["item_$i"]) ? "border border-danger" : (isset($_POST['items'][$i]) && !empty($_POST['items'][$i]) ? "border border-success" : "")) ?>" name="items[]" value="<?= isset($_POST['items'][$i]) ? htmlspecialchars($_POST['items'][$i]) : "" ?>">
+                            <input type="text" class="form-control item_add <?= (!empty($errors["item_$i"]) ? "border border-danger" : (isset($_POST['items'][$i]) && !empty($_POST['items'][$i]) ? "border border-success" : "")) ?>" name="items[]" value="<?= isset($_POST['items'][$i]) ? htmlspecialchars($_POST['items'][$i]) : "" ?>" id ="items">
                             <?php if (!empty($errors["item_$i"])) : ?>
                                 <span class="text-danger"><?= $errors["item_$i"] ?></span>
                             <?php endif; ?>

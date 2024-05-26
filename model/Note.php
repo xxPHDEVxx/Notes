@@ -279,6 +279,11 @@ abstract class Note extends Model
         }
     }
 
+    public static function get_max_weight(User $user){
+        $query = self::execute("SELECT MAX(weight) FROM notes WHERE owner = :user", ["user"=> $user->id]);
+        $data = $query->fetchColumn();
+        return $data + 1;
+    }
     public function is_weight_unique(int $id): int
     {
         $query = self::execute("SELECT id, MAX(weight) from notes where id = :note_id group by id", ["note_id" => $id]);
