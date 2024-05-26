@@ -8,9 +8,9 @@ html {
 }
 
 .err-page {
-margin-top: 13%;
-margin-left: 10%;
-font-size: 20px;
+  margin-top: 13%;
+  margin-left: 10%;
+  font-size: 20px;
 }
 
 /*login et signup*/
@@ -308,7 +308,7 @@ h2 {
 }
 
 
-.view_notes_pinned_unpinned{
+.view_notes_pinned_unpinned {
 
   display: flex;
   flex-wrap: wrap;
@@ -348,6 +348,11 @@ h2 {
   color: rgb(30, 115, 213);
 }
 
+.note-content {
+  padding: 5px;
+  margin-bottom: 3em;
+}
+
 .note {
 
   border: 1.5px solid #43464c;
@@ -357,6 +362,11 @@ h2 {
   background: #202325;
   margin: 3px;
   position: relative;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-height: 300px;
+  /* Hauteur maximale fixe pour la note */
 }
 
 /* view shares note*/
@@ -364,12 +374,14 @@ h2 {
 .share-empty {
   font-style: italic;
 }
+
 .box-shares {
   margin-top: 18%;
   margin-left: auto;
   margin-right: auto;
   width: 98%;
 }
+
 .form-control-share {
   background-color: transparent;
   border: 1.6px solid #494c51;
@@ -379,9 +391,11 @@ h2 {
   width: 75%;
 
 }
+
 .form-box-share {
   width: 90%;
 }
+
 .form-control-share option {
   color: lightgray;
   background-color: #202325;
@@ -394,12 +408,15 @@ h2 {
   flex-wrap: wrap;
   flex-direction: row;
 }
+
 .btn-share {
   padding: 3px;
 }
+
 .btn-toggle {
   border-radius: 0%;
 }
+
 .btn-del {
   border-radius: 0 5px 5px 0;
 }
@@ -605,7 +622,7 @@ nav a {
   top: 30px;
 }
 
-#deleteForm  {
+#deleteForm {
   margin: unset;
   display: unset;
 }
@@ -616,6 +633,7 @@ nav a {
   background-color: transparent;
   border: none;
 }
+
 #delete_icon span {
   color: red;
 
@@ -693,18 +711,18 @@ nav a {
 /*open_text_note*/
 
 .note_body_text {
-    color : lightgray;
-    position: absolute;
-    top: 230px;
-    left: 3%;
-    padding: 15px;
-    width: 94%;
-    border-radius: 7PX;
-    border: 1.7px solid #53575e;
-    background-color: #383c44;
-    overflow-y: auto;
-    max-height: 500px;
-    
+  color: lightgray;
+  position: absolute;
+  top: 230px;
+  left: 3%;
+  padding: 15px;
+  width: 94%;
+  border-radius: 7PX;
+  border: 1.7px solid #53575e;
+  background-color: #383c44;
+  overflow-y: auto;
+  max-height: 500px;
+
 }
 
 .is-invalid {
@@ -715,9 +733,12 @@ nav a {
   border: 2px solid rgb(27, 197, 27) !important;
 }
 
-input:focus, textarea:focus {
-  outline: none;  /* Supprime l'outline par défaut */
-  box-shadow: 0 0 5px rgba(81, 203, 238, 1);  /* Ajoute une légère box-shadow pour un effet de focus */
+input:focus,
+textarea:focus {
+  outline: none;
+  /* Supprime l'outline par défaut */
+  box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+  /* Ajoute une légère box-shadow pour un effet de focus */
 }
 
 /*open_checklist_note*/
@@ -794,7 +815,7 @@ input:focus, textarea:focus {
   position: absolute;
   left: 3%;
   width: 94%;
-  top: 30px; 
+  top: 30px;
 }
 
 .note_body_edit {
@@ -804,14 +825,16 @@ input:focus, textarea:focus {
   color: white;
   font-size: 18px;
 }
+
 .note_body_checklist_edit {
-  color : lightgray;
+  color: lightgray;
   position: absolute;
   top: 260px;
   left: 3%;
   width: 94%;
-  
+
 }
+
 .erreur_edit {
   position: absolute;
   left: 3%;
@@ -917,38 +940,45 @@ input:focus, textarea:focus {
   margin-left: 14%;
   width: 70%;
 }
+
 .input_add {
   background-color: transparent;
 
 }
+
 .adapt_height {
-  
+
   height: 500px;
 }
+
 .pointer {
   cursor: pointer;
 }
+
 /* .form-control {
   background: transparent;
 } */
 
 /* add checklist note */
 .add_checklist {
-  margin: 20% auto ;
+  margin: 20% auto;
   width: 90%;
 }
+
 .item_add {
-  margin: 5% 0 ;
+  margin: 5% 0;
   background: transparent;
   color: lightgrey;
 
 }
+
 .add_header {
   position: absolute;
   left: 3%;
   width: 94%;
   top: 40px;
 }
+
 .item_add:focus {
   background-color: transparent;
   color: lightgrey;
@@ -976,5 +1006,3 @@ input:focus, textarea:focus {
 .modal-content {
   background-color: #313538;
 }
-
-
