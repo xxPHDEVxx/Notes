@@ -707,20 +707,6 @@ nav a {
     
 }
 
-/*error edit and add text_note*/
-
-#titleError {
-  position: absolute;
-  top: 170px;
-  left: 3%;
-}
-
-#contentError {
-  position: absolute;
-  top: 330px;
-  left: 3%;
-}
-
 .is-invalid {
   border: 2px solid red !important;
 }

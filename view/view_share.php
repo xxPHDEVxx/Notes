@@ -16,7 +16,7 @@
 
 <body>
     <div class="barre">
-        <a class="back" href="<?= $_SESSION['previous_page'] ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
+        <a class="back" href="note/open_note/<?= $note->note_id?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
     </div>
 
     <div class="container box-shares">

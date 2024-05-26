@@ -153,6 +153,12 @@ abstract class Note extends Model
         return $notes;
     }
 
+    public static function get_max_weight(User $user){
+        $query = self::execute("SELECT MAX(weight) FROM notes WHERE owner = :user", ["user"=> $user->id]);
+        $data = $query->fetchColumn();
+        return $data + 1;
+    }
+
 
     public static function get_notes_pinned(User $user): array
     {
@@ -202,7 +208,7 @@ abstract class Note extends Model
 
         // Vérifie la longueur du titre
         if (strlen($this->title) < $minLength || strlen($this->title) > $maxLength) {
-            $errors[] = "Le titre doit avoir au minimum $minLength caractères et au maximum $maxLength caractères.";
+            $errors[] = "Le titre doit avoir au minimum 3 caractères et au maximum 25 caractères.";
         }
 
         // Vérifie si le titre est unique pour cet utilisateur
@@ -219,17 +225,20 @@ abstract class Note extends Model
     }
 
     public function validate_content()
-    {
-        $minLength = Configuration::get('description_min_length');
-        $maxLength = Configuration::get('description_max_length');
-        $errors = [];
-        // Vérifie la longueur du contenu
-        if ((strlen($this->get_content()) < $minLength && strlen($this->get_content()) > 0) || strlen($this->get_content()) > $maxLength) {
-            $errors[] = "Le contenu de la note doit contenir entre 5 et 800 caractères.";
-        }
+{
+    $minLength = Configuration::get('description_min_length');
+    $maxLength = Configuration::get('description_max_length');
+    $errors = [];
+    $contentLength = strlen($this->get_content());
 
-        return $errors;
+    // Vérifie que le contenu est soit vide, soit entre minLength et maxLength caractères
+    if (($contentLength > 0 && $contentLength < $minLength) || $contentLength > $maxLength) {
+        $errors[] = "Le contenu de la note doit contenir entre 5 et 800 caractères ou être vide.";
     }
+
+    return $errors;
+}
+
 
 
 
@@ -268,12 +277,6 @@ abstract class Note extends Model
             ]);
             return $this;
         }
-    }
-
-    public static function get_max_weight(User $user){
-        $query = self::execute("SELECT MAX(weight) FROM notes WHERE owner = :user", ["user"=> $user->id]);
-        $data = $query->fetchColumn();
-        return $data + 1;
     }
     public function is_weight_unique(int $id): int
     {

@@ -18,7 +18,7 @@
 <body>
     <form method="post" action="note/edit_checklist/<?= $note_id ?>">
         <div class="edit">
-            <a class="back" href="<?= $_SESSION['previous_page'] ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
+            <a class="back" href="note/open_note/<?= $note_id ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
 
             <button class="save" type="submit"><span class="material-symbols-outlined">save</span></button>
         </div>
@@ -30,7 +30,7 @@
         <?php endif; ?>
         <span class="note_body_edit">Items</span>
         <div class="note_body_checklist_edit">
-            <?php foreach ($note_body as $row) : ?>
+            <?php foreach ($content as $row) : ?>
                 <div class="edit_checklist_form">
                     <div class="edit_check_div">
                         <input class="check_square" type="checkbox" value="<?= $row["id"] ?>" name="box" <?= $row["checked"] ? 'checked' : '' ?> disabled>
