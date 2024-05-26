@@ -1,6 +1,6 @@
 <div class="barre">
 
-    <a class="back" href="note/index"><span class="material-symbols-outlined">arrow_back_ios</span></a>
+    <a class="back" href="<?php echo ($archived == 1) ? 'user/my_archives' : (($is_shared_as_reader == 1 || $is_shared_as_editor == 1) ? "user/get_shared_by/$note->owner" : 'note/index'); ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
     <?php if ($archived == 1) : ?>
         <form action="note/delete_note/<?= $note_id ?>" id="deleteForm" method="post">
             <button class="delete" type="submit" id="delete_icon"><span class="material-symbols-outlined">delete_forever</span></button>
