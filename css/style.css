@@ -685,13 +685,12 @@ nav a {
 
 /* Partie title et dates */
 .dates {
-  position: absolute;
+  position: relative;
   top: 60px;
   left: 3%;
   font-style: italic;
   color: lightgray;
   font-weight: 350;
-
 }
 
 .title_note {
