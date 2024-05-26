@@ -13,8 +13,9 @@ class ControllerNote extends Controller
         $user = $this->get_user_or_redirect();
         $notes_pinned = $user->get_notes_pinned();
         $notes_unpinned = $user->get_notes_unpinned();
-        $_SESSION['previous_page'] = $_SERVER['REQUEST_URI'];
-        (new View("notes"))->show(["currentPage" => "my_notes", "notes_pinned" => $notes_pinned, "notes_unpinned" => $notes_unpinned, "user" => $user, "sharers" => $user->shared_by()]);
+        (new View("notes"))->show(["currentPage" => "my_notes", 
+        "notes_pinned" => $notes_pinned, "notes_unpinned" => $notes_unpinned, 
+        "user" => $user, "sharers" => $user->shared_by()]);
     }
 
     public function move_up(): void

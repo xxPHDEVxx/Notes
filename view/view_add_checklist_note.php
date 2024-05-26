@@ -17,7 +17,7 @@
 <body>
     <form method="post" action="note/add_checklist_note">
         <div class="add_header">
-            <a class="back" href="<?= $_SESSION['previous_page'] ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
+            <a class="back" href="note/index"><span class="material-symbols-outlined">arrow_back_ios</span></a>
             <button class="save" type="submit"><span class="material-symbols-outlined">save</span></button>
         </div>
         <div class="container add_checklist">

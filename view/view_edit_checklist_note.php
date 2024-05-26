@@ -18,7 +18,7 @@
 <body>
     <form method="post" action="note/edit_checklist/<?= $note_id ?>">
         <div class="edit">
-            <a class="back" href="<?= $_SESSION['previous_page'] ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
+            <a class="back" href="note/open_note/<?= $note_id ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
 
             <button class="save" type="submit"><span class="material-symbols-outlined">save</span></button>
         </div>
