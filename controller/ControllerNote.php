@@ -384,7 +384,13 @@ class ControllerNote extends Controller
     public function save_edit_text_note()
     {
         $user = $this->get_user_or_redirect();
+        $content_errors = [];
+        $title_errors = [];
         $errors = [];
+
+        if (isset($_POST['title']) && $_POST['title'] == "") {
+            array_push($title_errors, "Title required");
+        }
 
         if (isset($_GET['param1'], $_POST['title'], $_POST['content'])) {
             $note_id = (int) $_GET['param1'];
@@ -395,19 +401,20 @@ class ControllerNote extends Controller
                     $note->title = Tools::sanitize($_POST['title']);
                     $note->set_content(Tools::sanitize($_POST['content']));
 
-                    $titleErrors = $note->validate_title();
-                    $contentErrors = $note->validate_content();
-                    $errors = array_merge($titleErrors, $contentErrors);
+                    $title_errors = $note->validate_title();
+                    $content_errors = $note->validate_content();
 
-                    if (!empty($errors)) {
+                    if (!empty($content_errors) && !empty($title_errors)) {
                         (new View("edit_text_note"))->show([
                             "note" => $note,
                             "note_id" => $note_id,
                             "created" => $this->get_created_time($note_id),
                             "edited" => $this->get_edited_time($note_id),
-                            "note_body" => $note->get_content(),
+                            "content" => $note->get_content(),
                             "title" => $note->title,
-                            'errors' => $errors
+                            'errors' => $errors,
+                            'content_errors' => $content_errors,
+                            'title_errors' => $title_errors,
                         ]);
                         exit();
                     }
@@ -416,14 +423,14 @@ class ControllerNote extends Controller
                     $this->redirect("note", "open_note", $note_id);
                     exit();
                 } else {
-                    echo "Note introuvable ou vous n'avez pas la permission de la modifier.";
+                    $errors = "Note introuvable ou vous n'avez pas la permission de la modifier.";
                 }
             } else {
-                echo "ID de note invalide.";
+                $errors = "ID de note invalide.";
             }
         } else {
             var_dump($_GET['param1']);
-            echo "Les informations requises sont manquantes.";
+            $errors = "Les informations requises sont manquantes.";
         }
     }
 
@@ -619,7 +626,7 @@ class ControllerNote extends Controller
             $pinned = $note->is_pinned($user_id);
             $is_shared_as_editor = $note->is_shared_as_editor($user_id);
             $is_shared_as_reader = $note->is_shared_as_reader($user_id);
-            $body = $note->get_content();
+            $content = $note->get_content();
         }
         ($note->get_type() == "TextNote" ? new View("edit_text_note") : new View("edit_checklist_note"))->show([
             "note" => $note,
@@ -629,7 +636,7 @@ class ControllerNote extends Controller
             "archived" => $archived,
             "is_shared_as_editor" => $is_shared_as_editor,
             "is_shared_as_reader" => $is_shared_as_reader,
-            "note_body" => $body,
+            "content" => $content,
             "pinned" => $pinned,
             "user_id" => $user_id
         ]);

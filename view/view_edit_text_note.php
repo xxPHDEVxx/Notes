@@ -23,24 +23,24 @@
         <div class="container add_checklist">
             <div class="mb-3">
                 <label for="title">Title</label>
-                <input type="text" id="title" class="form-control title_add" value="<?= $note->title ?>">
+                <input type="text" id="title" name="title" class="form-control title_add" value="<?= $note->title?>">
                 <span id="titleError" class="text-danger" style="display: none;"></span>
                 <?php if (!empty($title_errors)): ?>
                     <?php foreach ($title_errors as $error): ?>
                         <span class="text-danger">
-                            <p><?= htmlspecialchars($error) ?></p>
+                            <p><?= $error ?></p>
                         </span>
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>
             <div class="mb-3">
                 <label for="content">Text</label>
-                <textarea class="form-control title_add" id="content" name="content"><?= $note_body ?></textarea>
+                <textarea class="form-control title_add" id="content" name="content"><?= $content?></textarea>
                 <span id="contentError" class="text-danger" style="display: none;"></span>
                 <?php if (!empty($title_errors)): ?>
                     <?php foreach ($content_errors as $error): ?>
                         <span class="text-danger">
-                            <p><?= htmlspecialchars($error) ?></p>
+                            <p><?= $error ?></p>
                         </span>
                     <?php endforeach; ?>
                 <?php endif; ?>
