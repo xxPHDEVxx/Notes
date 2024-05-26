@@ -33,7 +33,7 @@
     </div>
     <p class="title_note_pinned">Pinned</p>
     <div id="pinned" class="view_notes_pinned_unpinned">
-        <?php if (count($notes_pinned) != 0 && count($notes_unpinned) != 0): ?>
+        <?php if (count($notes_pinned) != 0 || count($notes_unpinned) != 0): ?>
             <?php for ($i = 0; $i < count($notes_pinned); $i++): ?>
                 <div class="note">
                     <p class="note-title"><?= $notes_pinned[$i]["title"]; ?></p>
