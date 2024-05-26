@@ -11,14 +11,20 @@ class CheckListNoteItem extends Model
         public int $checked
     ) {
     }
+    public function validate_item()
+    {
+        $errors = [];
+        $minLength = Configuration::get('item_min_length');
+        $maxLength = Configuration::get('item_max_length');
 
-    /*public static function get_items(int $checklist_note) : array {
-        $query = self::execute("SELECT * FROM checklist_note_items 
-        WHERE checklist_note = :id order by checked, id ", ["id" => $checklist_note]);
-        $data = $query->fetchAll();
-        return $data;
+        // Vérifie la longueur du titre
+        if (strlen($this->content) < $minLength || strlen($this->content) > $maxLength) {
+            $errors[] = "L'item doit avoir au minimum $minLength caractères et au maximum $maxLength caractères.";
+        }
 
-    }*/
+
+        return $errors;
+    }
     public static function update_checked(int $checklist_item_id, bool $checked): bool
     {
         self::execute("UPDATE checklist_note_items SET checked =:checked WHERE id = :id", ["id" => $checklist_item_id, "checked" => $checked]);
@@ -33,14 +39,34 @@ class CheckListNoteItem extends Model
 
     public function persist(): CheckListNoteItem 
     {
-
-            self::execute("INSERT INTO checklist_note_items (checklist_note, content, checked) VALUES (:checklist_note, :content, :checked)", [
-                "checklist_note" => $this->checklist_note,
-                "content" => $this->content,
-                "checked" => $this->checked
-            ]);
-            $this->id = self::lastInsertId();
-            return $this;
+            // Vérifier si l'item existe
+            $existingItem = self::get_item_by_id($this->id);
+            if ($existingItem) {
+                // Mettre à jour l'item existant
+                self::execute(
+                    "UPDATE checklist_note_items SET checklist_note = :checklist_note, content = :content, checked = :checked WHERE id = :id",
+                    [
+                        "id" => $this->id,
+                        "checklist_note" => $this->checklist_note,
+                        "content" => $this->content,
+                        "checked" => $this->checked
+                    ]
+                );
+                return $this;
+            } else {
+                
+                // Créer un nouvel item si l'item n'existe pas
+                self::execute(
+                    "INSERT INTO checklist_note_items (checklist_note, content, checked) VALUES (:checklist_note, :content, :checked)",
+                    [
+                        "checklist_note" => $this->checklist_note,
+                        "content" => $this->content,
+                        "checked" => $this->checked
+                    ]
+                );
+                $this->id = self::lastInsertId();
+                return $this;
+            }
     
 
     }

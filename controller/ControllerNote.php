@@ -212,11 +212,18 @@ class ControllerNote extends Controller
             $items = $_POST['items'];
             foreach ($items as $key => $item) {
                 if (!empty($item)) {
-                    if (in_array($item, $duplicateItems)) {
-                        $duplicateErrors["item_$key"] = "Items must be unique.";
+                    //on crée une instance pour vérifier la longueur de l'item
+                    $checklistItem = new CheckListNoteItem(0, 0, $item, 0); 
+                    $contentErrors = $checklistItem->validate_item();
+                    if (!empty($contentErrors)) {
+                        $errors["item_$key"] = implode($contentErrors);
                     } else {
-                        $non_empty_items[$key] = $item;
-                        $duplicateItems[] = $item;
+                        if (in_array($item, $duplicateItems)) {
+                            $duplicateErrors["item_$key"] = "Items must be unique.";
+                        } else {
+                            $non_empty_items[$key] = $item;
+                            $duplicateItems[] = $item;
+                        }
                     }
                 }
             }
