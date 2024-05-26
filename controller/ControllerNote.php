@@ -91,7 +91,8 @@ class ControllerNote extends Controller
 
             if (isset($_POST['user'], $_POST['editor']) && empty($errors)) {
                 $nv_us = User::get_user_by_id($_POST['user']);
-                $editor = ($_POST['editor'] == 1) ? true : false;;
+                $editor = ($_POST['editor'] == 1) ? true : false;
+                ;
                 $note_share = new NoteShare($note_id, $nv_us->id, $editor);
                 $note_share->persist();
                 $this->redirect("note", "shares", $note_id);
@@ -257,12 +258,11 @@ class ControllerNote extends Controller
     public function delete_note()
     {
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
-            $note_id = $_GET['param1'];
+            $note_id = Tools::sanitize($_GET["param1"]);
             $note = Note::get_note_by_id($note_id);
             $user = $this->get_user_or_redirect();
-            if ($note->delete($user)) {
-                // Rediriger l'utilisateur vers la liste des notes après la suppression
-                $this->redirect("user", "my_archives");
+            if ($user->id == $note->owner) {
+                (new View('delete_confirmation'))->show(['note_id' => $note_id]);
             } else {
                 throw new Exception("vous n'êtes pas l'auteur de cette note");
             }
@@ -270,6 +270,35 @@ class ControllerNote extends Controller
             throw new Exception("Missing ID");
         }
     }
+
+    public function delete_confirmation()
+{
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if (isset($_POST["delete"])) {
+            if (isset($_GET['param1'])) {
+                $note_id = Tools::sanitize($_GET["param1"]);
+                $note = Note::get_note_by_id($note_id);
+                $user = $this->get_user_or_redirect();
+                if ($user->id == $note->owner) {
+                    $note->delete($user);
+                    $this->redirect("user", "my_archives");
+                } else {
+                    throw new Exception("Vous n'êtes pas autorisé à supprimer cette note.");
+                }
+            } else {
+                throw new Exception("Identifiant de la note manquant");
+            }
+        } else {
+            // Si l'utilisateur annule la suppression, redirige vers la page de la note
+            if (isset($_GET['param1'])) {
+                $note_id = $_GET['param1'];
+                $this->redirect("note", "open_note", $note_id);
+            } else {
+                throw new Exception("Identifiant de la note manquant");
+            }
+        }
+    }
+}
 
     public function edit_checklist(): void
     {
@@ -318,9 +347,9 @@ class ControllerNote extends Controller
                 $new_item_content = Tools::sanitize($_POST['new']);
                 $new_item = new CheckListNoteItem(0, $note->note_id, $new_item_content, false);
                 if (!$new_item->is_unique()) {
-                    $errors ["items"] = "item must be unique";
+                    $errors["items"] = "item must be unique";
                 }
-                if(empty($errors['items'])) {
+                if (empty($errors['items'])) {
                     $new_item->persist();
                 }
             }
@@ -331,113 +360,125 @@ class ControllerNote extends Controller
         }
 
         (new View("edit_checklist_note"))->show([
-            "note" => $note, "note_id" => $note_id, "created" => $this->get_created_time($note_id), "edited" => $this->get_edited_time($note_id), "archived" => $archived, "is_shared_as_editor" => $is_shared_as_editor, "is_shared_as_reader" => $is_shared_as_reader, "note_body" => $body, "pinned" => $pinned, "user_id" => $user_id, "errors" => $errors
+            "note" => $note,
+            "note_id" => $note_id,
+            "created" => $this->get_created_time($note_id),
+            "edited" => $this->get_edited_time($note_id),
+            "archived" => $archived,
+            "is_shared_as_editor" => $is_shared_as_editor,
+            "is_shared_as_reader" => $is_shared_as_reader,
+            "note_body" => $body,
+            "pinned" => $pinned,
+            "user_id" => $user_id,
+            "errors" => $errors
         ]);
     }
 
     public function save_edit_text_note()
-{
-    $user = $this->get_user_or_redirect();
-    $errors = [];
-    
-    if (isset($_GET['param1'], $_POST['title'], $_POST['content'])) {
-        $note_id = (int) $_GET['param1'];
-        if ($note_id > 0) {
-            $note = TextNote::get_note_by_id($note_id);
+    {
+        $user = $this->get_user_or_redirect();
+        $errors = [];
 
-            if ($note && $note->owner == $user->id) {
-                $note->title = Tools::sanitize($_POST['title']);
-                $note->set_content(Tools::sanitize($_POST['content']));
+        if (isset($_GET['param1'], $_POST['title'], $_POST['content'])) {
+            $note_id = (int) $_GET['param1'];
+            if ($note_id > 0) {
+                $note = TextNote::get_note_by_id($note_id);
 
-                $titleErrors = $note->validate_title();
-                $contentErrors = $note->validate_content();
-                $errors = array_merge($titleErrors, $contentErrors);
+                if ($note && $note->owner == $user->id) {
+                    $note->title = Tools::sanitize($_POST['title']);
+                    $note->set_content(Tools::sanitize($_POST['content']));
 
-                if (!empty($errors)) {
-                    (new View("edit_text_note"))->show([
-                        "note" => $note,
-                        "note_id" => $note_id,
-                        "created" => $this->get_created_time($note_id),
-                        "edited" => $this->get_edited_time($note_id),
-                        "note_body" => $note->get_content(),
-                        'errors' => $errors,
-                    ]);
-                    exit();
-                }
+                    $titleErrors = $note->validate_title();
+                    $contentErrors = $note->validate_content();
+                    $errors = array_merge($titleErrors, $contentErrors);
 
-                $note->update();
-                $this->redirect("openNote", "index", $note_id);
-                exit();
-            } else {
-                echo "Note introuvable ou vous n'avez pas la permission de la modifier.";
-            }
-        } else {
-            echo "ID de note invalide.";
-        }
-    } else {
-        echo "Les informations requises sont manquantes.";
-    }
-}
+                    if (!empty($errors)) {
+                        (new View("edit_text_note"))->show([
+                            "note" => $note,
+                            "note_id" => $note_id,
+                            "created" => $this->get_created_time($note_id),
+                            "edited" => $this->get_edited_time($note_id),
+                            "note_body" => $note->get_content(),
+                            "title" => $note->title,
+                            'errors' => $errors
+                        ]);
+                        exit();
+                    }
 
-
-public function save_add_text_note()
-{
-    $user = $this->get_user_or_redirect();
-    $content_errors = [];
-    $title_errors = [];
-    $errors = [];
-    $title = "";
-    $content = "";
-
-    if (isset($_POST['title']) && $_POST['title'] == "") {
-        array_push($title_errors,"Title required");
-    }
-
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        if (isset($_POST['title'], $_POST['content'])) {
-            $title = Tools::sanitize($_POST['title']);
-            $content = Tools::sanitize($_POST['content']);
-
-            $note = new TextNote(
-                0,
-                $title,
-                $user->id,
-                date("Y-m-d H:i:s"),
-                0,
-                0,
-                $user->get_max_weight(),
-                null
-            );
-            $note->set_content($content);
-
-            $content_errors = $note->validate_content();
-            if($note->validate_title() != null)
-                array_push($title_errors,$note->validate_title()[0]);
-
-            if (empty($title_errors) && empty($content_errors)) {
-                $result = $note->persist();
-                if ($result instanceof TextNote) {
                     $note->update();
-                    $this->redirect("note", "index", $result->note_id);
+                    $this->redirect("note", "open_note", $note_id);
                     exit();
                 } else {
-                    $errors[] = "Erreur lors de la sauvegarde de la note.";
+                    echo "Note introuvable ou vous n'avez pas la permission de la modifier.";
                 }
+            } else {
+                echo "ID de note invalide.";
             }
         } else {
-            $errors[] = "Les informations requises pour le titre ou le contenu sont manquantes.";
+            var_dump($_GET['param1']);
+            echo "Les informations requises sont manquantes.";
         }
     }
 
-    (new View("add_text_note"))->show([
-        'user' => $user,
-        'errors' => $errors,
-        'title' => $title,
-        'content' => $content,
-        'content_errors' => $content_errors,
-        'title_errors' => $title_errors
-    ]);
-}
+
+    public function save_add_text_note()
+    {
+        $user = $this->get_user_or_redirect();
+        $content_errors = [];
+        $title_errors = [];
+        $errors = [];
+        $title = "";
+        $content = "";
+
+        if (isset($_POST['title']) && $_POST['title'] == "") {
+            array_push($title_errors, "Title required");
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (isset($_POST['title'], $_POST['content'])) {
+                $title = Tools::sanitize($_POST['title']);
+                $content = Tools::sanitize($_POST['content']);
+
+                $note = new TextNote(
+                    0,
+                    $title,
+                    $user->id,
+                    date("Y-m-d H:i:s"),
+                    0,
+                    0,
+                    $user->get_max_weight(),
+                    null
+                );
+                $note->set_content($content);
+
+                $content_errors = $note->validate_content();
+                if ($note->validate_title() != null)
+                    array_push($title_errors, $note->validate_title()[0]);
+
+                if (empty($title_errors) && empty($content_errors)) {
+                    $result = $note->persist();
+                    if ($result instanceof TextNote) {
+                        $note->update();
+                        $this->redirect("note", "index", $result->note_id);
+                        exit();
+                    } else {
+                        $errors[] = "Erreur lors de la sauvegarde de la note.";
+                    }
+                }
+            } else {
+                $errors[] = "Les informations requises pour le titre ou le contenu sont manquantes.";
+            }
+        }
+
+        (new View("add_text_note"))->show([
+            'user' => $user,
+            'errors' => $errors,
+            'title' => $title,
+            'content' => $content,
+            'content_errors' => $content_errors,
+            'title_errors' => $title_errors
+        ]);
+    }
 
 
 
@@ -457,21 +498,30 @@ public function save_add_text_note()
             $body = $note->get_content();
         }
         ($note->get_type() == "TextNote" ? new View("open_text_note") : new View("open_checklist_note"))->show([
-            "note" => $note, "note_id" => $note_id, "created" => $this->get_created_time($note_id), "edited" => $this->get_edited_time($note_id), "archived" => $archived, "is_shared_as_editor" => $is_shared_as_editor, "is_shared_as_reader" => $is_shared_as_reader, "note_body" => $body, "pinned" => $pinned, "user_id" => $user_id
+            "note" => $note,
+            "note_id" => $note_id,
+            "created" => $this->get_created_time($note_id),
+            "edited" => $this->get_edited_time($note_id),
+            "archived" => $archived,
+            "is_shared_as_editor" => $is_shared_as_editor,
+            "is_shared_as_reader" => $is_shared_as_reader,
+            "note_body" => $body,
+            "pinned" => $pinned,
+            "user_id" => $user_id
         ]);
     }
-    public function get_edited_time(int $note_id): String | bool
+    public function get_edited_time(int $note_id): string|bool
     {
         $edited_date = Note::get_edited_at($note_id);
         return $edited_date != null ? $this->get_elapsed_time($edited_date) : false;
     }
-    public function get_created_time(int $note_id): String
+    public function get_created_time(int $note_id): string
     {
         $created_date = Note::get_created_at($note_id);
         return $this->get_elapsed_time($created_date);
     }
 
-    public function get_elapsed_time(String $date): String
+    public function get_elapsed_time(string $date): string
     {
         $localDateNow = new DateTime();
         $dateTime = new DateTime($date);
@@ -479,7 +529,7 @@ public function save_add_text_note()
         $res = '';
         if ($diff->y == 0 && $diff->m == 0 && $diff->d == 0 && $diff->h == 0 && $diff->i == 0) {
             $res = $diff->s . " secondes ago.";
-        } elseif ($diff->y == 0 && $diff->m == 0 && $diff->d == 0 && $diff->h == 0  && $diff->i != 0) {
+        } elseif ($diff->y == 0 && $diff->m == 0 && $diff->d == 0 && $diff->h == 0 && $diff->i != 0) {
             $res = $diff->i . " minutes ago.";
         } elseif ($diff->y == 0 && $diff->m == 0 && $diff->d == 0 && $diff->h != 0) {
             $res = $diff->h . " hours ago.";
@@ -565,7 +615,16 @@ public function save_add_text_note()
             $body = $note->get_content();
         }
         ($note->get_type() == "TextNote" ? new View("edit_text_note") : new View("edit_checklist_note"))->show([
-            "note" => $note, "note_id" => $note_id, "created" => $this->get_created_time($note_id), "edited" => $this->get_edited_time($note_id), "archived" => $archived, "is_shared_as_editor" => $is_shared_as_editor, "is_shared_as_reader" => $is_shared_as_reader, "note_body" => $body, "pinned" => $pinned, "user_id" => $user_id
+            "note" => $note,
+            "note_id" => $note_id,
+            "created" => $this->get_created_time($note_id),
+            "edited" => $this->get_edited_time($note_id),
+            "archived" => $archived,
+            "is_shared_as_editor" => $is_shared_as_editor,
+            "is_shared_as_reader" => $is_shared_as_reader,
+            "note_body" => $body,
+            "pinned" => $pinned,
+            "user_id" => $user_id
         ]);
     }
 
