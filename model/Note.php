@@ -110,11 +110,44 @@ abstract class Note extends Model
     }
     public function pin(): void
     {
+        // mettre poids de chaque notes en négatifs
+        // renuméroter chaque poid dans l'ordre (pinned, unpinned, ...)
+        // pin la note
         self::execute("UPDATE notes SET pinned = :val WHERE id = :id", ["val" => 1, "id" => $this->note_id]);
     }
     public function unpin(): void
     {
         self::execute("UPDATE notes SET pinned = :val WHERE id = :id", ["val" => 0, "id" => $this->note_id]);
+        $this->put_negative_weights();
+    }
+
+    public static function get_every_notes_id(){
+        $dataSql = self::execute("SELECT id FROM notes WHERE weight > val", ["val" => 0]);
+        $data = $dataSql->fetchAll();
+        return $data;
+    }
+
+    public function get_pinned_notes_count(){
+        $dataSql = self::execute("SELECT COUNT(*) FROM notes WHERE pinned = val", ["val" => 1]);
+        $data = $dataSql->fetchColumn();
+        return $data;
+    }
+
+    public function get_unpinned_notes_count(){
+        $dataSql = self::execute("SELECT COUNT(*) FROM notes WHERE pinned = val", ["val" => 0]);
+        $data = $dataSql->fetchColumn();
+        return $data;
+    }
+
+    public function put_negative_weights(){
+        $notes_id = Note::get_every_notes_id();
+        for ($i = 0 ; $i < count($notes_id); $i++){
+            self::execute("UPDATE notes SET weight = val WHERE id = id ", ["val" => -($this->weight), "id" => $notes_id[$i]]);
+        }
+    }
+
+    public function new_notes_weight(){
+
     }
 
 
@@ -159,6 +192,18 @@ abstract class Note extends Model
 
     public static function get_max_weight(User $user){
         $query = self::execute("SELECT MAX(weight) FROM notes WHERE owner = :user", ["user"=> $user->id]);
+        $data = $query->fetchColumn();
+        return $data + 1;
+    }
+
+    public function get_max_pinned_weight(User $user){
+        $query = self::execute("SELECT MAX(weight) FROM notes WHERE owner = :user AND pinned = val", ["val" => 1, "user"=> $user->id]);
+        $data = $query->fetchColumn();
+        return $data + 1;
+    }
+
+    public function get_max_unpinned_weight(User $user){
+        $query = self::execute("SELECT MAX(weight) FROM notes WHERE owner = :user AND pinned = val", ["val" => 0, "user"=> $user->id]);
         $data = $query->fetchColumn();
         return $data + 1;
     }
