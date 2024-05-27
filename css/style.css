@@ -903,6 +903,8 @@ input:focus, textarea:focus {
   padding: 7px;
   margin-left: 14%;
   width: 70%;
+  background-color: unset;
+  color: lightgray;
 }
 .input_add {
   background-color: transparent;

@@ -314,6 +314,9 @@ class ControllerNote extends Controller
 
         $user = $this->get_user_or_redirect();
         $errors = [];
+        $duplicateErrors = [];
+        $duplicateItems = [];
+
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = Tools::sanitize($_GET["param1"]);
             $note = CheckListNote::get_note_by_id($note_id);
@@ -329,7 +332,7 @@ class ControllerNote extends Controller
 
 
 
-
+            //verification si champ titre vide + si c'est le titre initial
             if (isset($_POST['title']) && $_POST['title'] == "") {
                 $errors["title"] = "Title required";
             }
@@ -342,6 +345,7 @@ class ControllerNote extends Controller
             }
 
 
+            //action delete item
             if (isset($_POST['delete']) && $_POST['delete']) {
                 $item_id = $_POST["delete"];
                 $item = CheckListNoteItem::get_item_by_id($item_id);
@@ -352,12 +356,45 @@ class ControllerNote extends Controller
                 $item->delete();
                 $this->redirect("note", "edit_checklist", $note_id);
             }
+
+            //action add item
             if (isset($_POST['new']) && $_POST["new"] != "") {
                 $new_item_content = Tools::sanitize($_POST['new']);
                 $new_item = new CheckListNoteItem(0, $note->note_id, $new_item_content, false);
                 if (!$new_item->is_unique()) {
                     $errors["items"] = "item must be unique";
                 }
+                $contentErrors = $new_item->validate_item();
+                if (!empty($contentErrors)) {
+                    $errors["items"] = implode($contentErrors);
+                }
+    
+
+                //action edit item 
+        // Vérification des éléments
+        if (isset($_POST['items'])) {
+            $items = $_POST['items'];
+            foreach ($items as $key => $item) {
+                if (!empty($item)) {
+                    //on crée une instance pour vérifier la longueur de l'item
+                    $checklistItem = new CheckListNoteItem(0, 0, $item, 0); 
+                    $contentErrors = $checklistItem->validate_item();
+                    if (!empty($contentErrors)) {
+                        $errors["item_$key"] = implode($contentErrors);
+                    } else {
+                        if (in_array($item, $duplicateItems)) {
+                            $duplicateErrors["item_$key"] = "Items must be unique.";
+                        } else {
+                            $non_empty_items[$key] = $item;
+                            $duplicateItems[] = $item;
+                        }
+                    }
+                }
+            }
+        }
+
+
+                //si item oke -> modif db
                 if (empty($errors['items'])) {
                     $new_item->persist();
                     $this->redirect("note", "edit_checklist", $note_id);

@@ -36,11 +36,13 @@
                         <div class="edit_check_div">
                             <input class="check_square" type="checkbox" value="<?= $row["id"] ?>" name="box" <?= $row["checked"] ? 'checked' : '' ?> disabled>
                         </div>
-                        <label class="checklist_elements <?= $row["checked"] ? 'check_label' : '' ?>">
-                            <?= $row["content"] ?>
-                        </label>
+                        <input type="text" name="items[]"  class="checklist_elements <?= $row["checked"] ? 'check_label' : '' ?>" value="<?= $row["content"] ?>">
+
                         <input type="hidden" name="remove" value="<?= $row['id'] ?>">
                         <button type="submit" name="delete" value="<?= $row["id"] ?>" class="icone-delete">-</button>
+                        <?php if (!empty($errors["item_$i"])) : ?>
+                                <p class="text-danger"><?= $errors["item_$i"] ?></p>
+                            <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
                 <label for="new">New item</label>

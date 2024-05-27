@@ -72,6 +72,7 @@ class CheckListNoteItem extends Model
     }
 
     public function is_unique() : bool {
+        
         // Vérifie si le titre est unique pour cet utilisateur
         $query = self::execute("SELECT COUNT(*) FROM checklist_note_items WHERE checklist_note = :checklist AND content = :content AND checked = :checked", [
             'checklist' => $this->checklist_note,
