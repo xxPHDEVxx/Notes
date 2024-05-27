@@ -17,7 +17,7 @@ abstract class Note extends Model
 {
     public function __construct(
         public int $note_id,
-        public String $title,
+        public string $title,
         public int $owner,
         public string $created_at,
         public int $pinned,
@@ -40,14 +40,14 @@ abstract class Note extends Model
     {
         return 5;
     }
-    public static function get_created_at(int $id): String
+    public static function get_created_at(int $id): string
     {
         $query = self::execute("SELECT created_at from notes WHERE id = :id", ["id" => $id]);
         $data = $query->fetchColumn();
 
         return $data;
     }
-    public static function get_edited_at(int $id): String | null
+    public static function get_edited_at(int $id): string|null
     {
         $query = self::execute("SELECT edited_at from notes WHERE id = :id", ["id" => $id]);
         $data = $query->fetchColumn();
@@ -110,59 +110,96 @@ abstract class Note extends Model
     }
     public function pin(): void
     {
-        // mettre poids de chaque notes en négatifs
-        // renuméroter chaque poid dans l'ordre (pinned, unpinned, ...)
-        // pin la note
         self::execute("UPDATE notes SET pinned = :val WHERE id = :id", ["val" => 1, "id" => $this->note_id]);
+        $this->order_notes();
     }
     public function unpin(): void
     {
         self::execute("UPDATE notes SET pinned = :val WHERE id = :id", ["val" => 0, "id" => $this->note_id]);
-        $this->put_negative_weights();
+        $this->order_notes();
+
     }
 
-    public static function get_every_notes_id(){
-        $dataSql = self::execute("SELECT id FROM notes WHERE weight > val", ["val" => 0]);
-        $data = $dataSql->fetchAll();
+    // récupérer tous les id en un tableau
+    public function get_every_notes_id(): array
+    {
+        $dataSql = self::execute("SELECT id FROM notes", []);
+        $data = $dataSql->fetchAll(PDO::FETCH_COLUMN, 0);  // Récupérer toutes les valeurs de la colonne 'id'
         return $data;
     }
 
-    public function get_pinned_notes_count(){
-        $dataSql = self::execute("SELECT COUNT(*) FROM notes WHERE pinned = val", ["val" => 1]);
+    // récupérer nombre total de notes
+    public function get_all_notes()
+    {
+        $dataSql = self::execute("SELECT COUNT(*) FROM notes", []);
         $data = $dataSql->fetchColumn();
         return $data;
     }
 
-    public function get_unpinned_notes_count(){
-        $dataSql = self::execute("SELECT COUNT(*) FROM notes WHERE pinned = val", ["val" => 0]);
-        $data = $dataSql->fetchColumn();
+    // récupérer id des notes pinned
+    public function get_pinned_notes()
+    {
+        $dataSql = self::execute("SELECT id FROM notes WHERE pinned = :val", ["val" => 1]);
+        $data = $dataSql->fetchAll(PDO::FETCH_COLUMN, 0);
         return $data;
     }
 
-    public function put_negative_weights(){
-        $notes_id = Note::get_every_notes_id();
-        for ($i = 0 ; $i < count($notes_id); $i++){
-            self::execute("UPDATE notes SET weight = val WHERE id = id ", ["val" => -($this->weight), "id" => $notes_id[$i]]);
+    // récupérer id des notes unpinned
+    public function get_unpinned_notes()
+    {
+        $dataSql = self::execute("SELECT id FROM notes WHERE pinned = :val", ["val" => 0]);
+        $data = $dataSql->fetchAll(PDO::FETCH_COLUMN, 0);
+        return $data;
+    }
+
+    // Donne poids négatif unique aux notes
+    public function put_negative_weights()
+    {
+        $notes = $this->get_every_notes_id();
+        $nb = -20;
+        foreach ($notes as $note) {
+            self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => $nb--, "id" => $note]);
         }
     }
 
-    public function new_notes_weight(){
+    // Modifie le poids des notes par odre d'importance (owner, pin, unpin, ...)
+    public function order_notes()
+    {
 
+        // mettres les poids en négatif pour contraintes Bd
+        $this->put_negative_weights();
+
+        // numéroter notes pin
+        $pinned = $this->get_pinned_notes();
+        $nb = $this->get_all_notes();
+
+        foreach ($pinned as $note) {
+            self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => $nb--, "id" => $note]);
+
+        }
+
+        // numéroter notes pin
+        $unpinned = $this->get_unpinned_notes();
+
+        foreach ($unpinned as $note) {
+            self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => $nb--, "id" => $note]);
+        }
     }
 
 
-    public function get_shared_users()  {
+    public function get_shared_users()
+    {
         return NoteShare::get_shared_users($this);
     }
 
 
 
-    public function  get_weight(): int
+    public function get_weight(): int
     {
         return $this->weight;
     }
 
-    public function  set_weight(int $weight): void
+    public function set_weight(int $weight): void
     {
         $this->weight = $weight;
     }
@@ -190,20 +227,23 @@ abstract class Note extends Model
         return $notes;
     }
 
-    public static function get_max_weight(User $user){
-        $query = self::execute("SELECT MAX(weight) FROM notes WHERE owner = :user", ["user"=> $user->id]);
+    public static function get_max_weight(User $user)
+    {
+        $query = self::execute("SELECT MAX(weight) FROM notes WHERE owner = :user", ["user" => $user->id]);
         $data = $query->fetchColumn();
         return $data + 1;
     }
 
-    public function get_max_pinned_weight(User $user){
-        $query = self::execute("SELECT MAX(weight) FROM notes WHERE owner = :user AND pinned = val", ["val" => 1, "user"=> $user->id]);
+    public function get_max_pinned_weight(User $user)
+    {
+        $query = self::execute("SELECT MAX(weight) FROM notes WHERE owner = :user AND pinned = val", ["val" => 1, "user" => $user->id]);
         $data = $query->fetchColumn();
         return $data + 1;
     }
 
-    public function get_max_unpinned_weight(User $user){
-        $query = self::execute("SELECT MAX(weight) FROM notes WHERE owner = :user AND pinned = val", ["val" => 0, "user"=> $user->id]);
+    public function get_max_unpinned_weight(User $user)
+    {
+        $query = self::execute("SELECT MAX(weight) FROM notes WHERE owner = :user AND pinned = val", ["val" => 0, "user" => $user->id]);
         $data = $query->fetchColumn();
         return $data + 1;
     }
@@ -221,7 +261,7 @@ abstract class Note extends Model
 
 
     // Supprime une note
-    public function delete(User $initiator): Note |false
+    public function delete(User $initiator): Note|false
     {
         $user = User::get_user_by_id($this->owner);
         // permet la suppression en cascade pour éviter problèmes suite aux dépendances
@@ -274,19 +314,19 @@ abstract class Note extends Model
     }
 
     public function validate_content()
-{
-    $minLength = Configuration::get('description_min_length');
-    $maxLength = Configuration::get('description_max_length');
-    $errors = [];
-    $contentLength = strlen($this->get_content());
+    {
+        $minLength = Configuration::get('description_min_length');
+        $maxLength = Configuration::get('description_max_length');
+        $errors = [];
+        $contentLength = strlen($this->get_content());
 
-    // Vérifie que le contenu est soit vide, soit entre minLength et maxLength caractères
-    if (($contentLength > 0 && $contentLength < $minLength) || $contentLength > $maxLength) {
-        $errors[] = "Le contenu de la note doit contenir entre 5 et 800 caractères ou être vide.";
+        // Vérifie que le contenu est soit vide, soit entre minLength et maxLength caractères
+        if (($contentLength > 0 && $contentLength < $minLength) || $contentLength > $maxLength) {
+            $errors[] = "Le contenu de la note doit contenir entre 5 et 800 caractères ou être vide.";
+        }
+
+        return $errors;
     }
-
-    return $errors;
-}
 
 
 
@@ -335,7 +375,7 @@ abstract class Note extends Model
     }
 
 
-    public function get_note_up(User $user, int $note_id, int $weight, bool $pin): Note | false
+    public function get_note_up(User $user, int $note_id, int $weight, bool $pin): Note|false
     {
         $query = self::execute("
         SELECT * FROM notes n
@@ -346,10 +386,11 @@ abstract class Note extends Model
         $data = $query->fetch();
         if (!$data) {
             return false;
-        } else return Note::create_note($data);
+        } else
+            return Note::create_note($data);
     }
 
-    public function get_note_down(User $user, int $note_id, int $weight, bool $pin): Note | false
+    public function get_note_down(User $user, int $note_id, int $weight, bool $pin): Note|false
     {
         $query = self::execute("
         SELECT * FROM notes n
@@ -360,8 +401,8 @@ abstract class Note extends Model
         $data = $query->fetch();
         if (!$data)
             return false;
-
-        else return Note::create_note($data);
+        else
+            return Note::create_note($data);
     }
 
     public function move_db(Note $second): Note
@@ -369,22 +410,28 @@ abstract class Note extends Model
         $weight_second = $second->get_weight();
         $second_id = $second->note_id;
         $weight_first = $this->weight;
-        
+
         // étape intermédiaire pour éviter respecter unicité des poids par owner
-        self::execute('UPDATE notes SET weight = :weight_note2 WHERE id = :id_note2',
-            ['id_note2' => $second->note_id, 'weight_note2' => 99]);
+        self::execute(
+            'UPDATE notes SET weight = :weight_note2 WHERE id = :id_note2',
+            ['id_note2' => $second->note_id, 'weight_note2' => 99]
+        );
 
-        self::execute('UPDATE notes SET weight = :weight_note2 WHERE id = :id_note1',
-            ['id_note1' => $this->note_id, 'weight_note2' => $weight_second]);
+        self::execute(
+            'UPDATE notes SET weight = :weight_note2 WHERE id = :id_note1',
+            ['id_note1' => $this->note_id, 'weight_note2' => $weight_second]
+        );
 
-        self::execute('UPDATE notes SET weight = :weight_note1 WHERE id = :id_note2',
-         ['id_note2' => $second_id, 'weight_note1' => $weight_first]);
+        self::execute(
+            'UPDATE notes SET weight = :weight_note1 WHERE id = :id_note2',
+            ['id_note2' => $second_id, 'weight_note1' => $weight_first]
+        );
 
 
         return $this;
     }
 
-    public static function get_note_by_id(int $note_id): Note |false
+    public static function get_note_by_id(int $note_id): Note|false
     {
         return Note::is_text_note($note_id) ? TextNote::get_note_by_id($note_id) : CheckListNote::get_note_by_id($note_id);
     }
@@ -394,7 +441,7 @@ abstract class Note extends Model
         $data = $query->fetchAll();
         return count($data) !== 0;
     }
-    public static function create_note($data): Note | false
+    public static function create_note($data): Note|false
     {
         if (count($data) !== 0) {
             return Note::is_text_note($data['id']) ? new TextNote(
