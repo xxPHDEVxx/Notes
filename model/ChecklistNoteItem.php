@@ -72,12 +72,19 @@ class CheckListNoteItem extends Model
     }
 
     public function is_unique() : bool {
-        $item = $this->get_item_by_id($this->id);
-        if ($item) {
+        // Vérifie si le titre est unique pour cet utilisateur
+        $query = self::execute("SELECT COUNT(*) FROM checklist_note_items WHERE checklist_note = :checklist AND content = :content AND checked = :checked", [
+            'checklist' => $this->checklist_note,
+            'content' => $this->content,
+            'checked' => $this->checked 
+        ]);
+        if ($query->fetchColumn() > 0) {
             return false;
         } else {
             return true;
-        }
+        }               
+
+            
     }
 
     public function delete(): void

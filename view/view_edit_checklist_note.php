@@ -16,7 +16,6 @@
 </head>
 
 <body>
-    <?php var_dump($errors)?>
     <form method="post" action="note/edit_checklist/<?= $note_id ?>">
         <div class="edit">
             <a class="back" href="note/open_note/<?= $note_id ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>

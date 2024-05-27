@@ -309,7 +309,7 @@ class ControllerNote extends Controller
     }
 }
 
-    public function edit_checklist(): void
+    public function edit_checklist()
     {
 
         $user = $this->get_user_or_redirect();
@@ -334,7 +334,7 @@ class ControllerNote extends Controller
                 $errors["title"] = "Title required";
             }
 
-            if (isset($_POST['title']) && $_POST['title'] != "") {
+            if (isset($_POST['title']) && $_POST['title'] != $note->title) {
                 $title = Tools::sanitize($_POST["title"]);
                 $note = Note::get_note_by_id($note_id);
                 $note->title = $title;
@@ -350,22 +350,20 @@ class ControllerNote extends Controller
                 }
                 // Supprime l'élément de la liste de contrôle
                 $item->delete();
-                $this->redirect("note", "edit_checklist", $note_id);
             }
             if (isset($_POST['new']) && $_POST["new"] != "") {
                 $new_item_content = Tools::sanitize($_POST['new']);
                 $new_item = new CheckListNoteItem(0, $note->note_id, $new_item_content, false);
-                if (!$new_item->is_unique()) {
-                    $errors["items"] = "item must be unique";
-                }
-                if (empty($errors['items'])) {
-                    $new_item->persist();
-                    $this->redirect("note", "edit_checklist", $note_id);
-                    exit;
-                }
+                return var_dump($new_item->is_unique());
+                // if ($new_item->is_unique()) {
+                //     $errors["items"] = "item must be unique";
+                // }
+                // if (empty($errors['items'])) {
+                //     $new_item->persist();
+                // }
             }
         }
-        if (empty($errors["title"]) && (isset($_POST['title']) && $_POST['title'] != "")) {
+        if (empty($errors["title"])) {
             $note->persist();
             $this->redirect("note", "open_note", $note->note_id);
         }

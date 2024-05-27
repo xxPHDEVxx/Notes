@@ -37,7 +37,7 @@
                         <?= $row["content"] ?></label>
                 </form>
             <?php else: ?>
-                <form class="check_form" method="post">
+                <form class="check_form" method="post" action="note/update_checked">
                     <input type="text" name="check" value="<?= $row["id"] ?>" class="item" hidden>
                     <input class="material-symbols-outlined check_submit" type="submit" value="check_box_outline_blank"
                         id="check<?= $row["id"] ?>">
