@@ -46,10 +46,10 @@
                 <label for="new">New item</label>
                 <div class="edit_checklist_form">
                     <input type="text" class="form-control-edit" id="new" name="new">
-                    <?php if (!empty($errors['items'])) : ?>
-                        <span class="text-danger erreur_edit"><?= $errors['items'] ?></span>
-                    <?php endif; ?>
                     <button type="submit" class="icone-add">+</button>
+                    <?php if (!empty($errors['items'])) : ?>
+                        <p class="text-danger erreur_edit"><?= $errors['items'] ?></p>
+                    <?php endif; ?>
                 </div>
             </div>
         </form>

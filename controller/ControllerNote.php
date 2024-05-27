@@ -350,20 +350,23 @@ class ControllerNote extends Controller
                 }
                 // Supprime l'élément de la liste de contrôle
                 $item->delete();
+                $this->redirect("note", "edit_checklist", $note_id);
             }
             if (isset($_POST['new']) && $_POST["new"] != "") {
                 $new_item_content = Tools::sanitize($_POST['new']);
                 $new_item = new CheckListNoteItem(0, $note->note_id, $new_item_content, false);
-                return var_dump($new_item->is_unique());
-                // if ($new_item->is_unique()) {
-                //     $errors["items"] = "item must be unique";
-                // }
-                // if (empty($errors['items'])) {
-                //     $new_item->persist();
-                // }
+                if (!$new_item->is_unique()) {
+                    $errors["items"] = "item must be unique";
+                }
+                if (empty($errors['items'])) {
+                    $new_item->persist();
+                    $this->redirect("note", "edit_checklist", $note_id);
+                    exit;
+                    
+                }
             }
         }
-        if (empty($errors["title"])) {
+        if (empty($errors["title"]) && $_POST == $note->title) {
             $note->persist();
             $this->redirect("note", "open_note", $note->note_id);
         }
