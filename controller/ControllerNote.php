@@ -169,16 +169,9 @@ class ControllerNote extends Controller
 
     public function drag_and_drop()
     {
-
-        if (isset($_POST['arrayorder'], $_POST['update'])) {
-            $array = $_POST['arrayorder'];
-            if ($_POST['update'] == "update") {
-                $count = 1;
-                foreach ($array as $idval) {
-                    Note::update_drag_and_drop($count, $idval);
-                    $count++;
-                }
-            }
+        if (isset($_POST['serialize'], $_POST['update'], $_POST['source'], $_POST['target'])) {
+            $array = $_POST['serialize'];
+            $pinned = $_POST['source'] == "pinned" ? 1 : 0;
         }
     }
 
