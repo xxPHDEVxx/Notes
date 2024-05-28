@@ -102,11 +102,13 @@ abstract class Note extends Model
     public function archive(): void
     {
         self::execute("UPDATE notes SET archived = :val WHERE id = :id", ["val" => 1, "id" => $this->note_id]);
+        $this->order_notes();
     }
 
     public function unarchive(): void
     {
         self::execute("UPDATE notes SET archived = :val WHERE id = :id", ["val" => 0, "id" => $this->note_id]);
+        $this->order_notes();
     }
     public function pin(): void
     {
@@ -115,15 +117,17 @@ abstract class Note extends Model
     }
     public function unpin(): void
     {
-        self::execute("UPDATE notes SET pinned = :val WHERE id = :id", ["val" => 0, "id" => $this->note_id]);
-        $this->order_notes();
-
+        $user = $this->owner;
+        if ($this->is_pinned($user) == 1) {
+            self::execute("UPDATE notes SET pinned = :val WHERE id = :id", ["val" => 0, "id" => $this->note_id]);
+            $this->order_notes();
+        }
     }
 
-    // récupérer nombre total de notes non archivées
-    public function get_all_notes_by_user($owner)
+    // récupérer nombre total de notes d'un user spécifique
+    public function get_all_notes_by_user($user)
     {
-        $dataSql = self::execute("SELECT id FROM notes WHERE owner = :user", ["user" => $owner]);
+        $dataSql = self::execute("SELECT id FROM notes WHERE owner = :user", ["user" => $user]);
         $data = $dataSql->fetchAll(PDO::FETCH_COLUMN, 0);
         return $data;
     }
@@ -131,14 +135,15 @@ abstract class Note extends Model
     // Donne poids négatif unique aux notes
     public function temporary_weights($array_id)
     {
+        $user = $this->owner;
         $notes = $array_id;
-        $nb = count($this->get_all_notes_by_user($this->owner));
+        $nb = count($this->get_all_notes_by_user($user));
         foreach ($notes as $note) {
             self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => ++$nb, "id" => $note]);
         }
     }
 
-    // Ordonnes les notes selon les règles métiers liées au poids (owner -> pin -> unpin -> ...)
+    // Ordonnes les notes selon les règles métiers liées au poids (owner -> pin -> unpin -> ...) à factoriser 
     public function order_notes()
 {
     // Récupérer toutes les notes de l'utilisateur
@@ -186,6 +191,30 @@ abstract class Note extends Model
         self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => $nb--, "id" => $note]);
     }
 }
+
+
+
+    // peut être nécessaire pour gérer ordre des unarchive
+    /*public function check_archived_order()
+    {
+        $user_id = $this->owner;
+        // Récupération des notes non archivées
+        if ($this->in_my_archives($user_id) == 1) {
+            // Si la note actuelle est archivée, la placer en tête de liste des archivées
+            self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => $nb--, "id" => $this->note_id]);
+            // Exclure la note actuelle de la liste des notes non épinglées
+            $dataSql = self::execute("SELECT id FROM notes WHERE archived = :archived AND id != :note_id ORDER BY weight DESC", ["archived" => 1, "note_id" => $this->note_id]);
+        } else {
+            // Récupérer toutes les notes archivées
+            $dataSql = self::execute("SELECT id FROM notes WHERE archived = :archived ORDER BY weight DESC", ["archived" => 1]);
+        }
+        $archived = $dataSql->fetchAll(PDO::FETCH_COLUMN, 0);
+
+        // Numéroter les notes archivées (en commençant par le plus grand poids)
+        foreach ($archived as $note) {
+            self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => $nb--, "id" => $note]);
+        }
+    }*/
 
 
     public function get_shared_users()
