@@ -608,6 +608,7 @@ class ControllerNote extends Controller
             $note_id = $_GET["param1"];
             $note = Note::get_note_by_id($note_id);
             $note->archive();
+            $note->unpin();
             $this->redirect("note", "open_note", $note_id);
         }
     }
