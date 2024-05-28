@@ -1,9 +1,8 @@
 <?php
 require_once "framework/Model.php";
 require_once "User.php";
-require_once "CheckListNoteItem.php";
 
-class CheckListNote extends Note
+class ChecklistNote extends Note
 {
 
     public function get_content(): array | null
@@ -54,4 +53,10 @@ class CheckListNote extends Note
     }
 
     public function update(){}
+
+    public function new(): void
+    {
+        self::execute("INSERT INTO `checklist_notes`(`id`) VALUES (:id)",
+        ["id"=> $this->note_id]);
+    }
 }
