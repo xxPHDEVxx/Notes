@@ -120,72 +120,51 @@ abstract class Note extends Model
 
     }
 
-    // récupérer tous les id en un tableau
-    public function get_every_notes_id(): array
+    // récupérer nombre total de notes non archivées
+    public function get_all_notes_by_user($owner)
     {
-        $dataSql = self::execute("SELECT id FROM notes", []);
-        $data = $dataSql->fetchAll(PDO::FETCH_COLUMN, 0);  // Récupérer toutes les valeurs de la colonne 'id'
-        return $data;
-    }
-
-    // récupérer nombre total de notes
-    public function get_all_notes()
-    {
-        $dataSql = self::execute("SELECT COUNT(*) FROM notes", []);
-        $data = $dataSql->fetchColumn();
-        return $data;
-    }
-
-    // récupérer id des notes pinned
-    public function get_pinned_notes()
-    {
-        $dataSql = self::execute("SELECT id FROM notes WHERE pinned = :val", ["val" => 1]);
-        $data = $dataSql->fetchAll(PDO::FETCH_COLUMN, 0);
-        return $data;
-    }
-
-    // récupérer id des notes unpinned
-    public function get_unpinned_notes()
-    {
-        $dataSql = self::execute("SELECT id FROM notes WHERE pinned = :val", ["val" => 0]);
+        $dataSql = self::execute("SELECT id FROM notes WHERE owner = :user", ["user" => $owner]);
         $data = $dataSql->fetchAll(PDO::FETCH_COLUMN, 0);
         return $data;
     }
 
     // Donne poids négatif unique aux notes
-    public function put_negative_weights()
+    public function temporary_weights($array_id)
     {
-        $notes = $this->get_every_notes_id();
-        $nb = -20;
+        $notes = $array_id;
+        $nb = count($this->get_all_notes_by_user($this->owner));
         foreach ($notes as $note) {
-            self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => $nb--, "id" => $note]);
+            self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => ++$nb, "id" => $note]);
         }
     }
 
-    // Modifie le poids des notes par odre d'importance (owner, pin, unpin, ...)
+    // Ordonnes les notes selon pin unpin règles, à corriger pour placer $this en tête de liste
     public function order_notes()
     {
 
-        // mettres les poids en négatif pour contraintes Bd
-        $this->put_negative_weights();
+        $notes = $this->get_all_notes_by_user($this->owner);
+        $this->temporary_weights($notes);
 
+        // récupération notes pin de l'owner
+        $user_id = $this->owner;
+        $dataSql = self::execute("SELECT id FROM notes WHERE pinned = :val AND owner = :user ORDER BY weight DESC", ["val" => 1, "user" => $user_id]);
+        $pinned = $dataSql->fetchAll(PDO::FETCH_COLUMN, 0);
+        
         // numéroter notes pin
-        $pinned = $this->get_pinned_notes();
-        $nb = $this->get_all_notes();
+        $nb = count($notes);
 
         foreach ($pinned as $note) {
             self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => $nb--, "id" => $note]);
-
         }
-
-        // numéroter notes pin
-        $unpinned = $this->get_unpinned_notes();
-
+        // récupération notes unpin de l'owner
+        $dataSql = self::execute("SELECT id FROM notes WHERE pinned = :val AND owner = :user ORDER BY weight DESC", ["val" => 0, "user" => $user_id]);
+        $unpinned = $dataSql->fetchAll(PDO::FETCH_COLUMN, 0);
+        
+        // numéroter notes unpin
         foreach ($unpinned as $note) {
             self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => $nb--, "id" => $note]);
         }
     }
-
 
     public function get_shared_users()
     {
