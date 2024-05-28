@@ -35,9 +35,9 @@
     <div id="pinned" class="view_notes_pinned_unpinned">
         <?php if (count($notes_pinned) != 0 || count($notes_unpinned) != 0): ?>
             <?php for ($i = 0; $i < count($notes_pinned); $i++): ?>
-                <div class="note">
-                    <p class="note-title"><?= $notes_pinned[$i]["title"]; ?></p>
-                    <a class="link-note-archivee" href='note/open_note/<?= $notes_pinned[$i]["id"]; ?>'>
+                <div class="note" id="note_<?= $notes_pinned[$i]["id"] ?>">
+                    <p class="note-title"><?= $notes_pinned[$i]["title"] ?></p>
+                    <a class="link-note-archivee" href='note/open_note/<?= $notes_pinned[$i]["id"] ?>'>
                         <div class="note-content">
                             <?php if ($notes_pinned[$i]["content"]): ?>
                                 <div class="content_text">
@@ -78,9 +78,9 @@
         <p class="title_note_unpinned">Others</p>
         <div id="unpinned" class="view_notes_pinned_unpinned">
             <?php for ($i = 0; $i < count($notes_unpinned); $i++): ?>
-                <div class="note">
+                <div class="note" id="note_<?= $notes_unpinned[$i]["id"] ?>">
                     <p class="note-title"><?= $notes_unpinned[$i]["title"]; ?></p>
-                    <a class="link-note-archivee" href='note/open_note/<?= $notes_unpinned[$i]["id"]; ?>'>
+                    <a class="link-note-archivee" href='note/open_note/<?= $notes_unpinned[$i]["id"] ?>'>
                         <div class="note-content">
                             <?php if ($notes_unpinned[$i]["content"]): ?>
                                 <div class="content_text">

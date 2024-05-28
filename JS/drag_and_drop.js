@@ -6,6 +6,8 @@ $(document).ready(function() {
         // Sérialisation de l'ordre des éléments et ajout des paramètres de mise à jour
         var order = sourceList.sortable("serialize") + '&update=update';
         order += '&source=' + sourceList.attr('id') + '&target=' + targetList.attr('id');
+        var movedItemId = ui.item.attr('id').split('_')[1]; // Extrait l'ID de l'élément déplacé
+        order += '&moved=' + movedItemId;
 
         // Envoi d'une requête AJAX pour mettre à jour l'ordre des éléments côté serveur
         $.ajax({

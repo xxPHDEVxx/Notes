@@ -169,9 +169,17 @@ class ControllerNote extends Controller
 
     public function drag_and_drop()
     {
-        if (isset($_POST['serialize'], $_POST['update'], $_POST['source'], $_POST['target'])) {
-            $array = $_POST['serialize'];
-            $pinned = $_POST['source'] == "pinned" ? 1 : 0;
+        if (isset($_POST['note'], $_POST['moved'], $_POST['update'], $_POST['source'], $_POST['target'])) {
+            $note_id = $_POST['moved'];
+            $note = Note::get_note_by_id($note_id);
+            $notes = $_POST['note'];
+            $target = $_POST['target'] == "pinned" ? 1 : 0;
+            echo($target);
+            $source = $_POST['source'] == "pinned" ? 1 : 0;
+            echo($source);
+            if ($target != $source) {
+                $target == 1 ? $note->pin() : $note->unpin();
+            }
         }
     }
 
