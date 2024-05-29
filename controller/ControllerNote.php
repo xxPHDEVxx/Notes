@@ -167,38 +167,71 @@ class ControllerNote extends Controller
         (new view("add_text_note"))->show();
     }
 
-    // à corriger
-    public function drag_and_drop()
+    function extractIdsFromString($string)
     {
-        if (isset($_POST['moved'], $_POST['update'], $_POST['source'], $_POST['target'])) {
-            $note_id = $_POST['moved'];
-            $note = Note::get_note_by_id($note_id);
-            // debug
-            if (isset($_POST['note'])) {
-                $notes = $_POST['note'];
-                for ($i = 0; $i < count($notes); $i++)
-                    echo ($_POST['note'][$i]);
-            }
-            echo (" / ");
-            //debug
-            if (isset($_POST['item'])) {
-                $notes_target = $_POST['item'];
-                for ($i = 0; $i < count($notes_target); $i++)
-                    echo ($notes_target[$i]);
-            }
-            $target = $_POST['target'] == "pinned" ? 1 : 0;
-            $source = $_POST['source'] == "pinned" ? 1 : 0;
+        // Initialiser un tableau pour stocker les IDs extraits
+        $ids = array();
 
-            if ($target != $source) {
-                $target == 1 ? $note->pin() : $note->unpin();
-            }
+        // Séparer la chaîne en éléments individuels en utilisant la virgule comme délimiteur
+        $elements = explode(",", $string);
 
-            if (isset($_POST['item']))
-                $note->new_order($notes_target);
-            if (isset($_POST['note']))
-                $note->new_order($notes);
+        // Parcourir chaque élément et extraire l'ID en supprimant le préfixe "note_"
+        foreach ($elements as $element) {
+            // Supprimer le préfixe "note_"
+            $id = substr($element, strpos($element, "_") + 1);
+
+            // Ajouter l'ID à notre tableau d'IDs
+            $ids[] = $id;
+        }
+
+        // Retourner le tableau d'IDs extraits
+        return $ids;
+    }
+
+    public function drag_and_drop()
+{
+    // Vérifie si les données nécessaires sont présentes dans la requête POST
+    if (
+        isset(
+            $_POST['moved'],
+            $_POST['update'],
+            $_POST['source'],
+            $_POST['target'],
+            $_POST['sourceItems'],
+            $_POST['targetItems']
+        )
+    ) {
+        // Récupère l'ID de la note déplacée
+        $note_id = $_POST['moved'];
+
+        // Récupère l'objet de la note à partir de l'ID
+        $note = Note::get_note_by_id($note_id);
+
+        // Extrait les IDs des éléments source et target à partir des chaînes JSON
+        $source_ids = $this->extractIdsFromString($_POST['sourceItems']);
+        $target_ids = $this->extractIdsFromString($_POST['targetItems']);
+
+        // Détermine si la cible est "pinned" ou "unpinned"
+        $target = $_POST['target'] == "pinned" ? 1 : 0;
+
+        // Détermine si la source est "pinned" ou "unpinned"
+        $source = $_POST['source'] == "pinned" ? 1 : 0;
+
+        // Si la cible est différente de la source, effectue l'opération de "pin" ou "unpin"
+        if ($target != $source) {
+            // Si la cible est "pinned", épingle la note, sinon désépingle la note
+            $target == 1 ? $note->pin() : $note->unpin();
+            // Met à jour l'ordre des notes dans les listes source et target
+            $note->new_order($source_ids);
+            $note->new_order($target_ids);
+        } else {
+            // Si la cible est égale à la source, met simplement à jour l'ordre dans la source
+            $note->new_order($source_ids);
         }
     }
+}
+
+
 
     public function add_checklist_note()
     {
@@ -704,7 +737,7 @@ class ControllerNote extends Controller
                 $note = Note::get_note_by_id($note_id);
                 if ($note->validate_title_service($title) != null)
                     $title_error = $note->validate_title_service($title)[0];
-            } else{
+            } else {
                 if (Note::validate_new_title_service($title) != null)
                     $title_error = Note::validate_new_title_service($title)[0];
             }

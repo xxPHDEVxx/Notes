@@ -1,17 +1,23 @@
 $(document).ready(function () {
-    // Cette fonction est exécutée lorsque le DOM est complètement chargé
+    // Ces fonctions sont exécutées lorsque le DOM est complètement chargé
 
+    function serializeList(list) {
+        return list.sortable("toArray", { attribute: "id" });
+    }
     // Fonction pour gérer la mise à jour de l'ordre des éléments
     function updateOrder(event, ui, sourceList, targetList) {
         // Sérialisation de l'ordre des éléments et ajout des paramètres de mise à jour
-        var order = sourceList.sortable("serialize") + '&update=update';
-        order += '&source=' + sourceList.attr('id') + '&target=' + targetList.attr('id');
-        var movedItemId = ui.item.attr('id').split('_')[1]; // Extrait l'ID de l'élément déplacé
-        order += '&moved=' + movedItemId;
 
-        if (sourceList.attr('id') !== targetList.attr('id')) {
-            order += '&' + targetList.sortable("serialize");
-        }
+        let sourceItems = serializeList(sourceList);
+        let targetItems = serializeList(targetList);
+        let movedItemId = ui.item.attr('id').split('_')[1]; // Extrait l'ID de l'élément déplacé
+        let order = sourceList.sortable("serialize") + '&update=update';
+        
+        order += '&source=' + sourceList.attr('id');
+        order += '&target=' + targetList.attr('id');
+        order += '&moved=' + movedItemId;
+        order += '&sourceItems=' + sourceItems;
+        order += '&targetItems=' + targetItems;
 
         // Envoi d'une requête AJAX pour mettre à jour l'ordre des éléments côté serveur
         $.ajax({
@@ -29,22 +35,14 @@ $(document).ready(function () {
     }
 
     // Activation de la fonctionnalité de tri pour la liste "pinned"
-    $("#pinned").sortable({
-        connectWith: "#unpinned", // Permet de connecter cette liste avec la liste "unpinned"
-        update: function (event, ui) { // Cette fonction est appelée lorsque l'ordre des éléments est mis à jour
-            var sourceList = ui.sender ? ui.sender : $(this);
-            var targetList = $(this);
+    $("#pinned, #unpinned").sortable({
+        connectWith: "#unpinned, #pinned",
+        start: function (event, ui) {
+            sourceList = ui.item.parent();
+        },
+        update: function (event, ui) {
+            targetList = ui.item.parent();
             updateOrder(event, ui, sourceList, targetList);
         }
-    });
-
-    // Activation de la fonctionnalité de tri pour la liste "unpinned"
-    $("#unpinned").sortable({
-        connectWith: "#pinned", // Permet de connecter cette liste avec la liste "pinned"
-        update: function (event, ui) { // Cette fonction est appelée lorsque l'ordre des éléments est mis à jour
-            var sourceList = ui.sender ? ui.sender : $(this);
-            var targetList = $(this);
-            updateOrder(event, ui, sourceList, targetList);
-        }
-    });
+    }).disableSelection();
 });
