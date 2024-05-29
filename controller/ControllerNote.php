@@ -167,19 +167,36 @@ class ControllerNote extends Controller
         (new view("add_text_note"))->show();
     }
 
+    // à corriger
     public function drag_and_drop()
     {
-        if (isset($_POST['note'], $_POST['moved'], $_POST['update'], $_POST['source'], $_POST['target'])) {
+        if (isset($_POST['moved'], $_POST['update'], $_POST['source'], $_POST['target'])) {
             $note_id = $_POST['moved'];
             $note = Note::get_note_by_id($note_id);
-            $notes = $_POST['note'];
+            // debug
+            if (isset($_POST['note'])) {
+                $notes = $_POST['note'];
+                for ($i = 0; $i < count($notes); $i++)
+                    echo ($_POST['note'][$i]);
+            }
+            echo (" / ");
+            //debug
+            if (isset($_POST['item'])) {
+                $notes_target = $_POST['item'];
+                for ($i = 0; $i < count($notes_target); $i++)
+                    echo ($notes_target[$i]);
+            }
             $target = $_POST['target'] == "pinned" ? 1 : 0;
-            echo($target);
             $source = $_POST['source'] == "pinned" ? 1 : 0;
-            echo($source);
+
             if ($target != $source) {
                 $target == 1 ? $note->pin() : $note->unpin();
             }
+
+            if (isset($_POST['item']))
+                $note->new_order($notes_target);
+            if (isset($_POST['note']))
+                $note->new_order($notes);
         }
     }
 

@@ -78,7 +78,7 @@
         <p class="title_note_unpinned">Others</p>
         <div id="unpinned" class="view_notes_pinned_unpinned">
             <?php for ($i = 0; $i < count($notes_unpinned); $i++): ?>
-                <div class="note" id="note_<?= $notes_unpinned[$i]["id"] ?>">
+                <div class="note" id="item_<?= $notes_unpinned[$i]["id"] ?>">
                     <p class="note-title"><?= $notes_unpinned[$i]["title"]; ?></p>
                     <a class="link-note-archivee" href='note/open_note/<?= $notes_unpinned[$i]["id"] ?>'>
                         <div class="note-content">
