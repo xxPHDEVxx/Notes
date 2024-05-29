@@ -19,8 +19,7 @@
     <form method="post" action="note/edit_checklist/<?= $note_id ?>">
         <div class="edit">
             <a class="back" href="note/open_note/<?= $note_id ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
-
-            <button class="save" type="submit"><span class="material-symbols-outlined">save</span></button>
+            <button class="save" type="submit" name = "save"><span class="material-symbols-outlined">save</span></button>
         </div>
         <div class="dates">Created <?= $created ?><?= ($edited ? " Edited " . $edited : " Not edited yet") ?></div>
         <div class="container_edit">
@@ -41,10 +40,11 @@
 
                         <input type="hidden" name="remove" value="<?= $id ?>">
                         <button type="submit" name="delete" value="<?= $id ?>" class="icone-delete">-</button>
-                        <?php if (!empty($errors["item_$id"])) : ?>
-                                <p class="text-danger"><?= $errors["item_$id"] ?></p>
-                            <?php endif; ?>
                     </div>
+                    <?php if (!empty($errors["item_$id"])) :  ?>
+                            <p class="text-danger"><?= $errors["item_$id"] ?></p>
+                        <?php 
+                    endif; ?>
                 <?php endforeach; ?>
                 <label for="new">New item</label>
                 <div class="edit_checklist_form">

@@ -314,7 +314,8 @@ class ControllerNote extends Controller
     {
         $user = $this->get_user_or_redirect();
         $errors = [];
-        $items_edit = [];
+        $errorsItem = [];
+        $edit_item = [];
 
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = Tools::sanitize($_GET["param1"]);
@@ -340,7 +341,7 @@ class ControllerNote extends Controller
                 $title = Tools::sanitize($_POST["title"]);
                 $note = Note::get_note_by_id($note_id);
                 $note->title = $title;
-                $errors["title"] = $note->validate_title();
+                $errors["title"] = implode($note->validate_title());
             }
 
 
@@ -376,27 +377,36 @@ class ControllerNote extends Controller
                     exit;
                 }
             }
+        }
+        if (isset($_POST["save"])) {
             //action edit item 
             // Vérification des éléments
             if (isset($_POST['items'])) {
                 foreach ($_POST['items'] as $key => $item) {
                     $checklistItem = CheckListNoteItem::get_item_by_id($key);
                     $checklistItem->content = $item;
+                    if (!$checklistItem->is_unique()) {
+                        $errorsItem["item_$key"] = "item must be unique";
+                    }
                     $contentErrors = $checklistItem->validate_item();
-                    $checklistItem->persist();
+                    if (!empty($contentErrors)) {
+                        $errorsItem["item_$key"] = implode("; ", $contentErrors);
+                    }
+                    if (empty($errorsItem["item_$key"])) {
+                        $checklistItem->persist();
+                    }
                 }
+            }   
+            $errors = array_merge($errors, $errorsItem);
+            if (empty($errors["title"]) ) {
+                $note->persist();
                 $this->redirect("note", "open_note", $note->note_id);
-
             }
-        }
-        if (empty($errors["title"]) && $_POST == $note->title) {
-            $note->persist();
-            $this->redirect("note", "open_note", $note->note_id);
         }
 
         (new View("edit_checklist_note"))->show([
             "note" => $note,
-            "note_id" => $note_id,
+            "note_id" => $note_id,  
             "created" => $this->get_created_time($note_id),
             "edited" => $this->get_edited_time($note_id),
             "archived" => $archived,
@@ -404,7 +414,7 @@ class ControllerNote extends Controller
             "is_shared_as_reader" => $is_shared_as_reader,
             "content" => $body,
             "pinned" => $pinned,
-            "user_id" => $user_id, "errors" => $errors
+            "user_id" => $user_id, "errors" => $errors, "errors_item" => $errorsItem
         ]);
     }
 
