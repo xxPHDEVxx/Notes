@@ -1,18 +1,21 @@
 $(document).ready(function () {
-    // Ces fonctions sont exécutées lorsque le DOM est complètement chargé
 
+    // Rendre les footers invisibles (utiles qu'en php only)
+    $(".card-footer").hide();
+
+    // Fonction pour sérialiser une liste d'éléments
     function serializeList(list) {
         return list.sortable("toArray", { attribute: "id" });
     }
-    // Fonction pour gérer la mise à jour de l'ordre des éléments
-    function updateOrder(event, ui, sourceList, targetList) {
-        // Sérialisation de l'ordre des éléments et ajout des paramètres de mise à jour
 
+    // Fonction pour mettre à jour l'ordre des éléments et les inputs "up" et "down"
+    function updateOrder(event, ui, sourceList, targetList) {
+        // Sérialisation de l'ordre des éléments
         let sourceItems = serializeList(sourceList);
         let targetItems = serializeList(targetList);
         let movedItemId = ui.item.attr('id').split('_')[1]; // Extrait l'ID de l'élément déplacé
         let order = sourceList.sortable("serialize") + '&update=update';
-        
+
         order += '&source=' + sourceList.attr('id');
         order += '&target=' + targetList.attr('id');
         order += '&moved=' + movedItemId;
@@ -34,7 +37,7 @@ $(document).ready(function () {
         });
     }
 
-    // Activation de la fonctionnalité de tri pour la liste "pinned"
+    // Activation de la fonctionnalité de tri pour les listes "pinned" et "unpinned"
     $("#pinned, #unpinned").sortable({
         connectWith: "#unpinned, #pinned",
         start: function (event, ui) {
@@ -44,5 +47,5 @@ $(document).ready(function () {
             targetList = ui.item.parent();
             updateOrder(event, ui, sourceList, targetList);
         }
-    }).disableSelection();
+    }).disableSelection(); // Désactivation de la sélection pour éviter les problèmes lors du déplacement
 });
