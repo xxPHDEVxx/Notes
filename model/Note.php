@@ -381,6 +381,60 @@ abstract class Note extends Model
         return $errors;
     }
 
+    public function validate_title_service($title)
+    {
+        $errors = [];
+        $minLength = Configuration::get('title_min_length');
+        $maxLength = Configuration::get('title_max_length');
+
+        // Vérifie la longueur du titre
+        if (strlen($title) < $minLength) {
+            $errors[] = "Le titre doit contenir au minimum 3 caractères";
+        }
+
+        if (strlen($title) > $maxLength) {
+            $errors[] = "Le titre doit contenir au maximum 25 caractères.";
+        }
+
+        // Vérifie si le titre est unique pour cet utilisateur
+        $query = self::execute("SELECT COUNT(*) FROM notes WHERE title = :title AND owner = :owner AND id != :id", [
+            'title' => $title,
+            'owner' => $this->owner,
+            'id' => $this->note_id ?? 0
+        ]);
+        if ($query->fetchColumn() > 0) {
+            $errors[] = "Une autre note avec le même titre existe déjà.";
+        }
+
+        return $errors;
+    }
+
+    public static function validate_new_title_service($title)
+    {
+        $errors = [];
+        $minLength = Configuration::get('title_min_length');
+        $maxLength = Configuration::get('title_max_length');
+
+        // Vérifie la longueur du titre
+        if (strlen($title) < $minLength) {
+            $errors[] = "Le titre doit contenir au minimum 3 caractères";
+        }
+
+        if (strlen($title) > $maxLength) {
+            $errors[] = "Le titre doit contenir au maximum 25 caractères.";
+        }
+
+        // Vérifie si le titre est unique pour cet utilisateur
+        $query = self::execute("SELECT COUNT(*) FROM notes WHERE title = :title", [
+            'title' => $title,
+        ]);
+        if ($query->fetchColumn() > 0) {
+            $errors[] = "Une autre note avec le même titre existe déjà.";
+        }
+
+        return $errors;
+    }
+
     public function validate_content()
     {
         $minLength = Configuration::get('description_min_length');
@@ -396,6 +450,20 @@ abstract class Note extends Model
         return $errors;
     }
 
+    public static function validate_content_service($content)
+{
+        $minLength = Configuration::get('description_min_length');
+        $maxLength = Configuration::get('description_max_length');
+        $errors = [];
+        $contentLength = strlen($content);
+
+        // Vérifie que le contenu est soit vide, soit entre minLength et maxLength caractères
+        if (($contentLength > 0 && $contentLength < $minLength) || $contentLength > $maxLength) {
+            $errors[] = "Le contenu de la note doit contenir 5 et 800 caractères ou être vide.";
+        }
+
+        return $errors;
+}
 
 
 

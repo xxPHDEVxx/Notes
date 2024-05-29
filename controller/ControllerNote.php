@@ -511,6 +511,7 @@ class ControllerNote extends Controller
         }
 
         (new View("add_text_note"))->show([
+            'note' => $note,
             'user' => $user,
             'errors' => $errors,
             'title' => $title,
@@ -691,5 +692,38 @@ class ControllerNote extends Controller
         ];
 
         $view->show($data);
+    }
+
+    public function check_title_service()
+    {
+        $title_error = "";
+        if (isset($_POST['title'])) {
+            $title = $_POST['title'];
+            if ($_POST['note'] != null) {
+                $note_id = (int) str_replace("&quot;", "", $_POST["note"]);
+                $note = Note::get_note_by_id($note_id);
+                if ($note->validate_title_service($title) != null)
+                    $title_error = $note->validate_title_service($title)[0];
+            } else{
+                if (Note::validate_new_title_service($title) != null)
+                    $title_error = Note::validate_new_title_service($title)[0];
+            }
+            if (!empty($title_error)) {
+                echo $title_error;
+            }
+        }
+    }
+
+    public function check_content_service()
+    {
+        $content_error = "";
+        if (isset($_POST['content'])) {
+            $content = $_POST['content'];
+            if (Note::validate_content_service($content) != null)
+                $content_error = Note::validate_content_service($content)[0];
+            if (!empty($content_error)) {
+                echo $content_error;
+            }
+        }
     }
 }
