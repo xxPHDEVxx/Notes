@@ -167,20 +167,71 @@ class ControllerNote extends Controller
         (new view("add_text_note"))->show();
     }
 
-    public function drag_and_drop()
+    function extractIdsFromString($string)
     {
+        // Initialiser un tableau pour stocker les IDs extraits
+        $ids = array();
 
-        if (isset($_POST['arrayorder'], $_POST['update'])) {
-            $array = $_POST['arrayorder'];
-            if ($_POST['update'] == "update") {
-                $count = 1;
-                foreach ($array as $idval) {
-                    Note::update_drag_and_drop($count, $idval);
-                    $count++;
-                }
-            }
+        // Séparer la chaîne en éléments individuels en utilisant la virgule comme délimiteur
+        $elements = explode(",", $string);
+
+        // Parcourir chaque élément et extraire l'ID en supprimant le préfixe "note_"
+        foreach ($elements as $element) {
+            // Supprimer le préfixe "note_"
+            $id = substr($element, strpos($element, "_") + 1);
+
+            // Ajouter l'ID à notre tableau d'IDs
+            $ids[] = $id;
+        }
+
+        // Retourner le tableau d'IDs extraits
+        return $ids;
+    }
+
+    public function drag_and_drop()
+{
+    // Vérifie si les données nécessaires sont présentes dans la requête POST
+    if (
+        isset(
+            $_POST['moved'],
+            $_POST['update'],
+            $_POST['source'],
+            $_POST['target'],
+            $_POST['sourceItems'],
+            $_POST['targetItems']
+        )
+    ) {
+        // Récupère l'ID de la note déplacée
+        $note_id = $_POST['moved'];
+
+        // Récupère l'objet de la note à partir de l'ID
+        $note = Note::get_note_by_id($note_id);
+
+        // Extrait les IDs des éléments source et target à partir des chaînes JSON
+        $source_ids = $this->extractIdsFromString($_POST['sourceItems']);
+        $target_ids = $this->extractIdsFromString($_POST['targetItems']);
+
+        // Détermine si la cible est "pinned" ou "unpinned"
+        $target = $_POST['target'] == "pinned" ? 1 : 0;
+
+        // Détermine si la source est "pinned" ou "unpinned"
+        $source = $_POST['source'] == "pinned" ? 1 : 0;
+
+        // Si la cible est différente de la source, effectue l'opération de "pin" ou "unpin"
+        if ($target != $source) {
+            // Si la cible est "pinned", épingle la note, sinon désépingle la note
+            $target == 1 ? $note->pin() : $note->unpin();
+            // Met à jour l'ordre des notes dans les listes source et target
+            $note->new_order($source_ids);
+            $note->new_order($target_ids);
+        } else {
+            // Si la cible est égale à la source, met simplement à jour l'ordre dans la source
+            $note->new_order($source_ids);
         }
     }
+}
+
+
 
     public function add_checklist_note()
     {
@@ -493,6 +544,7 @@ class ControllerNote extends Controller
         }
 
         (new View("add_text_note"))->show([
+            'note' => $note,
             'user' => $user,
             'errors' => $errors,
             'title' => $title,
@@ -673,5 +725,38 @@ class ControllerNote extends Controller
         ];
 
         $view->show($data);
+    }
+
+    public function check_title_service()
+    {
+        $title_error = "";
+        if (isset($_POST['title'])) {
+            $title = $_POST['title'];
+            if ($_POST['note'] != null) {
+                $note_id = (int) str_replace("&quot;", "", $_POST["note"]);
+                $note = Note::get_note_by_id($note_id);
+                if ($note->validate_title_service($title) != null)
+                    $title_error = $note->validate_title_service($title)[0];
+            } else {
+                if (Note::validate_new_title_service($title) != null)
+                    $title_error = Note::validate_new_title_service($title)[0];
+            }
+            if (!empty($title_error)) {
+                echo $title_error;
+            }
+        }
+    }
+
+    public function check_content_service()
+    {
+        $content_error = "";
+        if (isset($_POST['content'])) {
+            $content = $_POST['content'];
+            if (Note::validate_content_service($content) != null)
+                $content_error = Note::validate_content_service($content)[0];
+            if (!empty($content_error)) {
+                echo $content_error;
+            }
+        }
     }
 }

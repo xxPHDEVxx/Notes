@@ -315,6 +315,7 @@ h2 {
   top: 3px;
   position: relative;
   left: 2%;
+  min-height: 100px; /* Définissez la hauteur minimale selon vos besoins */
 }
 
 .view_notes_header {

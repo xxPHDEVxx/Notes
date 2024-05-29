@@ -35,9 +35,9 @@
     <div id="pinned" class="view_notes_pinned_unpinned">
         <?php if (count($notes_pinned) != 0 || count($notes_unpinned) != 0): ?>
             <?php for ($i = 0; $i < count($notes_pinned); $i++): ?>
-                <div class="note">
-                    <p class="note-title"><?= $notes_pinned[$i]["title"]; ?></p>
-                    <a class="link-note-archivee" href='note/open_note/<?= $notes_pinned[$i]["id"]; ?>'>
+                <div class="note" id="note_<?= $notes_pinned[$i]["id"] ?>">
+                    <p class="note-title"><?= $notes_pinned[$i]["title"] ?></p>
+                    <a class="link-note-archivee" href='note/open_note/<?= $notes_pinned[$i]["id"] ?>'>
                         <div class="note-content">
                             <?php if ($notes_pinned[$i]["content"]): ?>
                                 <div class="content_text">
@@ -78,9 +78,9 @@
         <p class="title_note_unpinned">Others</p>
         <div id="unpinned" class="view_notes_pinned_unpinned">
             <?php for ($i = 0; $i < count($notes_unpinned); $i++): ?>
-                <div class="note">
+                <div class="note" id="item_<?= $notes_unpinned[$i]["id"] ?>">
                     <p class="note-title"><?= $notes_unpinned[$i]["title"]; ?></p>
-                    <a class="link-note-archivee" href='note/open_note/<?= $notes_unpinned[$i]["id"]; ?>'>
+                    <a class="link-note-archivee" href='note/open_note/<?= $notes_unpinned[$i]["id"] ?>'>
                         <div class="note-content">
                             <?php if ($notes_unpinned[$i]["content"]): ?>
                                 <div class="content_text">
@@ -136,13 +136,14 @@
 
 
     </footer>
+    <script src="JS/drag_and_drop.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
         integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
         integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
         crossorigin="anonymous"></script>
-    <script src="JS/drag_drop.js"></script>
+
 </body>
 
 </html>

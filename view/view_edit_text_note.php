@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit note "<?= $note->title ?>"</title>
+    <title>Edit note</title>
     <base href="<?= $web_root ?>">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
@@ -57,9 +57,9 @@
     </form>
 
     <?php include ("view_modal.php"); ?>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script>
-        var userId = <?= json_encode($note->owner); ?>;
-        console.log(userId); // Pour vérifier que la valeur est correctement passée
+        var note = <?= json_encode($note_id) ?>;
     </script>
     <script src="JS/edit_errors.js"></script>
     <script src="JS/confirmation_edit_text.js"></script>

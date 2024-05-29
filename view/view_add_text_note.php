@@ -21,9 +21,8 @@
 <body>
     <form method="post" action="note/save_add_text_note">
         <div class="add_header">
-            <a class="back" href="note/index"><span
-                    class="material-symbols-outlined">arrow_back_ios</span></a>
-            <button class="save" type="submit"><span class="material-symbols-outlined">save</span></button>
+            <a class="back" href="note/index"><span class="material-symbols-outlined">arrow_back_ios</span></a>
+            <button class="save" type="submit" id="saveButton"><span class="material-symbols-outlined">save</span></button>
         </div>
         <div class="dates">Today's Date: <?= date("Y-m-d H:i:s") ?></div>
         <div class="container add_checklist">
@@ -59,11 +58,8 @@
 
 
 
-
-    <script>
-        var userId = <?= json_encode($note->owner); ?>;
-        console.log(userId); // Pour vérifier que la valeur est correctement passée
-    </script>
+    <script>var note = <?= json_encode($note_id) ?></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="JS/edit_errors.js"></script>
 </body>
 

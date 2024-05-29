@@ -143,54 +143,92 @@ abstract class Note extends Model
         }
     }
 
+    // Fonction pour trier les poids en ordre décroissant
+    function sort_weights_desc($weights)
+    {
+        $n = count($weights);
+        // Boucle externe pour chaque élément du tableau
+        for ($i = 0; $i < $n - 1; $i++) {
+            // Boucle interne pour les comparaisons successives
+            for ($j = 0; $j < $n - $i - 1; $j++) {
+                // Comparaison et échange si nécessaire
+                if ($weights[$j] < $weights[$j + 1]) {
+                    $stack = $weights[$j];
+                    $weights[$j] = $weights[$j + 1];
+                    $weights[$j + 1] = $stack;
+                }
+            }
+        }
+        return $weights;
+    }
+
+    public function new_order($new_order)
+    {
+        $i = 0;
+        foreach ($new_order as $id) {
+            $dataSql = self::execute("SELECT weight FROM notes WHERE id = :id", ["id" => $id]);
+            $weights[$i] = $dataSql->fetchColumn();
+            $i++;
+        }
+        $new_weights = $this->sort_weights_desc($weights);
+        $this->temporary_weights($new_order);
+
+        $i = 0;
+        foreach ($new_order as $id) {
+            self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["id" => $id, "val" => $new_weights[$i]]);
+            $i++;
+        }
+
+    }
+
     // Ordonnes les notes selon les règles métiers liées au poids (owner -> pin -> unpin -> ...) à factoriser 
     public function order_notes()
-{
-    // Récupérer toutes les notes de l'utilisateur
-    $notes = $this->get_all_notes_by_user($this->owner);
-    // Appliquer des poids temporaires aux notes
-    $this->temporary_weights($notes);
-    // Initialiser le compteur de poids
-    $nb = count($notes);
-    // Identifiant de l'utilisateur
-    $user_id = $this->owner;
+    {
+        // Récupérer toutes les notes de l'utilisateur
+        $notes = $this->get_all_notes_by_user($this->owner);
+        // Appliquer des poids temporaires aux notes
+        $this->temporary_weights($notes);
+        // Initialiser le compteur de poids
+        $nb = count($notes);
+        // Identifiant de l'utilisateur
+        $user_id = $this->owner;
 
-    // Récupération des notes épinglées de l'utilisateur
-    if ($this->is_pinned($user_id) == 1) {
-        // Si la note actuelle est épinglée, la placer en tête de liste
-        self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => $nb--, "id" => $this->note_id]);
-        // Exclure la note actuelle de la liste des notes épinglées
-        $dataSql = self::execute("SELECT id FROM notes WHERE pinned = :val AND owner = :user AND id != :note_id ORDER BY weight DESC", ["val" => 1, "user" => $user_id, "note_id" => $this->note_id]);
-    } else {
-        // Récupérer toutes les notes épinglées de l'utilisateur
-        $dataSql = self::execute("SELECT id FROM notes WHERE pinned = :val AND owner = :user ORDER BY weight DESC", ["val" => 1, "user" => $user_id]);
-    }
-    // Récupérer les notes épinglées
-    $pinned = $dataSql->fetchAll(PDO::FETCH_COLUMN, 0);
+        // Récupération des notes épinglées de l'utilisateur
+        if ($this->is_pinned($user_id) == 1) {
+            // Si la note actuelle est épinglée, la placer en tête de liste
+            self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => $nb--, "id" => $this->note_id]);
+            // Exclure la note actuelle de la liste des notes épinglées
+            $dataSql = self::execute("SELECT id FROM notes WHERE pinned = :val AND owner = :user AND id != :note_id ORDER BY weight DESC", ["val" => 1, "user" => $user_id, "note_id" => $this->note_id]);
+        } else {
+            // Récupérer toutes les notes épinglées de l'utilisateur
+            $dataSql = self::execute("SELECT id FROM notes WHERE pinned = :val AND owner = :user ORDER BY weight DESC", ["val" => 1, "user" => $user_id]);
+        }
+        // Récupérer les notes épinglées
+        $pinned = $dataSql->fetchAll(PDO::FETCH_COLUMN, 0);
 
-    // Numéroter les notes épinglées (en commençant par le plus grand poids)
-    foreach ($pinned as $note) {
-        self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => $nb--, "id" => $note]);
-    }
+        // Numéroter les notes épinglées (en commençant par le plus grand poids)
+        foreach ($pinned as $note) {
+            self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => $nb--, "id" => $note]);
+        }
 
-    // Récupération des notes non épinglées de l'utilisateur
-    if ($this->is_pinned($user_id) == 0) {
-        // Si la note actuelle n'est pas épinglée, la placer en tête de liste
-        self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => $nb--, "id" => $this->note_id]);
-        // Exclure la note actuelle de la liste des notes non épinglées
-        $dataSql = self::execute("SELECT id FROM notes WHERE pinned = :val AND owner = :user AND id != :note_id ORDER BY weight DESC", ["val" => 0, "user" => $user_id, "note_id" => $this->note_id]);
-    } else {
-        // Récupérer toutes les notes non épinglées de l'utilisateur
-        $dataSql = self::execute("SELECT id FROM notes WHERE pinned = :val AND owner = :user ORDER BY weight DESC", ["val" => 0, "user" => $user_id]);
-    }
-    // Récupérer les notes non épinglées
-    $unpinned = $dataSql->fetchAll(PDO::FETCH_COLUMN, 0);
+        // Récupération des notes non épinglées de l'utilisateur
+        if ($this->is_pinned($user_id) == 0) {
+            // Si la note actuelle n'est pas épinglée, la placer en tête de liste
+            self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => $nb--, "id" => $this->note_id]);
+            // Exclure la note actuelle de la liste des notes non épinglées
+            $dataSql = self::execute("SELECT id FROM notes WHERE pinned = :val AND owner = :user AND id != :note_id ORDER BY weight DESC", ["val" => 0, "user" => $user_id, "note_id" => $this->note_id]);
+        } else {
+            // Récupérer toutes les notes non épinglées de l'utilisateur
+            $dataSql = self::execute("SELECT id FROM notes WHERE pinned = :val AND owner = :user ORDER BY weight DESC", ["val" => 0, "user" => $user_id]);
+        }
+        // Récupérer les notes non épinglées
+        $unpinned = $dataSql->fetchAll(PDO::FETCH_COLUMN, 0);
 
-    // Numéroter les notes non épinglées (en commençant par le plus grand poids)
-    foreach ($unpinned as $note) {
-        self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => $nb--, "id" => $note]);
+        // Numéroter les notes non épinglées (en commençant par le plus grand poids)
+        foreach ($unpinned as $note) {
+            self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => $nb--, "id" => $note]);
+        }
     }
-}
 
 
 
@@ -343,6 +381,60 @@ abstract class Note extends Model
         return $errors;
     }
 
+    public function validate_title_service($title)
+    {
+        $errors = [];
+        $minLength = Configuration::get('title_min_length');
+        $maxLength = Configuration::get('title_max_length');
+
+        // Vérifie la longueur du titre
+        if (strlen($title) < $minLength) {
+            $errors[] = "Le titre doit contenir au minimum 3 caractères";
+        }
+
+        if (strlen($title) > $maxLength) {
+            $errors[] = "Le titre doit contenir au maximum 25 caractères.";
+        }
+
+        // Vérifie si le titre est unique pour cet utilisateur
+        $query = self::execute("SELECT COUNT(*) FROM notes WHERE title = :title AND owner = :owner AND id != :id", [
+            'title' => $title,
+            'owner' => $this->owner,
+            'id' => $this->note_id ?? 0
+        ]);
+        if ($query->fetchColumn() > 0) {
+            $errors[] = "Une autre note avec le même titre existe déjà.";
+        }
+
+        return $errors;
+    }
+
+    public static function validate_new_title_service($title)
+    {
+        $errors = [];
+        $minLength = Configuration::get('title_min_length');
+        $maxLength = Configuration::get('title_max_length');
+
+        // Vérifie la longueur du titre
+        if (strlen($title) < $minLength) {
+            $errors[] = "Le titre doit contenir au minimum 3 caractères";
+        }
+
+        if (strlen($title) > $maxLength) {
+            $errors[] = "Le titre doit contenir au maximum 25 caractères.";
+        }
+
+        // Vérifie si le titre est unique pour cet utilisateur
+        $query = self::execute("SELECT COUNT(*) FROM notes WHERE title = :title", [
+            'title' => $title,
+        ]);
+        if ($query->fetchColumn() > 0) {
+            $errors[] = "Une autre note avec le même titre existe déjà.";
+        }
+
+        return $errors;
+    }
+
     public function validate_content()
     {
         $minLength = Configuration::get('description_min_length');
@@ -358,6 +450,20 @@ abstract class Note extends Model
         return $errors;
     }
 
+    public static function validate_content_service($content)
+{
+        $minLength = Configuration::get('description_min_length');
+        $maxLength = Configuration::get('description_max_length');
+        $errors = [];
+        $contentLength = strlen($content);
+
+        // Vérifie que le contenu est soit vide, soit entre minLength et maxLength caractères
+        if (($contentLength > 0 && $contentLength < $minLength) || $contentLength > $maxLength) {
+            $errors[] = "Le contenu de la note doit contenir 5 et 800 caractères ou être vide.";
+        }
+
+        return $errors;
+}
 
 
 
