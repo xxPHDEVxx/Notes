@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit note</title>
+    <title>Edit note </title>
     <base href="<?= $web_root ?>">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
@@ -19,15 +19,15 @@
 </head>
 
 <body>
-    <form method="post" action="note/save_edit_text_note/<?= $note_id ?>">
+    <form method="post" class="edit_text_note_form" action="note/save_edit_text_note/<?= $note_id ?>">
         <div class="edit">
             <a class="back" href="note/index"><span class="material-symbols-outlined">arrow_back_ios</span></a>
             <button class="save" type="submit" id="saveButton"><span
                     class="material-symbols-outlined">save</span></button>
         </div>
-        <div class="dates">Created <?= $created ?><?= ($edited ? " Edited " . $edited : " Not edited yet") ?></div>
-        <div class="container add_checklist">
-            <div class="mb-3">
+        <div class="edit_text_note_date">Created <?= $created ?><?= ($edited ? " Edited " . $edited : " Not edited yet") ?></div>
+        <div>
+            <div class="text_note_form_items">
                 <label for="title">Title</label>
                 <input type="text" id="title" name="title" class="form-control title_add" value="<?= $note->title ?>">
                 <span id="titleError" class="text-danger" style="display: none;"></span>
@@ -39,7 +39,7 @@
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>
-            <div class="mb-3">
+            <div class="text_note_form_items" >
                 <label for="content">Text</label>
                 <textarea class="form-control title_add" id="content" name="content"><?= $content ?></textarea>
                 <span id="contentError" class="text-danger" style="display: none;"></span>

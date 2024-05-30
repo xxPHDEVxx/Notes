@@ -18,8 +18,8 @@
     <div class="title">
         <h1>Settings</h1>
     </div>
-    <div id="settings_div">
-        <h2>Hey <?= $user->full_name ?> ! </h2>
+    <div>
+        <h2>Hey <?= $user->full_name ?></h2>
     </div>
     <div class="menu_settings">
         <a href="settings/edit_profile"><i class="fas fa-pen"></i>Edit Profile</a>
