@@ -50,6 +50,16 @@ class NoteLabel extends Model
         return $errors;
     }
 
+    public function persist() {
+        self::execute(
+            "INSERT INTO note_labels (note, label) VALUES (:note,:label)",
+            [
+                "note" => $this->note,
+                "label" => $this->label
+            ]
+        );
+        
+    }
 
 }
 

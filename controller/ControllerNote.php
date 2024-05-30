@@ -6,6 +6,7 @@ require_once "framework/View.php";
 require_once "model/User.php";
 require_once "framework/Tools.php";
 require_once "model/NoteShare.php";
+require_once "model/NoteLabel.php";
 
 // Définition de la classe ControllerNote, héritant de la classe Controller
 class ControllerNote extends Controller
@@ -872,4 +873,45 @@ class ControllerNote extends Controller
             }
         }
     }
+
+
+    public function labels() {
+        $labels = [];
+        $all = ["Privé", "Maison", "Loisirs", "Travail"];
+        $nvlab = [];
+        $user = $this->get_user_or_redirect();
+        $errors= [];
+        //vérifier et récupérer l'id en paramètre
+        if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
+            $note_id = $_GET["param1"];
+            // Récupération de la note par son identifiant
+            $note = Note::get_note_by_id($note_id);
+            $labels = $note->get_labels();     
+            
+            //verifier et mis en tableau les labels non utilisé
+            foreach ($all as $label) {
+                if (!in_array($label, $labels)) {
+                    $nvlab[] = $label;
+                }
+            }
+
+            //rajouter un nouveau label
+            if (isset($_POST["new_label"]) && isset($_POST["new_label"]) !== "") {
+                $content = $_POST["new_label"];
+                $new_label = new NoteLabel($note->note_id, $content);
+                $errors = $new_label->validate_label();
+                if (empty($errors)) {
+                    $new_label->persist();
+                    $this->redirect("note", "labels", $note->note_id);
+                }
+            }
+
+            //supprimer un label
+
+
+        }
+        (new View("labels"))->show(["labels" => $labels, "note"=>$note, "all"=>$nvlab, "errors"=> $errors]);
+
+    }
+
 }

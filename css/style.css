@@ -392,7 +392,6 @@ h2 {
   border-radius: 5px;
   color: lightgray;
   width: 75%;
-
 }
 
 .form-box-share {
@@ -1054,4 +1053,23 @@ textarea:focus {
 
 .modal-content {
   background-color: #313538;
+}
+
+
+/* Note label*/
+.box-label {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.form-control-label {
+  background-color: transparent;
+  border: 1.6px solid #494c51;
+  padding: 7px;
+  border-radius: 5px;
+  color: lightgray;
+  width: 90%;
 }
