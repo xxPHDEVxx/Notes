@@ -61,7 +61,7 @@
     <script>
         var note = <?= json_encode($note_id) ?>;
     </script>
-    <script src="JS/edit_errors.js"></script>
+    <script src="JS/edit_text_note_errors.js"></script>
     <script src="JS/confirmation_edit_text.js"></script>
 </body>
 
