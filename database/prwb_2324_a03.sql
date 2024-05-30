@@ -9,11 +9,11 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données : `prwb_2324_xyy`
+-- Base de données : `prwb_2324_a03`
 --
-DROP DATABASE IF EXISTS `prwb_2324_xyy`;
-CREATE DATABASE IF NOT EXISTS `prwb_2324_xyy` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-USE `prwb_2324_xyy`;
+DROP DATABASE IF EXISTS `prwb_2324_a03`;
+CREATE DATABASE IF NOT EXISTS `prwb_2324_a03` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+USE `prwb_2324_a03`;
 
 
 DROP TABLE IF EXISTS `users`;
