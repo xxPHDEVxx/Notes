@@ -25,7 +25,8 @@
             <button class="save" type="submit" id="saveButton"><span
                     class="material-symbols-outlined">save</span></button>
         </div>
-        <div class="edit_text_note_date">Created <?= $created ?><?= ($edited ? " Edited " . $edited : " Not edited yet") ?></div>
+        <div class="edit_text_note_date">Created
+            <?= $created ?><?= ($edited ? " Edited " . $edited : " Not edited yet") ?></div>
         <div>
             <div class="text_note_form_items">
                 <label for="title">Title</label>
@@ -39,7 +40,7 @@
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>
-            <div class="text_note_form_items" >
+            <div class="text_note_form_items">
                 <label for="content">Text</label>
                 <textarea class="form-control title_add" id="content" name="content"><?= $content ?></textarea>
                 <span id="contentError" class="text-danger" style="display: none;"></span>
@@ -58,9 +59,7 @@
 
     <?php include ("view_modal.php"); ?>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-    <script>
-        var note = <?= json_encode($note_id) ?>;
-    </script>
+    <script>var note = <?= json_encode($note_id) ?>;</script>
     <script src="JS/edit_text_note_errors.js"></script>
     <script src="JS/confirmation_edit_text.js"></script>
 </body>

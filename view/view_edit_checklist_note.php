@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit checklist note "<?= $note->title ?>"</title>
+    <title>Edit checklist note"<?= $note->title ?>"</title>
     <base href="<?= $web_root ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
@@ -19,12 +19,13 @@
     <form method="post" action="note/edit_checklist/<?= $note_id ?>">
         <div class="edit">
             <a class="back" href="note/open_note/<?= $note_id ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
-            <button class="save" type="submit" name = "save"><span class="material-symbols-outlined">save</span></button>
+            <button class="save" type="submit" id="saveButton" name = "save"><span class="material-symbols-outlined">save</span></button>
         </div>
         <div class="dates">Created <?= $created ?><?= ($edited ? " Edited " . $edited : " Not edited yet") ?></div>
         <div class="container_edit">
             <label for="title" >Title</label>
             <input type="text" class="title_edit_note" id="title" name="title" value="<?= $note->title ?>">
+            <span id="titleError" class="text-danger" style="display: none;"></span>
             <?php if (!empty($errors['title'])) :?>
                 <p class="text-danger erreur_edit"><?= $errors['title'] ?></p>
             <?php endif; ?>
@@ -58,8 +59,11 @@
         </form>
         </div>
         
-    <?php include("view_modal.php"); ?>
-    <script src="JS/confirmation_edit_check.js"></script>
+        <?php include ("view_modal.php"); ?>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script>var note = <?= json_encode($note_id) ?>;</script>
+    <script src="JS/edit_checklist_errors.js"></script>
+    <script src="JS/confirmation_edit_text.js"></script>
 </body>
 
 </html>
