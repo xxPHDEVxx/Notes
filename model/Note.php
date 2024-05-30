@@ -40,6 +40,30 @@ abstract class Note extends Model
     {
         return 5;
     }
+
+    /**
+     * Récupère les libellés associés à la note.
+     *
+     * @return array Les libellés associés à la note.
+     */
+    public function get_labels()
+    {
+        // Initialise un tableau vide pour stocker les libellés
+        $labels = [];
+
+        // Exécute une requête SQL pour récupérer les libellés de la base de données
+        $data_sql = self::execute("SELECT label FROM note_labels WHERE note = :id", ["id" => $this->note_id]);
+
+        // Récupère les résultats de la requête sous forme de tableau de colonnes
+        // Utilise FETCH_COLUMN pour obtenir uniquement la première colonne des résultats
+        // (dans ce cas, la colonne contenant les libellés)
+        $labels = $data_sql->fetchAll(PDO::FETCH_COLUMN, 0);
+
+        // Retourne le tableau des libellés
+        return $labels;
+    }
+
+
     public static function get_created_at(int $id): string
     {
         $query = self::execute("SELECT created_at from notes WHERE id = :id", ["id" => $id]);
@@ -229,31 +253,6 @@ abstract class Note extends Model
             self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => $nb--, "id" => $note]);
         }
     }
-
-
-
-    // peut être nécessaire pour gérer ordre des unarchive
-    /*public function check_archived_order()
-    {
-        $user_id = $this->owner;
-        // Récupération des notes non archivées
-        if ($this->in_my_archives($user_id) == 1) {
-            // Si la note actuelle est archivée, la placer en tête de liste des archivées
-            self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => $nb--, "id" => $this->note_id]);
-            // Exclure la note actuelle de la liste des notes non épinglées
-            $dataSql = self::execute("SELECT id FROM notes WHERE archived = :archived AND id != :note_id ORDER BY weight DESC", ["archived" => 1, "note_id" => $this->note_id]);
-        } else {
-            // Récupérer toutes les notes archivées
-            $dataSql = self::execute("SELECT id FROM notes WHERE archived = :archived ORDER BY weight DESC", ["archived" => 1]);
-        }
-        $archived = $dataSql->fetchAll(PDO::FETCH_COLUMN, 0);
-
-        // Numéroter les notes archivées (en commençant par le plus grand poids)
-        foreach ($archived as $note) {
-            self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => $nb--, "id" => $note]);
-        }
-    }*/
-
 
     public function get_shared_users()
     {
@@ -451,7 +450,7 @@ abstract class Note extends Model
     }
 
     public static function validate_content_service($content)
-{
+    {
         $minLength = Configuration::get('description_min_length');
         $maxLength = Configuration::get('description_max_length');
         $errors = [];
@@ -463,7 +462,7 @@ abstract class Note extends Model
         }
 
         return $errors;
-}
+    }
 
 
 
