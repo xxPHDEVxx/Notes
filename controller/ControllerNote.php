@@ -911,7 +911,19 @@ class ControllerNote extends Controller
 
         }
         (new View("labels"))->show(["labels" => $labels, "note"=>$note, "all"=>$nvlab, "errors"=> $errors]);
+    }
 
+    public function delete_label()  {
+        $user = $this->get_user_or_redirect();
+        if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
+            $note_id = $_GET["param1"];
+            // Récupération de la note par son identifiant
+            $note = Note::get_note_by_id($note_id);
+            $content = $_POST["label"];
+            $label  = NoteLabel::get_note_label($note->note_id, $content);
+            $label->delete();
+            $this->redirect("note", "labels", $note->note_id);
+        }
     }
 
 }

@@ -30,7 +30,7 @@ class NoteLabel extends Model
 
         // Vérifie si la longueur du label est comprise entre la longueur minimale et maximale
         if (strlen($this->label) < $minLength || strlen($this->label) > $maxLength) {
-            $errors[] = "Le label doit contenir entre $minLength et $maxLength caractères.";
+            $errors[] = "Label lenght must be between $minLength and $maxLength.";
         }
 
         // Vérifie si un autre label avec le même contenu existe déjà dans la base de données
@@ -39,7 +39,7 @@ class NoteLabel extends Model
             'note' => $this->note
         ]);
         if ($data_sql->fetchColumn() > 0) {
-            $errors[] = "Un autre label avec le même contenu existe déjà.";
+            $errors[] = "A note cannot contain the same label twice.";
         }
 
         // Vérifie si le label contient un espace
@@ -61,6 +61,25 @@ class NoteLabel extends Model
         
     }
 
+    public static function get_note_label(int $note, string $label) {
+        $query = self::execute("SELECT * FROM note_labels WHERE note = :note AND label = :label", 
+        [
+            "note" => $note, 
+            "label"  => $label
+        ]);
+        $data = $query->fetch();
+        if (count($data) !== 0) {
+            return new NoteLabel($data["note"], $data["label"]);
+        }
+    }
+
+    public function delete() {
+        self::execute("DELETE FROM note_labels WHERE note = :note AND label = :label",
+        [
+            "note"=>$this->note,
+            "label"=> $this->label
+        ]);
+    }
 }
 
 

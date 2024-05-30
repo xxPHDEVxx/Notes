@@ -25,10 +25,10 @@
             <p class="share-empty" id="share-empty">This note does not yet have a label.</p>
         <?php else : ?>
             <?php foreach ($labels as $label) : ?>
-                <form action="" class="form_toggle" method="post">
+                <form action="note/delete_label/<?=$note->note_id?>" class="form_toggle" method="post">
                     <div class="box-label">
-                        <input type="text" id="note" name="note" value="<?= $label ?>" class="form-control-label my-1" disabled>
-                        <button class="btn btn-danger btn-share btn-del" type="submit" name="action" value="delete"><span class="material-symbols-outlined "><span class="material-symbols-outlined">
+                        <input type="text" id="note" name="label" value="<?= $label ?>" class="form-control-label my-1" disabled>
+                        <button class="btn btn-danger btn-share btn-del" type="submit" name="label" value="<?= $label ?>"><span class="material-symbols-outlined "><span class="material-symbols-outlined">
                                     minimize
                                 </span></button>
                     </div>
