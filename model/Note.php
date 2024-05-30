@@ -141,15 +141,14 @@ abstract class Note extends Model
     }
     public function unpin(): void
     {
-        $user = $this->owner;
-        if ($this->is_pinned($user) == 1) {
+        if ($this->is_pinned($this->owner) == 1) {
             self::execute("UPDATE notes SET pinned = :val WHERE id = :id", ["val" => 0, "id" => $this->note_id]);
             $this->order_notes();
         }
     }
 
     // récupérer nombre total de notes d'un user spécifique
-    public static function get_all_notes_by_user($user)
+    public function get_all_notes_by_user($user)
     {
         $dataSql = self::execute("SELECT id FROM notes WHERE owner = :user", ["user" => $user]);
         $data = $dataSql->fetchAll(PDO::FETCH_COLUMN, 0);
@@ -157,10 +156,10 @@ abstract class Note extends Model
     }
 
     // Donne poids négatif unique aux notes
-    public static function temporary_weights($array_id, $user)
+    public function temporary_weights($array_id)
     {
         $notes = $array_id;
-        $nb = count(Note::get_all_notes_by_user($user));
+        $nb = count($this->get_all_notes_by_user($this->owner)) + 50;// 50 pour éviter conflit de poids lors de plusieurs supressions
         foreach ($notes as $note) {
             self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => ++$nb, "id" => $note]);
         }
@@ -194,7 +193,7 @@ abstract class Note extends Model
             $i++;
         }
         $new_weights = $this->sort_weights_desc($weights);
-        Note::temporary_weights($new_order, $this->owner);
+        $this->temporary_weights($new_order);
 
         $i = 0;
         foreach ($new_order as $id) {
@@ -207,14 +206,14 @@ abstract class Note extends Model
     // Ordonnes les notes selon les règles métiers liées au poids (owner -> pin -> unpin -> ...) à factoriser 
     public function order_notes()
     {
-        // Récupérer toutes les notes de l'utilisateur
-        $notes = $this->get_all_notes_by_user($this->owner);
-        // Appliquer des poids temporaires aux notes
-        Note::temporary_weights($notes, $this->owner);
-        // Initialiser le compteur de poids
-        $nb = count($notes);
         // Identifiant de l'utilisateur
         $user_id = $this->owner;
+        // Récupérer toutes les notes de l'utilisateur
+        $notes = $this->get_all_notes_by_user($user_id);
+        // Appliquer des poids temporaires aux notes
+        $this->temporary_weights($notes);
+        // Initialiser le compteur de poids
+        $nb = count($notes);
 
         // Récupération des notes épinglées de l'utilisateur
         if ($this->is_pinned($user_id) == 1) {
@@ -252,39 +251,6 @@ abstract class Note extends Model
             self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => $nb--, "id" => $note]);
         }
     }
-
-    // remise en ordre après une suppresion ( à corriger )
-    public static function delete_order($user)
-    {
-        // Récupérer toutes les notes de l'utilisateur
-        $dataSql = self::execute("SELECT id FROM notes WHERE owner = :user", ["user" => $user]);
-        $notes = $dataSql->fetchAll(PDO::FETCH_COLUMN, 0);
-
-        // Appliquer des poids temporaires aux notes (cette méthode doit être définie dans votre classe Note)
-        Note::temporary_weights($notes, $user);
-
-        // Initialiser le compteur de poids
-        $nb = count($notes);
-
-        // Récupérer toutes les notes épinglées de l'utilisateur
-        $dataSql = self::execute("SELECT id FROM notes WHERE pinned = :val AND owner = :user ORDER BY weight DESC", ["val" => 1, "user" => $user]);
-        $pinned = $dataSql->fetchAll(PDO::FETCH_COLUMN, 0);
-
-        // Numéroter les notes épinglées (en commençant par le plus grand poids)
-        foreach ($pinned as $note_id) {
-            self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => $nb--, "id" => $note_id]);
-        }
-
-        // Récupérer toutes les notes non épinglées de l'utilisateur
-        $dataSql = self::execute("SELECT id FROM notes WHERE pinned = :val AND owner = :user ORDER BY weight DESC", ["val" => 0, "user" => $user]);
-        $unpinned = $dataSql->fetchAll(PDO::FETCH_COLUMN, 0);
-
-        // Numéroter les notes non épinglées (en commençant par le plus grand poids)
-        foreach ($unpinned as $note_id) {
-            self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => $nb--, "id" => $note_id]);
-        }
-    }
-
 
     public function get_shared_users()
     {
