@@ -1073,3 +1073,13 @@ textarea:focus {
   color: lightgray;
   width: 90%;
 }
+
+.box-label {
+  position: absolute;
+  bottom: 8%;
+  width: 80%;
+
+}
+.label-note {
+  margin: 1px;
+}
