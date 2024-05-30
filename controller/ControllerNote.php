@@ -5,6 +5,7 @@ require_once "framework/View.php";
 require_once "model/User.php";
 require_once "framework/Tools.php";
 require_once "model/NoteShare.php";
+require_once "model/ChecklistNote.php";
 
 class ControllerNote extends Controller
 {
@@ -97,8 +98,7 @@ class ControllerNote extends Controller
 
             if (isset($_POST['user'], $_POST['editor']) && empty($errors)) {
                 $nv_us = User::get_user_by_id($_POST['user']);
-                $editor = ($_POST['editor'] == 1) ? true : false;
-                ;
+                $editor = ($_POST['editor'] == 1) ? true : false;;
                 $note_share = new NoteShare($note_id, $nv_us->id, $editor);
                 $note_share->persist();
                 $this->redirect("note", "shares", $note_id);
@@ -365,18 +365,20 @@ class ControllerNote extends Controller
         }
     }
 
-    public function edit_checklist(): void
+    public function edit_checklist()
     {
-
         $user = $this->get_user_or_redirect();
         $errors = [];
+        $errorsItem = [];
+        $edit_item = [];
+
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = Tools::sanitize($_GET["param1"]);
             $note = CheckListNote::get_note_by_id($note_id);
             if ($note === false) {
                 throw new Exception("Undefined note");
             }
-            $user_id = $this->get_user_or_redirect()->id;
+            $user_id = $user->id;
             $archived = $note->in_my_archives($user_id);
             $pinned = $note->is_pinned($user_id);
             $is_shared_as_editor = $note->is_shared_as_editor($user_id);
@@ -385,19 +387,20 @@ class ControllerNote extends Controller
 
 
 
-
+            //verification si champ titre vide + si c'est le titre initial
             if (isset($_POST['title']) && $_POST['title'] == "") {
                 $errors["title"] = "Title required";
             }
 
-            if (isset($_POST['title']) && $_POST['title'] != "") {
+            if (isset($_POST['title']) && $_POST['title'] != $note->title) {
                 $title = Tools::sanitize($_POST["title"]);
                 $note = Note::get_note_by_id($note_id);
                 $note->title = $title;
-                $errors["title"] = $note->validate_title();
+                $errors["title"] = implode($note->validate_title());
             }
 
 
+            //action delete item
             if (isset($_POST['delete']) && $_POST['delete']) {
                 $item_id = $_POST["delete"];
                 $item = CheckListNoteItem::get_item_by_id($item_id);
@@ -408,20 +411,54 @@ class ControllerNote extends Controller
                 $item->delete();
                 $this->redirect("note", "edit_checklist", $note_id);
             }
+
+            //action add item
             if (isset($_POST['new']) && $_POST["new"] != "") {
                 $new_item_content = Tools::sanitize($_POST['new']);
                 $new_item = new CheckListNoteItem(0, $note->note_id, $new_item_content, false);
+
                 if (!$new_item->is_unique()) {
                     $errors["items"] = "item must be unique";
                 }
+                $contentErrors = $new_item->validate_item();
+                if (!empty($contentErrors)) {
+                    $errors["items"] = implode($contentErrors);
+                }
+
+                //si item oke -> modif db
                 if (empty($errors['items'])) {
                     $new_item->persist();
+                    $this->redirect("note", "edit_checklist", $note_id);
+                    exit;
                 }
             }
         }
-        if (empty($errors["title"]) && (isset($_POST['title']) && $_POST['title'] != "")) {
-            $note->persist();
-            $this->redirect("note", "open_note", $note->note_id);
+        if (isset($_POST["save"])) {
+            //action edit item 
+            // Vérification des éléments
+            if (isset($_POST['items'])) {
+                foreach ($_POST['items'] as $key => $item) {
+                    $checklistItem = CheckListNoteItem::get_item_by_id($key);
+                    $checklistItem->content = $item;
+                    if (!$checklistItem->is_unique()) {
+                        $errorsItem["item_$key"] = "item must be unique";
+                    } else {
+                        $contentErrors = $checklistItem->validate_item();
+                        if (!empty($contentErrors)) {
+                            $errorsItem["item_$key"] = implode("; ", $contentErrors);
+                        }
+                        if (empty($errorsItem["item_$key"])) {
+                            $checklistItem->persist();
+                        }
+                    }
+                }
+                
+            }   
+            $errors = array_merge($errors, $errorsItem);
+            if (empty($errors["title"]) && empty($errorsItem)) {
+                $note->persist();
+                $this->redirect("note", "open_note", $note->note_id);
+            }
         }
 
         (new View("edit_checklist_note"))->show([

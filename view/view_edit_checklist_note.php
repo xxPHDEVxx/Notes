@@ -19,39 +19,45 @@
     <form method="post" action="note/edit_checklist/<?= $note_id ?>">
         <div class="edit">
             <a class="back" href="note/open_note/<?= $note_id ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
-
-            <button class="save" type="submit"><span class="material-symbols-outlined">save</span></button>
+            <button class="save" type="submit" name = "save"><span class="material-symbols-outlined">save</span></button>
         </div>
         <div class="dates">Created <?= $created ?><?= ($edited ? " Edited " . $edited : " Not edited yet") ?></div>
-        <label for="title" class="title_note_title">Title</label>
-        <input type="text" class="title_edit_note" id="title" name="title" value="<?= $note->title ?>">
-        <?php if (!empty($errors['title'])) :?>
-            <span class="text-danger erreur_edit"><?= $errors['title'] ?></span>
-        <?php endif; ?>
-        <span class="note_body_edit">Items</span>
-        <div class="note_body_checklist_edit">
-            <?php foreach ($content as $row) : ?>
-                <div class="edit_checklist_form">
-                    <div class="edit_check_div">
-                        <input class="check_square" type="checkbox" value="<?= $row["id"] ?>" name="box" <?= $row["checked"] ? 'checked' : '' ?> disabled>
+        <div class="container_edit">
+            <label for="title" >Title</label>
+            <input type="text" class="title_edit_note" id="title" name="title" value="<?= $note->title ?>">
+            <?php if (!empty($errors['title'])) :?>
+                <p class="text-danger erreur_edit"><?= $errors['title'] ?></p>
+            <?php endif; ?>
+            <span class="note_body_edit">Items</span>
+            <div class="note_body_checklist_edit">
+                <?php foreach ($content as $row) :
+                    $id = $row['id'] ?>
+                    <div class="edit_checklist_form">
+                        <div class="edit_check_div">
+                            <input class="check_square" type="checkbox" value="<?= $id ?>" name="box" <?= $row["checked"] ? 'checked' : '' ?> disabled>
+                        </div>
+                        <input type="text" name="items[<?=$id?>]"  class="checklist_elements <?= $row["checked"] ? 'check_label' : '' ?>" value="<?= $row["content"] ?>">
+
+                        <input type="hidden" name="remove" value="<?= $id ?>">
+                        <button type="submit" name="delete" value="<?= $id ?>" class="icone-delete">-</button>
                     </div>
-                    <label class="checklist_elements <?= $row["checked"] ? 'check_label' : '' ?>">
-                        <?= $row["content"] ?>
-                    </label>
-                    <input type="hidden" name="remove" value="<?= $row['id'] ?>">
-                    <button type="submit" name="delete" value="<?= $row["id"] ?>" class="icone-delete">-</button>
+                    <?php if (!empty($errors["item_$id"])) :  ?>
+                            <p class="text-danger"><?= $errors["item_$id"] ?></p>
+                        <?php 
+                    endif; ?>
+                <?php endforeach; ?>
+                <label for="new">New item</label>
+                <div class="edit_checklist_form">
+                    <input type="text" class="form-control-edit" id="new" name="new">
+                    <button type="submit" class="icone-add">+</button>
+                    <?php if (!empty($errors['items'])) : ?>
+                        <p class="text-danger erreur_edit"><?= $errors['items'] ?></p>
+                    <?php endif; ?>
                 </div>
-            <?php endforeach; ?>
-            <label for="new">New item</label>
-            <div class="edit_checklist_form">
-                <input type="text" class="form-control-edit" id="new" name="new">
-                <?php if (!empty($errors['items'])) : ?>
-                    <span class="text-danger erreur_edit"><?= $errors['items'] ?></span>
-                <?php endif; ?>
-                <button type="submit" class="icone-add">+</button>
             </div>
+        </form>
         </div>
-    </form>
+        
     <?php include("view_modal.php"); ?>
     <script src="JS/confirmation_edit_check.js"></script>
 </body>
