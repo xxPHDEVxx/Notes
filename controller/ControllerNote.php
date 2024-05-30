@@ -384,10 +384,12 @@ class ControllerNote extends Controller
                     $note = Note::get_note_by_id($note_id);
                     // Récupération de l'utilisateur connecté
                     $user = $this->get_user_or_redirect();
+                    $user_id = $user->id;
                     // Vérification si l'utilisateur est le propriétaire de la note
-                    if ($user->id == $note->owner) {
+                    if ($user_id == $note->owner) {
                         // Suppression de la note
                         $note->delete($user);
+                        //Note::delete_order($user_id);
                         // Redirection vers les archives de l'utilisateur
                         $this->redirect("user", "my_archives");
                     } else {
@@ -757,6 +759,7 @@ class ControllerNote extends Controller
             // Récupère la note par son identifiant
             $note = Note::get_note_by_id($note_id);
             // Archive la note et la désépingle
+            echo $note->archive();
             $note->archive();
             $note->unpin();
             // Redirige vers la page d'affichage de la note

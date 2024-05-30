@@ -20,7 +20,7 @@ $(document).ready(function () {
     contentInput.addEventListener('input', checkContent);
 
     function checkContent() {
-        var requestData = {
+        let requestData = {
             content: contentInput.value,
         };
 
