@@ -1,6 +1,6 @@
--- MariaDB dump 10.19  Distrib 10.4.28-MariaDB, for osx10.10 (x86_64)
+-- MariaDB dump 10.19  Distrib 10.4.28-MariaDB, for Win64 (AMD64)
 --
--- Host: 127.0.0.1    Database: prwb_2324_a03
+-- Host: 127.0.0.1    Database: prwb_2324_xyy
 -- ------------------------------------------------------
 -- Server version	10.4.28-MariaDB
 
@@ -69,6 +69,31 @@ INSERT INTO `checklist_notes` VALUES (24),(25),(27),(29);
 UNLOCK TABLES;
 
 --
+-- Table structure for table `note_labels`
+--
+
+DROP TABLE IF EXISTS `note_labels`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `note_labels` (
+  `note` int(11) NOT NULL,
+  `label` varchar(32) NOT NULL,
+  PRIMARY KEY (`note`,`label`),
+  CONSTRAINT `fk_note_labels_users` FOREIGN KEY (`note`) REFERENCES `notes` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `note_labels`
+--
+
+LOCK TABLES `note_labels` WRITE;
+/*!40000 ALTER TABLE `note_labels` DISABLE KEYS */;
+INSERT INTO `note_labels` VALUES (21,'Maison'),(21,'Priv&eacute;'),(22,'Travail'),(23,'Maison'),(23,'Priv&eacute;'),(23,'Travail'),(24,'Loisirs'),(24,'Maison'),(25,'Travail'),(27,'Loisirs'),(27,'Maison'),(27,'Travail'),(29,'Travail');
+/*!40000 ALTER TABLE `note_labels` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `note_shares`
 --
 
@@ -126,7 +151,7 @@ CREATE TABLE `notes` (
 
 LOCK TABLES `notes` WRITE;
 /*!40000 ALTER TABLE `notes` DISABLE KEYS */;
-INSERT INTO `notes` VALUES (20,'Note archivée',1,'2023-10-11 11:51:37','2023-11-21 09:18:46',0,1,1),(21,'Code alarme',1,'2023-10-11 11:51:43','2023-11-20 21:33:47',1,0,7),(22,'Pensées',1,'2023-10-11 11:51:50','2023-11-21 09:17:15',1,0,4),(23,'Note avec un long texte',1,'2023-10-11 13:19:30','2023-11-20 21:36:02',0,0,2),(24,'Colruyt tartiflette',1,'2023-10-12 20:16:52','2023-11-20 21:37:12',1,0,6),(25,'Urgent',1,'2023-10-19 21:01:06','2023-11-20 21:34:34',1,0,5),(26,'Netflix password',4,'2023-11-06 23:03:42','2023-11-21 09:20:40',1,0,3),(27,'Courses',4,'2023-11-06 23:04:52','2023-11-21 09:19:34',0,0,2),(28,'Git clean',2,'2023-11-13 15:50:19',NULL,0,0,1),(29,'Prépa EPFC',2,'2023-11-13 16:08:37','2023-11-21 09:22:07',0,0,2),(30,'Note vide',1,'2023-11-20 18:42:04',NULL,0,0,3),(31,'Note archivée',4,'2023-11-21 09:21:07',NULL,0,1,1);
+INSERT INTO `notes` VALUES (20,'Note archivée',1,'2023-10-11 11:51:37','2023-11-21 09:18:46',0,1,1),(21,'Code alarme',1,'2023-10-11 11:51:43','2023-11-20 21:33:47',1,0,7),(22,'Pensées',1,'2023-10-11 11:51:50','2023-11-21 09:17:15',1,0,5),(23,'Note avec un long texte',1,'2023-10-11 13:19:30','2023-11-20 21:36:02',0,0,2),(24,'Colruyt tartiflette',1,'2023-10-12 20:16:52','2023-11-20 21:37:12',1,0,4),(25,'Urgent',1,'2023-10-19 21:01:06','2023-11-20 21:34:34',1,0,6),(26,'Netflix password',4,'2023-11-06 23:03:42','2023-11-21 09:20:40',1,0,3),(27,'Courses',4,'2023-11-06 23:04:52','2023-11-21 09:19:34',0,0,2),(28,'Git clean',2,'2023-11-13 15:50:19',NULL,0,0,1),(29,'Prépa EPFC',2,'2023-11-13 16:08:37','2023-11-21 09:22:07',0,0,2),(30,'Note vide',1,'2023-11-20 18:42:04',NULL,0,0,3),(31,'Note archivée',4,'2023-11-21 09:21:07',NULL,0,1,1);
 /*!40000 ALTER TABLE `notes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -192,4 +217,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-03-04 18:09:57
+-- Dump completed on 2024-04-09 11:27:59
