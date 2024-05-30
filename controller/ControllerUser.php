@@ -11,8 +11,8 @@ class ControllerUser extends Controller {
     public function my_archives() : void {
         $user = $this->get_user_or_redirect();
         $archives = $user->get_archives();
-        $_SESSION['previous_page'] = $_SERVER['REQUEST_URI'];
-        (new View("archives"))->show(["currentPage"=> "my_archives","archives"=>$archives, "sharers"=>$user->shared_by()]);
+        (new View("archives"))->show(["currentPage"=> "my_archives",
+        "archives"=>$archives, "sharers"=>$user->shared_by()]);
     }
 
     public function get_shared_by() : void {
@@ -31,8 +31,8 @@ class ControllerUser extends Controller {
                     $shared_notes_as_reader[] = $shared;
             }
         }
-        $_SESSION['previous_page'] = $_SERVER['REQUEST_URI'];
-        (new View("shared_notes"))->show(["currentPage" => $shared_by_name, "shared_by_name"=>$shared_by_name, "shared_notes_as_editor" =>$shared_notes_as_editor,
+        (new View("shared_notes"))->show(["currentPage" => $shared_by_name, 
+        "shared_by_name"=>$shared_by_name, "shared_notes_as_editor" =>$shared_notes_as_editor,
         "shared_notes_as_reader" =>$shared_notes_as_reader,"sharers"=>$user->shared_by()]);
     }
   

@@ -15,7 +15,7 @@ abstract class Model {
             $dbname = Configuration::get("dbname");
             $dsn = "{$dbtype}:host={$dbhost};dbname={$dbname};charset=utf8";
             $dbuser = Configuration::get("dbuser");
-            $dbpassword = Configuration::get("dbpassword");
+            $dbpassword =  Configuration::get("dbpassword");
 
             self::$pdo = new PDO($dsn, $dbuser, $dbpassword);
             self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
