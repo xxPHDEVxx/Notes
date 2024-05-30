@@ -1,31 +1,44 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const originalData = collectOriginalData();
+    // Récupération des éléments nécessaires
+    const originalTitle = document.getElementById('title').value;
+    const checklistDiv = document.querySelector('.note_body_checklist_edit');
     const backButton = document.querySelector('.back');
     const modal = new bootstrap.Modal(document.getElementById('unsavedChangesModal'));
     const confirmExitButton = document.getElementById('confirmExitButton');
 
-    backButton.addEventListener('click', function(event) {
-        if (dataHasChanged(originalData)) {
-            event.preventDefault(); 
-            modal.show(); 
+    // Stockage du nombre d'éléments de la checklist initial
+    const originalItemCount = checklistDiv.children.length;
+
+    // Observer pour détecter les changements dans la checklist
+    const observer = new MutationObserver(function () {
+        if (dataHasChanged(originalTitle)) {
+            modal.show();
         }
     });
 
-    confirmExitButton.addEventListener('click', function() {
-        modal.hide(); 
-        window.location.href = backButton.getAttribute('href');
+    // Configuration de l'observer
+    const config = { childList: true };
+
+    // Commence à observer la div checklist
+    observer.observe(checklistDiv, config);
+
+    // Vérifie si des données ont changé (titre ou nombre d'éléments dans la checklist)
+    function dataHasChanged(originalTitle) {
+        return originalTitle !== document.getElementById('title').value ||
+            originalItemCount !== checklistDiv.children.length;
+    }
+
+    // Événement du bouton retour
+    backButton.addEventListener('click', function (event) {
+        if (dataHasChanged(originalTitle)) {
+            event.preventDefault();
+            modal.show();
+        }
     });
 
-    function collectOriginalData() {
-        return {
-            title: document.getElementById('title').value,
-            items: Array.from(document.querySelectorAll('.form-control-edit')).map(input => input.value)
-        };
-    }
-
-    function dataHasChanged(original) {
-        const currentNumItems = document.querySelectorAll('.form-control-edit').length;
-        return original.title !== document.getElementById('title').value || 
-               original.numItems !== currentNumItems;
-    }
+    // Événement du bouton de confirmation pour quitter
+    confirmExitButton.addEventListener('click', function () {
+        modal.hide();
+        window.location.href = backButton.getAttribute('href');
+    });
 });

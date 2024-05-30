@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const originalData = {
         title: document.getElementById('title').value,
         content: document.getElementById('content').value
@@ -10,18 +10,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function dataHasChanged() {
         return originalData.title !== document.getElementById('title').value ||
-               originalData.content !== document.getElementById('content').value;
+            originalData.content !== document.getElementById('content').value;
     }
 
-    backButton.addEventListener('click', function(event) {
+    backButton.addEventListener('click', function (event) {
         if (dataHasChanged()) {
-            event.preventDefault(); 
-            modal.show(); 
+            event.preventDefault();
+            modal.show();
         }
     });
 
-    confirmExitButton.addEventListener('click', function() {
-        
-        window.location.href = backButton.href; 
+    confirmExitButton.addEventListener('click', function () {
+
+        window.location.href = backButton.href;
     });
 });
