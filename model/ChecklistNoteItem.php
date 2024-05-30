@@ -67,10 +67,11 @@ class CheckListNoteItem extends Model
     {
 
         // Vérifie si le titre est unique pour cet utilisateur
-        $query = self::execute("SELECT COUNT(*) FROM checklist_note_items WHERE checklist_note = :checklist AND content = :content AND checked = :checked", [
+        $query = self::execute("SELECT COUNT(*) FROM checklist_note_items WHERE checklist_note = :checklist AND content = :content AND id <> :id", [
             'checklist' => $this->checklist_note,
-            'content' => $this->content,
-            'checked' => $this->checked
+            'content' => $this->content, 
+            'id' => $this->id
+            
         ]);
         if ($query->fetchColumn() > 0) {
             return false;

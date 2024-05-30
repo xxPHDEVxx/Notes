@@ -387,18 +387,20 @@ class ControllerNote extends Controller
                     $checklistItem->content = $item;
                     if (!$checklistItem->is_unique()) {
                         $errorsItem["item_$key"] = "item must be unique";
-                    }
-                    $contentErrors = $checklistItem->validate_item();
-                    if (!empty($contentErrors)) {
-                        $errorsItem["item_$key"] = implode("; ", $contentErrors);
-                    }
-                    if (empty($errorsItem["item_$key"])) {
-                        $checklistItem->persist();
+                    } else {
+                        $contentErrors = $checklistItem->validate_item();
+                        if (!empty($contentErrors)) {
+                            $errorsItem["item_$key"] = implode("; ", $contentErrors);
+                        }
+                        if (empty($errorsItem["item_$key"])) {
+                            $checklistItem->persist();
+                        }
                     }
                 }
+                
             }   
             $errors = array_merge($errors, $errorsItem);
-            if (empty($errors["title"]) ) {
+            if (empty($errors["title"]) && empty($errorsItem)) {
                 $note->persist();
                 $this->redirect("note", "open_note", $note->note_id);
             }
