@@ -315,7 +315,8 @@ h2 {
   top: 3px;
   position: relative;
   left: 2%;
-  min-height: 100px; /* Définissez la hauteur minimale selon vos besoins */
+  min-height: 100px;
+  /* Définissez la hauteur minimale selon vos besoins */
 }
 
 .view_notes_header {
@@ -579,9 +580,12 @@ nav a {
 .menu_settings {
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Centrer verticalement */
-  align-items: center; /* Centrer horizontalement */
-  margin-top: 150px; /* Ajouter de la marge autour du menu et le centrer horizontalement */
+  justify-content: center;
+  /* Centrer verticalement */
+  align-items: center;
+  /* Centrer horizontalement */
+  margin-top: 150px;
+  /* Ajouter de la marge autour du menu et le centrer horizontalement */
 }
 
 .menu_settings a {
@@ -607,11 +611,12 @@ nav a {
 /* edit_profile */
 
 .edit_form {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Centrer horizontalement */
-    color: white;
-    margin: 150px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Centrer horizontalement */
+  color: white;
+  margin: 150px auto;
 }
 
 .form-label {
@@ -625,21 +630,31 @@ nav a {
 .logout {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Centrer horizontalement */
+  align-items: center;
+  /* Centrer horizontalement */
   color: white;
   margin-top: 50px;
 }
 
-.logout button{
+.logout button {
   margin: 10px;
 }
+
 /*partie commune entre checklist_note et text_note dans open_note :
 /*barre open note*/
 .barre {
+  display: flex;
+  justify-content: flex-end;
+  column-gap: 10px;
   position: absolute;
   left: 3%;
   width: 94%;
   top: 30px;
+}
+
+.back {
+  margin: auto;
+  margin-left: 5px;
 }
 
 #deleteForm {
@@ -657,32 +672,6 @@ nav a {
 #delete_icon span {
   color: red;
 
-}
-
-
-.unarchive {
-  position: absolute;
-  right: 0;
-}
-
-.archive {
-  position: absolute;
-  right: 40px;
-}
-
-.isShared {
-  position: absolute;
-  right: 0;
-}
-
-.pinned {
-  position: absolute;
-  right: 80px;
-}
-
-.share {
-  position: absolute;
-  right: 120px;
 }
 
 /* Partie title et dates */
@@ -814,20 +803,22 @@ textarea:focus {
 #alertPassword {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Centrer horizontalement */
+  align-items: center;
+  /* Centrer horizontalement */
   margin: auto;
   max-width: 30%;
 }
 
 @media screen and (max-width: 600px) {
   #alertPassword {
-      font-size: 3vw;
+    font-size: 3vw;
   }
 }
 
 @media screen and (min-width: 601px) {
   #alertPassword {
-      font-size: 18px; /* Taille fixe pour les écrans plus grands */
+    font-size: 18px;
+    /* Taille fixe pour les écrans plus grands */
   }
 }
 
@@ -878,7 +869,7 @@ textarea:focus {
   }
 }
 
-.text_note_form_items{
+.text_note_form_items {
   margin: 5%;
 }
 
