@@ -218,7 +218,6 @@ h2 {
   width: 188px;
   background: #202325;
   margin: 3px;
-  height: 200px;
 }
 
 .link-note-archivee,
@@ -813,9 +812,23 @@ textarea:focus {
 /* erreurs */
 
 #alertPassword {
-  position: absolute;
-  top: 450px;
-  left: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centrer horizontalement */
+  margin: auto;
+  max-width: 30%;
+}
+
+@media screen and (max-width: 600px) {
+  #alertPassword {
+      font-size: 3vw;
+  }
+}
+
+@media screen and (min-width: 601px) {
+  #alertPassword {
+      font-size: 18px; /* Taille fixe pour les écrans plus grands */
+  }
 }
 
 /* text note settings */
@@ -838,6 +851,41 @@ textarea:focus {
   top: 30px;
 }
 
+/* style edit et add text_note le plus récent */
+
+/******début*****/
+
+.edit_text_note_form {
+  margin: 10%;
+}
+
+.edit_text_note_date {
+  margin: 5%;
+}
+
+#content {
+  resize: vertical;
+  /* Permet à l'utilisateur de redimensionner verticalement */
+  min-height: 200px;
+  /* Taille minimale du textarea */
+}
+
+/* Media query pour les écrans de petite taille */
+@media (max-width: 768px) {
+  #content {
+    min-height: 300px;
+    /* Taille minimale réduite pour les écrans plus petits */
+  }
+}
+
+.text_note_form_items{
+  margin: 5%;
+}
+
+/* *****fin**** */
+
+
+
 .note_body_edit {
   position: absolute;
   top: 220px;
@@ -853,12 +901,6 @@ textarea:focus {
   left: 3%;
   width: 94%;
 
-}
-
-.erreur_edit {
-  position: absolute;
-  left: 3%;
-  top: 166px;
 }
 
 .save {
@@ -974,10 +1016,6 @@ textarea:focus {
 .pointer {
   cursor: pointer;
 }
-
-/* .form-control {
-  background: transparent;
-} */
 
 /* add checklist note */
 .add_checklist {

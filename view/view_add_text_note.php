@@ -19,14 +19,14 @@
 </head>
 
 <body>
-    <form method="post" action="note/save_add_text_note">
+    <form method="post" class="edit_text_note_form" action="note/save_add_text_note">
         <div class="add_header">
             <a class="back" href="note/index"><span class="material-symbols-outlined">arrow_back_ios</span></a>
             <button class="save" type="submit" id="saveButton"><span class="material-symbols-outlined">save</span></button>
         </div>
-        <div class="dates">Today's Date: <?= date("Y-m-d H:i:s") ?></div>
-        <div class="container add_checklist">
-            <div class="mb-3">
+        <div class="edit_text_note_date">Today's Date: <?= date("Y-m-d H:i:s") ?></div>
+        <div>
+            <div class="text_note_form_items">
                 <label for="title">Title</label>
                 <input type="text" id="title" class="form-control title_add" <?= (!empty($emptyTitle['title']) ? "border border-danger" : (isset($_POST["title"]) && !empty($_POST["title"]) ? "border border-success" : "")) ?> name="title" value="<?= isset($_POST["title"]) ? htmlspecialchars($_POST["title"]) : "" ?>">
                 <span id="titleError" class="text-danger" style="display: none;"></span>
@@ -38,7 +38,7 @@
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>
-            <div class="mb-3">
+            <div class="text_note_form_items">
                 <label for="content">Text</label>
                 <textarea class="form-control title_add" id="content" name="content"><?= $content ?></textarea>
                 <span id="contentError" class="text-danger" style="display: none;"></span>

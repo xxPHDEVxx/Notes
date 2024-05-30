@@ -31,13 +31,13 @@
         <h2>Edit Profile</h2>
 
         <form action="settings/edit_profile" method="post">
-            <div class="mb-3">
+            <div>
                 <label for="email" class="form-label">Mail</label>
                 <input type="email" class="form-control" id="email" name="email"
                     value="<?= isset($_POST['email']) ? htmlspecialchars($_POST['email']) : htmlspecialchars($user->mail) ?>"
                     required>
             </div>
-            <div class="mb-3">
+            <div>
                 <label for="fullName" class="form-label">Name</label>
                 <input type="text" class="form-control" id="fullName" name="fullName"
                     value="<?= isset($_POST['fullName']) ? htmlspecialchars($_POST['fullName']) : htmlspecialchars($user->full_name) ?>"
