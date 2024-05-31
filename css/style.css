@@ -7,6 +7,12 @@ html {
   color: white;
 }
 
+.err-page {
+  margin-top: 13%;
+  margin-left: 10%;
+  font-size: 20px;
+}
+
 /*login et signup*/
 .container_login_signup {
   max-width: 500px;
@@ -209,9 +215,10 @@ h2 {
   border: 1.5px solid #43464c;
   color: white;
   border-radius: 5px;
-  width: 188px;
+  width: 210px;
   background: #202325;
   margin: 3px;
+  height: 210px;
 }
 
 .link-note-archivee,
@@ -221,7 +228,7 @@ h2 {
 }
 
 .note-title {
-  font-size: 18px;
+  font-size: 17px;
   border-bottom: 1.5px solid #43464c;
   ;
   border-top-right-radius: 5px;
@@ -252,10 +259,10 @@ h2 {
   overflow: hidden;
 }
 
-.content_check::after {
+/* .content_check::after {
   content: '...';
   position: relative;
-}
+} */
 
 .checked_item,
 .unchecked_item {
@@ -302,13 +309,15 @@ h2 {
 }
 
 
-.view_notes_pinned_unpinned{
+.view_notes_pinned_unpinned {
 
   display: flex;
   flex-wrap: wrap;
   top: 3px;
   position: relative;
   left: 2%;
+  min-height: 100px;
+  /* Définissez la hauteur minimale selon vos besoins */
 }
 
 .view_notes_header {
@@ -334,6 +343,7 @@ h2 {
   justify-content: space-around;
   background: #292c30;
   padding: 2px;
+  height: 30px;
 }
 
 .card-footer input {
@@ -342,20 +352,82 @@ h2 {
   color: rgb(30, 115, 213);
 }
 
+.note-content {
+  padding: 5px;
+  margin-bottom: 3em;
+}
+
 .note {
 
   border: 1.5px solid #43464c;
   color: white;
   border-radius: 5px;
-  width: 188px;
+  width: 210px;
   background: #202325;
   margin: 3px;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 210px;
+  /* Hauteur maximale fixe pour la note */
 }
 
-/* share note*/
+/* view shares note*/
 
 .share-empty {
+  font-style: italic;
+}
+
+.box-shares {
+  margin-top: 18%;
+  margin-left: auto;
+  margin-right: auto;
+  width: 98%;
+}
+
+.form-control-share {
+  background-color: transparent;
+  border: 1.6px solid #494c51;
+  padding: 6px;
+  border-radius: 5px;
+  color: lightgray;
+  width: 75%;
+}
+
+.form-box-share {
+  width: 90%;
+}
+
+.form-control-share option {
+  color: lightgray;
+  background-color: #202325;
+}
+
+.box-sharer {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.btn-share {
+  padding: 3px;
+}
+
+.btn-toggle {
+  border-radius: 0%;
+}
+
+.btn-del {
+  border-radius: 0 5px 5px 0;
+}
+
+.form-share {
+  border-radius: 5px 0 0 5px;
+}
+
+#role {
   font-style: italic;
 }
 
@@ -485,7 +557,6 @@ nav a {
 .shared_editor {
   display: flex;
   flex-wrap: wrap;
-
 }
 
 .shared_title {
@@ -505,9 +576,24 @@ nav a {
 /* settings */
 
 .menu_settings {
-  position: absolute;
-  top: 80px;
-  left: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* Centrer verticalement */
+  align-items: center;
+  /* Centrer horizontalement */
+  margin-top: 150px;
+  /* Ajouter de la marge autour du menu et le centrer horizontalement */
+}
+
+.menu_settings a {
+  text-decoration: none;
+  color: black;
+  margin-bottom: 10px;
+}
+
+.menu_settings i {
+  margin-right: 10px;
 }
 
 .menu_settings a {
@@ -523,9 +609,12 @@ nav a {
 /* edit_profile */
 
 .edit_form {
-  position: absolute;
-  top: 120px;
-  left: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Centrer horizontalement */
+  color: white;
+  margin: 150px auto;
 }
 
 .form-label {
@@ -537,21 +626,38 @@ nav a {
 /* logout */
 
 .logout {
-  position: absolute;
-  top: 300px;
-  left: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Centrer horizontalement */
   color: white;
+  margin-top: 50px;
+}
+
+.logout button {
+  margin: 10px;
 }
 
 /*partie commune entre checklist_note et text_note dans open_note :
 /*barre open note*/
 .barre {
+  display: flex;
+  justify-content: flex-end;
+  column-gap: 10px;
   position: absolute;
   left: 3%;
   width: 94%;
   top: 30px;
+}
 
+.back {
+  margin: auto;
+  margin-left: 5px;
+}
 
+#deleteForm {
+  margin: unset;
+  display: unset;
 }
 
 #delete_icon {
@@ -560,46 +666,20 @@ nav a {
   background-color: transparent;
   border: none;
 }
+
 #delete_icon span {
   color: red;
 
 }
 
-
-.unarchive {
-  position: absolute;
-  right: 0;
-}
-
-.archive {
-  position: absolute;
-  right: 40px;
-}
-
-.isShared {
-  position: absolute;
-  right: 0;
-}
-
-.pinned {
-  position: absolute;
-  right: 80px;
-}
-
-.share {
-  position: absolute;
-  right: 120px;
-}
-
 /* Partie title et dates */
 .dates {
-  position: absolute;
+  position: relative;
   top: 60px;
   left: 3%;
   font-style: italic;
   color: lightgray;
   font-weight: 350;
-
 }
 
 .title_note {
@@ -637,32 +717,18 @@ nav a {
 /*open_text_note*/
 
 .note_body_text {
-    color : lightgray;
-    position: absolute;
-    top: 230px;
-    left: 3%;
-    padding: 15px;
-    width: 94%;
-    border-radius: 7PX;
-    border: 1.7px solid #53575e;
-    background-color: #383c44;
-    overflow-y: auto;
-    max-height: 500px;
-    
-}
-
-/*error edit and add text_note*/
-
-#titleError {
+  color: lightgray;
   position: absolute;
-  top: 170px;
+  top: 230px;
   left: 3%;
-}
+  padding: 15px;
+  width: 94%;
+  border-radius: 7PX;
+  border: 1.7px solid #53575e;
+  background-color: #383c44;
+  overflow-y: auto;
+  max-height: 500px;
 
-#contentError {
-  position: absolute;
-  top: 330px;
-  left: 3%;
 }
 
 .is-invalid {
@@ -673,9 +739,12 @@ nav a {
   border: 2px solid rgb(27, 197, 27) !important;
 }
 
-input:focus, textarea:focus {
-  outline: none;  /* Supprime l'outline par défaut */
-  box-shadow: 0 0 5px rgba(81, 203, 238, 1);  /* Ajoute une légère box-shadow pour un effet de focus */
+input:focus,
+textarea:focus {
+  outline: none;
+  /* Supprime l'outline par défaut */
+  box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+  /* Ajoute une légère box-shadow pour un effet de focus */
 }
 
 /*open_checklist_note*/
@@ -689,7 +758,7 @@ input:focus, textarea:focus {
 
 }
 
-#check_submit {
+.check_submit {
   background: #0962ea;
   border-radius: 5px 0 0 5px;
   border: 1.7px solid #0962ea;
@@ -730,9 +799,25 @@ input:focus, textarea:focus {
 /* erreurs */
 
 #alertPassword {
-  position: absolute;
-  top: 450px;
-  left: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Centrer horizontalement */
+  margin: auto;
+  max-width: 30%;
+}
+
+@media screen and (max-width: 600px) {
+  #alertPassword {
+    font-size: 3vw;
+  }
+}
+
+@media screen and (min-width: 601px) {
+  #alertPassword {
+    font-size: 18px;
+    /* Taille fixe pour les écrans plus grands */
+  }
 }
 
 /* text note settings */
@@ -752,29 +837,58 @@ input:focus, textarea:focus {
   position: absolute;
   left: 3%;
   width: 94%;
-  top: 30px; 
+  top: 30px;
+}
+.container_edit {
+  margin: 22% auto;
+  width: 90%;
 }
 
+/* style edit et add text_note le plus récent */
+
+/******début*****/
+
+.edit_text_note_form {
+  margin: 10%;
+}
+
+.edit_text_note_date {
+  margin: 5%;
+}
+
+#content {
+  resize: vertical;
+  /* Permet à l'utilisateur de redimensionner verticalement */
+  min-height: 200px;
+  /* Taille minimale du textarea */
+}
+
+/* Media query pour les écrans de petite taille */
+@media (max-width: 768px) {
+  #content {
+    min-height: 300px;
+    /* Taille minimale réduite pour les écrans plus petits */
+  }
+}
+
+.text_note_form_items {
+  margin: 5%;
+}
+
+/* *****fin**** */
+
+
+
 .note_body_edit {
-  position: absolute;
-  top: 220px;
-  left: 3.5%;
+
   color: white;
   font-size: 18px;
 }
+
 .note_body_checklist_edit {
   color : lightgray;
-  position: absolute;
-  top: 260px;
-  left: 3%;
-  width: 94%;
-  
 }
-.erreur_edit {
-  position: absolute;
-  left: 3%;
-  top: 166px;
-}
+
 
 .save {
   position: absolute;
@@ -784,9 +898,6 @@ input:focus, textarea:focus {
 }
 
 .title_edit_note {
-  position: absolute;
-  top: 125px;
-  left: 3%;
   color: lightgray;
   background-color: transparent;
   width: 94%;
@@ -797,10 +908,6 @@ input:focus, textarea:focus {
 
 .erreur_edit {
   color: red;
-  position: absolute;
-  top: 160px;
-  left: 4%;
-
 }
 
 .edit_checklist_form {
@@ -874,39 +981,44 @@ input:focus, textarea:focus {
   padding: 7px;
   margin-left: 14%;
   width: 70%;
+  background-color: unset;
+  color: lightgray;
 }
+
 .input_add {
   background-color: transparent;
 
 }
+
 .adapt_height {
-  
+
   height: 500px;
 }
+
 .pointer {
   cursor: pointer;
 }
-/* .form-control {
-  background: transparent;
-} */
 
 /* add checklist note */
 .add_checklist {
-  margin: 20% auto ;
+  margin: 20% auto;
   width: 90%;
 }
+
 .item_add {
-  margin: 5% 0 ;
+  margin: 5% 0;
   background: transparent;
   color: lightgrey;
 
 }
+
 .add_header {
   position: absolute;
   left: 3%;
   width: 94%;
   top: 40px;
 }
+
 .item_add:focus {
   background-color: transparent;
   color: lightgrey;
@@ -935,4 +1047,103 @@ input:focus, textarea:focus {
   background-color: #313538;
 }
 
+
+/* Note label*/
+.box-label-note {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+  position: absolute;
+  bottom: 8%;
+  width: 80%;
+}
+
+.form-control-label {
+  background-color: transparent;
+  border: 1.6px solid #494c51;
+  padding: 7px;
+  border-radius: 5px;
+  color: lightgray;
+  width: 90%;
+}
+
+.label-note {
+  margin: 1px;
+}
+
+/* Cache l'input checkbox natif */
+.radio-label input[type="checkbox"] {
+  display: none;
+}
+
+/* Style de la span représentant la checkbox */
+.custom-checkbox-label {
+  width: 15px;
+  height: 15px;
+  background-color: transparent;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 4px;
+  position: relative;
+  transition: background-color 0.3s, border-color 0.3s;
+  cursor: pointer;
+}
+
+/* Style de la checkbox quand elle est cochée */
+.radio-label input[type="checkbox"]:checked + .custom-checkbox-label {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+/* Style du "check" quand la checkbox est cochée */
+.custom-checkbox-label::after {
+  content: '';
+  position: absolute;
+  display: none;
+}
+
+.radio-label input[type="checkbox"]:checked + .custom-checkbox-label::after {
+  display: block;
+}
+
+.custom-checkbox-label::after {
+  left: 4px;
+  top: 0px;
+  width: 6px;
+  height: 12px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* Style du label de la checkbox */
+.radio-label {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 0 8px;
+}
+
+/* Page recherche*/
+.box-search {
+  margin: 2% auto 0 auto;
+  width: 90%;
+}
+.result-note {
+  margin: 4% auto 0 auto;
+}
+
+.view-notes_search {
+  display: flex;
+  flex-wrap: wrap;
+  top: 3px;
+  position: relative;
+  left: 2%;
+  min-height: 100px;
+
+}
 

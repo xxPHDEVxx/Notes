@@ -45,6 +45,15 @@ ALTER TABLE `notes` ADD CONSTRAINT `fk_notes_users` FOREIGN KEY (`owner`) REFERE
 ALTER TABLE `notes` ADD CONSTRAINT `unique_title_owner` UNIQUE (`title`, `owner`);
 ALTER TABLE `notes` ADD CONSTRAINT `unique_weigh_owner` UNIQUE (`weight`, `owner`);
 
+DROP TABLE IF EXISTS `note_labels`;
+CREATE TABLE IF NOT EXISTS `note_labels` (
+  `note` int(11) NOT NULL,
+  `label` varchar(32) NOT NULL,
+  PRIMARY KEY (`note`, `label`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+ALTER TABLE `note_labels` ADD CONSTRAINT `fk_note_labels_users` FOREIGN KEY (`note`) REFERENCES `notes`(`id`);
+
 DROP TABLE IF EXISTS `note_shares`;
 CREATE TABLE IF NOT EXISTS `note_shares` (
   `note` int(11) NOT NULL,

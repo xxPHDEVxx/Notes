@@ -1,9 +1,9 @@
 <?php
 require_once "framework/Model.php";
 require_once "User.php";
-require_once "CheckListNoteItem.php";
+require_once "ChecklistNoteItem.php";
 
-class CheckListNote extends Note
+class ChecklistNote extends Note
 {
 
     public function get_content(): array | null

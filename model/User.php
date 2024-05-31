@@ -4,7 +4,6 @@ require_once "Note.php";
 require_once "NoteShare.php";
 require_once "Note.php";
 
-
 class User extends Model
 {
 
@@ -21,7 +20,13 @@ class User extends Model
         if ($query->rowCount() == 0) {
             return false;
         } else {
-            return new User($data["mail"], $data["hashed_password"], $data["full_name"], $data["role"], $data["id"]);
+            return new User(
+                $data["mail"],
+                $data["hashed_password"],
+                $data["full_name"],
+                $data["role"],
+                $data["id"]
+            );
         }
     }
     public static function get_user_by_id(int $user_id): User|false
@@ -35,7 +40,10 @@ class User extends Model
             return new User($data["mail"], $data["hashed_password"], $data["full_name"], $data["role"], $data["id"]);
         }
     }
-
+    
+    public function get_max_weight(){
+        return Note::get_max_weight($this);
+    }
 
 
     public function persist(): User
@@ -61,11 +69,17 @@ class User extends Model
 
     public static function get_users(): array
     {
-        $query = self::execute("SELECT * FROM Users", []);
+        $query = self::execute("SELECT * FROM users ORDER BY full_name" , []);
         $data = $query->fetchAll();
         $results = [];
         foreach ($data as $row) {
-            $results[] = new User($row["mail"], $row["hashed_password"], $row["full_name"], $row["role"]);
+            $results[] = new User(
+                $row["mail"],
+                $row["hashed_password"],
+                $row["full_name"],
+                $row["role"],
+                $row["id"]
+            );
         }
         return $results;
     }
@@ -84,34 +98,34 @@ class User extends Model
         return $errors;
     }
 
-    public static function validateEdit($email, $fullname,$currentUser): array
-{
-    $errors = [];
-    if (!strlen($email) > 0) {
-        $errors[] = "⚠Mail is required.";
-    }
-    if (!(preg_match("/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/", $email))) {
-        $errors[] = "⚠Email must have a valid structure.";
-    }
-    if (!strlen($fullname) > 0) {
-        $errors[] = "⚠Full Name is required.";
-    }
-    if (!(strlen($fullname) >= 3)) {
-        $errors[] = "⚠Full Name must have more than 3 characters.";
-    }
+    public static function validateEdit($email, $fullname, $currentUser): array
+    {
+        $errors = [];
+        if (!strlen($email) > 0) {
+            $errors[] = "⚠Mail is required.";
+        }
+        if (!(preg_match("/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/", $email))) {
+            $errors[] = "⚠Email must have a valid structure.";
+        }
+        if (!strlen($fullname) > 0) {
+            $errors[] = "⚠Full Name is required.";
+        }
+        if (!(strlen($fullname) >= 3)) {
+            $errors[] = "⚠Full Name must have more than 3 characters.";
+        }
 
+    $currentEmail = $currentUser ? $currentUser->mail : null;
     $currentUserId = $currentUser ? $currentUser->id : null;
 
-    // Vérifier l'unicité de l'email uniquement si l'email est modifié par rapport à celui de l'utilisateur actuel
-    if ($currentUser && $currentUser->mail === $email) {
-        $errors[] = "⚠The email entered is identical to the current email.";
-    } else {
-        $existingUser = User::get_user_by_mail($email);
-        if ($existingUser && $existingUser->id != $currentUserId) {
-            $errors[] = "⚠This email is already used by another user.";
+    // Check if email field has been touched
+    if ($email !== $currentEmail) {
+        if ($currentEmail !== null) {
+            $existingUser = User::get_user_by_mail($email);
+            if ($existingUser && $existingUser->id != $currentUserId) {
+                $errors[] = "⚠This email is already used by another user.";
+            }
         }
     }
-
     return $errors;
 }
 
@@ -144,9 +158,9 @@ class User extends Model
         }
 
         // Récupérer le mot de passe actuel de l'utilisateur
-    if ($currentUser && Tools::my_hash($password) === $currentUser->getHashedPassword()) {
-        $errors[] = "⚠The new password cannot be the same as the current password.";
-    }
+        if ($currentUser && Tools::my_hash($password) === $currentUser->getHashedPassword()) {
+            $errors[] = "⚠The new password cannot be the same as the current password.";
+        }
         return $errors;
     }
     public static function validate_passwords(string $password, string $password_confirm, $currentPassword): array
@@ -182,34 +196,34 @@ class User extends Model
 
 
 
-    public function get_archives() : array{
+    public function get_archives(): array
+    {
         return Note::get_archives($this);
-        
     }
 
-    public function get_shared_by(int $ownerid) : array {
-        return NoteShare1::get_shared_by($this->id, $ownerid);
-        
+    public function get_shared_by(int $ownerid): array
+    {
+        return NoteShare::get_shared_by($this->id, $ownerid);
     }
 
 
-    public function shared_by() : array {
-        
-        $shared =  NoteShare1::get_shared_note($this);
+    public function shared_by(): array
+    {
+
+        $shared =  NoteShare::get_shared_note($this);
         $ids = [];
-        foreach($shared as $shared_note) {
-          $id = $shared_note->owner;
-            $ids[]= $id;
+        foreach ($shared as $shared_note) {
+            $id = $shared_note->owner;
+            $ids[] = $id;
         }
         $idsUnique = array_unique($ids);
         $sharers = [];
-        foreach($idsUnique as $userid) {
+        foreach ($idsUnique as $userid) {
             $user = User::get_user_by_id($userid);
             $sharers[] = $user;
         }
         return $sharers;
     }
-
     public function get_notes_pinned(): array
     {
         return Note::get_notes_pinned($this);
@@ -260,5 +274,7 @@ class User extends Model
             throw new Exception("Erreur lors de la mise à jour du mot de passe : " . $e->getMessage());
         }
     }
+    public function get_labels(): array {
+        return NoteLabel::get_labels($this);
+    }
 }
-
