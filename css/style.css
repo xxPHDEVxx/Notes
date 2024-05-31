@@ -218,6 +218,7 @@ h2 {
   width: 188px;
   background: #202325;
   margin: 3px;
+  height: 200px;
 }
 
 .link-note-archivee,
@@ -558,7 +559,6 @@ nav a {
 .shared_editor {
   display: flex;
   flex-wrap: wrap;
-
 }
 
 .shared_title {
