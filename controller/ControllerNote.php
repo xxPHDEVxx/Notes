@@ -877,21 +877,30 @@ class ControllerNote extends Controller
 
 
     public function labels() {
-        $labels = [];
-        $all = ["Privé", "Maison", "Loisirs", "Travail"];
+        $labels_note = [];
+        $default = ["Priv&eacute;", "Maison", "Loisirs", "Travail"];
         $nvlab = [];
         $user = $this->get_user_or_redirect();
+        $all = [];
+        if (!empty($user->get_labels())) {
+            $user_labels = $user->get_labels();
+    
+            // Fusionner les labels de l'utilisateur et les labels par défaut sans doublon
+            $all = array_unique(array_merge($default, $user_labels));
+        } else {
+            $all = $default;
+        } 
         $errors= [];
         //vérifier et récupérer l'id en paramètre
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
             // Récupération de la note par son identifiant
             $note = Note::get_note_by_id($note_id);
-            $labels = $note->get_labels();     
+            $labels_note = $note->get_labels();     
             
             //verifier et mis en tableau les labels non utilisé
             foreach ($all as $label) {
-                if (!in_array($label, $labels)) {
+                if (!in_array($label, $labels_note)) {
                     $nvlab[] = $label;
                 }
             }
@@ -906,12 +915,8 @@ class ControllerNote extends Controller
                     $this->redirect("note", "labels", $note->note_id);
                 }
             }
-
-            //supprimer un label
-
-
         }
-        (new View("labels"))->show(["labels" => $labels, "note"=>$note, "all"=>$nvlab, "errors"=> $errors]);
+        (new View("labels"))->show(["labels" => $labels_note, "note"=>$note, "all"=>$nvlab, "errors"=> $errors]);
     }
 
     public function delete_label()  {

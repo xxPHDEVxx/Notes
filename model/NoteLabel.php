@@ -50,7 +50,8 @@ class NoteLabel extends Model
         return $errors;
     }
 
-    public function persist() {
+    public function persist()
+    {
         self::execute(
             "INSERT INTO note_labels (note, label) VALUES (:note,:label)",
             [
@@ -58,31 +59,42 @@ class NoteLabel extends Model
                 "label" => $this->label
             ]
         );
-        
     }
 
-    public static function get_note_label(int $note, string $label) {
-        $query = self::execute("SELECT * FROM note_labels WHERE note = :note AND label = :label", 
-        [
-            "note" => $note, 
-            "label"  => $label
-        ]);
+    public static function get_note_label(int $note, string $label)
+    {
+        $query = self::execute(
+            "SELECT * FROM note_labels WHERE note = :note AND label = :label",
+            [
+                "note" => $note,
+                "label"  => $label
+            ]
+        );
         $data = $query->fetch();
         if (count($data) !== 0) {
             return new NoteLabel($data["note"], $data["label"]);
         }
     }
 
-    public function delete() {
-        self::execute("DELETE FROM note_labels WHERE note = :note AND label = :label",
-        [
-            "note"=>$this->note,
-            "label"=> $this->label
-        ]);
+    public function delete()
+    {
+        self::execute(
+            "DELETE FROM note_labels WHERE note = :note AND label = :label",
+            [
+                "note" => $this->note,
+                "label" => $this->label
+            ]
+        );
     }
 
-    public static function get_labels() {
-        $query = self::execute("SELECT DISTINCT label FROM note_labels ",[]);
+    public static function get_labels(User $user)
+    {
+
+        $query = self::execute("SELECT DISTINCT nl.label
+            FROM note_labels nl
+            INNER JOIN notes n ON nl.note = n.id
+            WHERE n.owner = :owner", 
+            ["owner" => $user->id]);
         $labels = [];
         $data = $query->fetchAll();
         foreach ($data as $row) {
@@ -91,5 +103,3 @@ class NoteLabel extends Model
         return $labels;
     }
 }
-
-

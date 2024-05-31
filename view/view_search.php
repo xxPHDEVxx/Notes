@@ -27,8 +27,8 @@
                     <span class="custom-checkbox-label"></span>
                     <?= $label ?>
                 </label>
-
             <?php endforeach; ?>
+
         </div>
     </div>
 

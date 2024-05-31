@@ -15,7 +15,7 @@ class ControllerSearch extends Controller
     public function index(): void
     {
         $user = $this->get_user_or_redirect();
-        $labels = NoteLabel::get_labels();
+        $labels = $user->get_labels();
         (new View("search"))->show(["sharers" => $user->shared_by(),
         "currentPage" => "search", "labels"=>$labels
     ]);
