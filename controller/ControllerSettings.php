@@ -36,9 +36,13 @@ class ControllerSettings extends Controller
                 try {
                     if ($user->mail == $newEmail && $user->full_name == $newFullName) {
                         $successMessage = "Nothing to update.";
+                        (new View("edit_profile"))->show(["user" => $user, "successMessage" => $successMessage, "errors" => $errors]);
+                        return;
                     } else {
                         $user->updateProfile($newFullName, $newEmail);
                         $successMessage = "Profil updated !";
+                        (new View("edit_profile"))->show(["user" => $user, "successMessage" => $successMessage, "errors" => $errors]);
+                        return;
                     }
                 } catch (Exception $e) {
                     $errors[] = "Error updating profile : " . $e->getMessage();
@@ -46,9 +50,9 @@ class ControllerSettings extends Controller
             } else {
                 $errors = array_merge($errors);
             }
-            (new View("edit_profile"))->show(["user" => $user, "successMessage" => $successMessage, "errors" => $errors, "sharers" => $sharers]);
+            (new View("edit_profile"))->show(["user" => $user, "successMessage" => $successMessage, "errors" => $errors]);
         } else {
-            (new View("edit_profile"))->show(["user" => $user, "sharers" => $sharers]);
+            (new View("edit_profile"))->show(["user" => $user]);
         }
     }
 
@@ -58,7 +62,6 @@ class ControllerSettings extends Controller
 
         $successMessage = null;
         $errors[] = [];
-        $sharers = $user->shared_by();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $currentPassword = $_POST['currentPassword'];
@@ -78,6 +81,8 @@ class ControllerSettings extends Controller
                         $user->setPassword($newPassword);
                         $user->updatePassword($newPassword);
                         $successMessage = "Password changed successfully!";
+                        (new View("change_password"))->show(["user" => $user, "successMessage" => $successMessage, "errors" => $errors]);
+                        return;
                     } catch (Exception $e) {
                         $errors[] = "Erreur lors de la mise à jour du mot de passe : " . $e->getMessage();
                     }
@@ -85,12 +90,11 @@ class ControllerSettings extends Controller
                     $errors = array_merge($errors, $passwordErrors);
                 }
             }
-            (new View("change_password"))->show(["user" => $user, "successMessage" => $successMessage, "errors" => $errors, "sharers" => $sharers]);
+            (new View("change_password"))->show(["user" => $user, "successMessage" => $successMessage, "errors" => $errors]);
         } else {
-            (new View("change_password"))->show(["user" => $user, "sharers" => $sharers]);
+            (new View("change_password"))->show(["user" => $user]);
         }
     }
-
 
     public function index(): void
     {
