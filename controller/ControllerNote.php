@@ -1078,5 +1078,60 @@ class ControllerNote extends Controller
     }
 
 
+    public function labels() {
+        $labels_note = [];
+        $default = ["Priv&eacute;", "Maison", "Loisirs", "Travail"];
+        $nvlab = [];
+        $user = $this->get_user_or_redirect();
+        $all = [];
+        if (!empty($user->get_labels())) {
+            //on récupere les label des notes de l'utilisateur connecté
+            $user_labels = $user->get_labels();
+            // Fusionner les labels de l'utilisateur et les labels par défaut sans doublon
+            $all = array_unique(array_merge($default, $user_labels));
+        } else {
+            $all = $default;
+        } 
+        $errors= [];
+        //vérifier et récupérer l'id en paramètre
+        if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
+            $note_id = $_GET["param1"];
+            // Récupération de la note par son identifiant
+            $note = Note::get_note_by_id($note_id);
+            $labels_note = $note->get_labels();     
+            
+            //verifier et mis en tableau les labels non utilisé
+            foreach ($all as $label) {
+                if (!in_array($label, $labels_note)) {
+                    $nvlab[] = $label;
+                }
+            }
+
+            //rajouter un nouveau label
+            if (isset($_POST["new_label"]) && isset($_POST["new_label"]) !== "") {
+                $content = $_POST["new_label"];
+                $new_label = new NoteLabel($note->note_id, $content);
+                $errors = $new_label->validate_label();
+                if (empty($errors)) {
+                    $new_label->persist();
+                    $this->redirect("note", "labels", $note->note_id);
+                }
+            }
+        }
+        (new View("labels"))->show(["labels" => $labels_note, "note"=>$note, "all"=>$nvlab, "errors"=> $errors]);
+    }
+
+    public function delete_label()  {
+        $user = $this->get_user_or_redirect();
+        if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
+            $note_id = $_GET["param1"];
+            // Récupération de la note par son identifiant
+            $note = Note::get_note_by_id($note_id);
+            $content = $_POST["label"];
+            $label  = NoteLabel::get_note_label($note->note_id, $content);
+            $label->delete();
+            $this->redirect("note", "labels", $note->note_id);
+        }
+    }
 
 }
