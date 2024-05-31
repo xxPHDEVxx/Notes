@@ -22,8 +22,11 @@
         <div class="form-check">
             <p>Search notes by tag : </p>
             <?php foreach ($labels as $label) : ?>
-                <input type="checkbox" id="<?=$label?>" name="<?=$label?>" value="<?=$label?>"  class="">
-                <label for="<?=$label?>"><?=$label?></label>
+                <label for="<?= $label ?>" class="radio-label">
+                    <input type="checkbox" id="<?= $label ?>" name="<?= $label ?>" value="<?= $label ?>" class="check-box-label">
+                    <span class="custom-checkbox-label"></span>
+                    <?= $label ?>
+                </label>
 
             <?php endforeach; ?>
         </div>

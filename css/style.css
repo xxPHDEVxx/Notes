@@ -1059,10 +1059,12 @@ textarea:focus {
 /* Note label*/
 .box-label {
   display: flex;
-  width: 100%;
   align-items: center;
   flex-wrap: wrap;
   flex-direction: row;
+  position: absolute;
+  bottom: 8%;
+  width: 80%;
 }
 
 .form-control-label {
@@ -1074,19 +1076,63 @@ textarea:focus {
   width: 90%;
 }
 
-.box-label {
-  position: absolute;
-  bottom: 8%;
-  width: 80%;
-
-}
 .label-note {
   margin: 1px;
 }
-.box-label input[type="checkbox"] {
+
+/* Cache l'input checkbox natif */
+.radio-label input[type="checkbox"] {
   display: none;
 }
 
-.check-box-label {
+/* Style de la span représentant la checkbox */
+.custom-checkbox-label {
+  width: 15px;
+  height: 15px;
   background-color: transparent;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 4px;
+  position: relative;
+  transition: background-color 0.3s, border-color 0.3s;
+  cursor: pointer;
 }
+
+/* Style de la checkbox quand elle est cochée */
+.radio-label input[type="checkbox"]:checked + .custom-checkbox-label {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+/* Style du "check" quand la checkbox est cochée */
+.custom-checkbox-label::after {
+  content: '';
+  position: absolute;
+  display: none;
+}
+
+.radio-label input[type="checkbox"]:checked + .custom-checkbox-label::after {
+  display: block;
+}
+
+.custom-checkbox-label::after {
+  left: 4px;
+  top: 0px;
+  width: 6px;
+  height: 12px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* Style du label de la checkbox */
+.radio-label {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 0 8px;
+}
+
