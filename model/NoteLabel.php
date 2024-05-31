@@ -80,6 +80,16 @@ class NoteLabel extends Model
             "label"=> $this->label
         ]);
     }
+
+    public static function get_labels() {
+        $query = self::execute("SELECT DISTINCT label FROM note_labels ",[]);
+        $labels = [];
+        $data = $query->fetchAll();
+        foreach ($data as $row) {
+            $labels[] = $row["label"];
+        }
+        return $labels;
+    }
 }
 
 

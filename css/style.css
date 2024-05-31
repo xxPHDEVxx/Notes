@@ -1083,3 +1083,10 @@ textarea:focus {
 .label-note {
   margin: 1px;
 }
+.box-label input[type="checkbox"] {
+  display: none;
+}
+
+.check-box-label {
+  background-color: transparent;
+}
