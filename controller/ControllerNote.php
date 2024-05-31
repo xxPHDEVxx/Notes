@@ -122,7 +122,8 @@ class ControllerNote extends Controller
             // Si les données postées sont valides, partager la note
             if (isset($_POST['user'], $_POST['editor']) && empty($errors)) {
                 $nv_us = User::get_user_by_id($_POST['user']);
-                $editor = ($_POST['editor'] == 1) ? true : false;;
+                $editor = ($_POST['editor'] == 1) ? true : false;
+                ;
                 $note_share = new NoteShare($note_id, $nv_us->id, $editor);
                 $note_share->persist();
                 $this->redirect("note", "shares", $note_id);
@@ -502,8 +503,8 @@ class ControllerNote extends Controller
                         }
                     }
                 }
-                
-            }   
+
+            }
             $errors = array_merge($errors, $errorsItem);
             if (empty($errors["title"]) && empty($errorsItem)) {
                 $note->persist();
@@ -907,4 +908,37 @@ class ControllerNote extends Controller
             }
         }
     }
+
+    public function check_content_checklist_service()
+    {
+        $error = []; // Tableau pour stocker les messages d'erreur
+
+        // Vérifie si les données nécessaires sont présentes dans la requête POST
+        if (isset($_POST['items'], $_POST['id'])) {
+            // Récupération de l'identifiant de l'élément et de son contenu
+            $id = $_POST['id'];
+            $content = $_POST['items'];
+
+            // Récupération de l'élément de la checklist associé à l'identifiant
+            $checklistItem = CheckListNoteItem::get_item_by_id($id);
+
+            if ($checklistItem) {
+                // Vérification si le contenu est unique pour l'élément
+                if (!$checklistItem->is_unique_service($content)) {
+                    $error[$id] = "Item must be unique"; // Erreur si le contenu n'est pas unique
+                } else {
+                    // Validation du contenu de l'élément
+                    $contentErrors = $checklistItem->validate_item_service($content);
+                    if (!empty($contentErrors)) {
+                        $error[$id] = $contentErrors[0]; // Erreur de validation du contenu
+                    }
+                }
+            } else {
+                $error[$id] = "Item not found in database"; // Erreur si l'élément n'est pas trouvé
+            }
+            // Retourne les messages d'erreur au format JSON
+            echo json_encode($error);
+        }
+    }
+
 }

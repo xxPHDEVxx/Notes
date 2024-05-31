@@ -26,6 +26,20 @@ class CheckListNoteItem extends Model
 
         return $errors;
     }
+
+    public function validate_item_service($content)
+    {
+        $errors = [];
+        $minLength = Configuration::get('item_min_length');
+        $maxLength = Configuration::get('item_max_length');
+
+        // Vérifie la longueur du titre
+        if (strlen($content) < $minLength || strlen($content) > $maxLength) {
+            $errors[] = "L'item doit avoir au minimum $minLength caractères et au maximum $maxLength caractères.";
+        }
+        return $errors;
+    }
+
     public static function update_checked(int $checklist_item_id, bool $checked): bool
     {
         self::execute("UPDATE checklist_note_items SET checked =:checked WHERE id = :id", ["id" => $checklist_item_id, "checked" => $checked]);
@@ -67,12 +81,28 @@ class CheckListNoteItem extends Model
     public function is_unique(): bool
     {
 
-        // Vérifie si le titre est unique pour cet utilisateur
+        // Vérifie si le contenu de l'item est unique pour cette note
         $query = self::execute("SELECT COUNT(*) FROM checklist_note_items WHERE checklist_note = :checklist AND content = :content AND id <> :id", [
             'checklist' => $this->checklist_note,
-            'content' => $this->content, 
+            'content' => $this->content,
             'id' => $this->id
-            
+
+        ]);
+        if ($query->fetchColumn() > 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public function is_unique_service($content)
+    {
+        // Vérifie si le contenu de l'item est unique pour cette note
+        $query = self::execute("SELECT COUNT(*) FROM checklist_note_items WHERE checklist_note = :checklist AND content = :content AND id <> :id", [
+            'checklist' => $this->checklist_note,
+            'content' => $content,
+            'id' => $this->id
+
         ]);
         if ($query->fetchColumn() > 0) {
             return false;
@@ -86,7 +116,7 @@ class CheckListNoteItem extends Model
         self::execute("DELETE FROM checklist_note_items WHERE id = :id", ["id" => $this->id]);
     }
 
-    public static function get_item_by_id(int $item_id): CheckListNoteItem | false
+    public static function get_item_by_id(int $item_id): CheckListNoteItem|false
     {
         $query = self::execute("SELECT * FROM checklist_note_items WHERE id = :id", ["id" => $item_id]);
         $data = $query->fetch();
@@ -94,6 +124,18 @@ class CheckListNoteItem extends Model
             return false;
         } else {
             return new CheckListNoteItem($data['id'], $data['checklist_note'], $data['content'], $data['checked']);
+        }
+    }
+
+    // récupérer l'id et le contenu d'un item uniquement.
+    public static function get_id_content_from_item(int $item_id)
+    {
+        $query = self::execute("SELECT id, content FROM checklist_note_items WHERE id = :id", ["id" => $item_id]);
+        $data = $query->fetchAll(PDO::FETCH_COLUMN, 0);
+        if ($data == null) {
+            return false;
+        } else {
+            return $data;
         }
     }
 
