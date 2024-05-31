@@ -205,7 +205,6 @@ $(document).ready(function () {
             type: "POST", // Méthode de la requête (POST)
             data: requestData, // Les données à envoyer (le titre de la note)
             success: function (data) { // Fonction exécutée en cas de succès de la requête
-                console.log(data);
                 if (data.length > 2) {
                     let message = JSON.parse(data)[0];
                     if (errorSpan) {
@@ -244,10 +243,11 @@ $(document).ready(function () {
             url: "note/add_new_content_checklist_service", // L'URL où envoyer la requête
             type: "POST", // Méthode de la requête (POST)
             data: requestData, // Les données à envoyer (le titre de la note)
-            success: function () {
-                let newItemData = JSON.parse(data);
-                // Créer l'élément HTML à ajouter à la vue
-                var newItemHTML = '<div class="item">' + newItemData.content + '</div>';
+            success: function (data) {
+                let item = JSON.parse(data);
+                console.log(item);
+                let editChecklistItem = createEditChecklistItem(item.id, item.content, item.checked);
+                document.getElementById("container-item").appendChild(editChecklistItem);
             },
             error: function (xhr, status, error) { // Fonction exécutée en cas d'erreur de la requête
                 console.error("Erreur lors de la vérification du contenu de la note : ", error); // Affichage de l'erreur dans la console
@@ -329,5 +329,63 @@ $(document).ready(function () {
                 console.error("Erreur lors de la vérification du titre unique : ", error); // Affichage de l'erreur dans la console
             }
         });
+    }
+
+    function createEditChecklistItem(id, content, checked) {
+        // Création du conteneur principal
+        let divContainer = document.createElement('div');
+        divContainer.classList.add('edit_checklist_form');
+        divContainer.id = 'div' + id;
+
+        // Création de la div pour la case à cocher
+        let divCheckDiv = document.createElement('div');
+        divCheckDiv.classList.add('edit_check_div');
+
+        // Création de la case à cocher
+        let checkbox = document.createElement('input');
+        checkbox.classList.add('check_square');
+        checkbox.type = 'checkbox';
+        checkbox.value = id;
+        checkbox.name = 'box';
+        if (checked) {
+            checkbox.checked = true;
+        }
+        checkbox.disabled = true;
+
+        // Création de l'élément input pour le contenu de l'item
+        let inputContent = document.createElement('input');
+        inputContent.type = 'text';
+        inputContent.name = 'items[' + id + ']';
+        inputContent.classList.add('checklist_elements');
+        if (checked) {
+            inputContent.classList.add('check_label');
+        }
+        inputContent.id = 'item_content_' + id;
+        inputContent.value = content;
+
+        // Création de l'input caché pour le retrait de l'élément
+        let inputRemove = document.createElement('input');
+        inputRemove.type = 'hidden';
+        inputRemove.name = 'remove';
+        inputRemove.value = id;
+
+        // Création du bouton de suppression
+        let deleteButton = document.createElement('button');
+        deleteButton.type = 'submit';
+        deleteButton.id = 'delete' + id;
+        deleteButton.name = 'delete';
+        deleteButton.value = id;
+        deleteButton.classList.add('icone-delete');
+        deleteButton.textContent = '-';
+
+        // Ajout des éléments créés au conteneur principal
+        divContainer.appendChild(divCheckDiv);
+        divCheckDiv.appendChild(checkbox);
+        divContainer.appendChild(inputContent);
+        divContainer.appendChild(inputRemove);
+        divContainer.appendChild(deleteButton);
+
+        // Retourner le conteneur principal
+        return divContainer;
     }
 });
