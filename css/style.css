@@ -227,7 +227,7 @@ h2 {
 }
 
 .note-title {
-  font-size: 18px;
+  font-size: 17px;
   border-bottom: 1.5px solid #43464c;
   ;
   border-top-right-radius: 5px;
@@ -361,14 +361,13 @@ h2 {
   border: 1.5px solid #43464c;
   color: white;
   border-radius: 5px;
-  width: 188px;
+  width: 210px;
   background: #202325;
   margin: 3px;
   position: relative;
-  position: relative;
   display: flex;
   flex-direction: column;
-  height: 200px;
+  height: 210px;
   /* Hauteur maximale fixe pour la note */
 }
 
