@@ -49,12 +49,12 @@
                             value="<?= $row["content"] ?>">
 
                         <input type="hidden" name="remove" value="<?= $id ?>">
-                        <button type="submit" name="delete" value="<?= $id ?>" class="icone-delete">-</button>
+                        <button type="submit" id = "delete<?=$id?> " name="delete" value="<?= $id ?>" class="icone-delete">-</button>
                     </div>
-                    <span id="contentError_<?= $id?>" class="text-danger" style="display: none;"></span>
+                    <span id="contentError_<?= $id ?>" class="text-danger" style="display: none;"></span>
                     <?php if (!empty($errors["item_$id"])): ?>
                         <p class="text-danger"><?= $errors["item_$id"] ?></p>
-                    <?php
+                        <?php
                     endif; ?>
                 <?php endforeach; ?>
                 <label for="new">New item</label>

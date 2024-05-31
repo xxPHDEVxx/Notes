@@ -874,6 +874,8 @@ class ControllerNote extends Controller
         $view->show($data);
     }
 
+    /* ***** Méthodes AJAX ***** */
+
     // Méthode pour vérifier le titre d'une note via un service AJAX
     public function check_title_service()
     {
@@ -895,6 +897,29 @@ class ControllerNote extends Controller
         }
     }
 
+
+    public function add_title_service()
+    {
+        $title_error = "";
+        if (isset($_POST['title'])) {
+            $title = $_POST['title'];
+            if ($_POST['note'] != null) {
+                $note_id = (int) str_replace("&quot;", "", $_POST["note"]);
+                $note = Note::get_note_by_id($note_id);
+                if ($note->validate_title_service($title) != null)
+                    $title_error = $note->validate_title_service($title)[0];
+            } else {
+                if (Note::validate_new_title_service($title) != null)
+                    $title_error = Note::validate_new_title_service($title)[0];
+            }
+            if (empty($title_error)) {
+                $note->title = Tools::sanitize($_POST['title']);
+                echo ("yo");
+                $note->persist();
+            }
+        }
+    }
+
     // Méthode pour vérifier le contenu d'une note via un service AJAX
     public function check_content_service()
     {
@@ -909,6 +934,7 @@ class ControllerNote extends Controller
         }
     }
 
+    // Méthode pour vérifier le contenu d'une checklist note via un service AJAX
     public function check_content_checklist_service()
     {
         $error = []; // Tableau pour stocker les messages d'erreur
@@ -917,7 +943,8 @@ class ControllerNote extends Controller
         if (isset($_POST['items'], $_POST['id'])) {
             // Récupération de l'identifiant de l'élément et de son contenu
             $id = $_POST['id'];
-            $content = $_POST['items'];
+            $content = Tools::sanitize($_POST['items']);
+
 
             // Récupération de l'élément de la checklist associé à l'identifiant
             $checklistItem = CheckListNoteItem::get_item_by_id($id);
@@ -940,5 +967,115 @@ class ControllerNote extends Controller
             echo json_encode($error);
         }
     }
+
+    public function save_content_checklist_service()
+    {
+        $errors = []; // Tableau pour stocker les messages d'erreur
+
+        // Vérifie si les données nécessaires sont présentes dans la requête POST
+        if (isset($_POST['items'], $_POST['id'])) {
+            // Récupération de l'identifiant de l'élément et de son contenu
+            $id = $_POST['id'];
+            $content = Tools::sanitize($_POST['items']);
+
+
+            // Récupération de l'élément de la checklist associé à l'identifiant
+            $checklistItem = CheckListNoteItem::get_item_by_id($id);
+
+            if ($checklistItem) {
+                // Vérification si le contenu est unique pour l'élément
+                if (!$checklistItem->is_unique_service($content)) {
+                    $errors[] = "Item must be unique"; // Erreur si le contenu n'est pas unique
+                } else {
+                    // Validation du contenu de l'élément
+                    if ($checklistItem->validate_item_service($content) != null)
+                        $errors = $checklistItem->validate_item_service($content)[0];
+                }
+                if (empty($errors)) {
+                    var_dump($checklistItem);
+                    $checklistItem->set_content($content);
+                    $checklistItem->persist();
+                }
+            }
+        }
+    }
+
+    // Méthode pour vérifier un nouvel item d'une checklist note via un service AJAX
+    public function check_new_content_checklist_service()
+    {
+        $error = []; // Tableau pour stocker les messages d'erreur
+
+        // Vérifie si les données nécessaires sont présentes dans la requête POST
+        if (isset($_POST['new'], $_POST['note_id'])) {
+            // Récupération de l'identifiant de l'élément et de son contenu
+            $note_id = $_POST['note_id'];
+            $content = Tools::sanitize($_POST['new']);
+            $item = new CheckListNoteItem(0, $note_id, $content, false);
+
+
+            if ($item) {
+                // Vérification si le contenu est unique pour l'élément
+                if (!$item->is_unique_service($content)) {
+                    $error[] = "Item must be unique"; // Erreur si le contenu n'est pas unique
+                } else {
+                    // Validation du contenu de l'élément
+                    $contentErrors = $item->validate_item_service($content);
+                    if (!empty($contentErrors)) {
+                        $error[] = $contentErrors[0]; // Erreur de validation du contenu
+                    }
+                }
+            } else {
+                $error[] = "Item not found in database"; // Erreur si l'élément n'est pas trouvé
+            }
+            // Retourne les messages d'erreur au format JSON
+            echo json_encode($error);
+        }
+    }
+
+    // ajoutes un item à la base de donnée sur base d'un service AJAX
+    public function add_new_content_checklist_service()
+    {
+        $errors = []; // Tableau pour stocker les messages d'erreur
+
+        // Vérifie si les données nécessaires sont présentes dans la requête POST
+        if (isset($_POST['new'], $_POST['note_id'])) {
+            // Récupération de l'identifiant de l'élément et de son contenu
+            $note_id = $_POST['note_id'];
+            $content = Tools::sanitize($_POST['new']);
+            $item = new CheckListNoteItem(0, $note_id, $content, false);
+
+            if ($item) {
+                // Vérification si le contenu est unique pour l'élément
+                if (!$item->is_unique_service($content)) {
+                    $errors[] = "Item must be unique"; // Erreur si le contenu n'est pas unique
+                } else {
+                    // Validation du contenu de l'élément
+                    if ($item->validate_item_service($content) != null)
+                        $errors = $item->validate_item_service($content)[0];
+                }
+                if (empty($errors)) {
+                    $item->persist();
+                    echo json_encode($item);
+                }
+            }
+        }
+    }
+
+    // supprime un item de la base de donnée sur base d'un service AJAX
+    public function delete_item_service()
+    {
+        //action delete item
+        if (isset($_POST['id'])) {
+            $id = $_POST["id"];
+            $item = CheckListNoteItem::get_item_by_id($id);
+            if ($item === null) {
+                throw new Exception("Undefined checklist item");
+            }
+            $item->delete();
+            echo ($id);
+        }
+    }
+
+
 
 }
