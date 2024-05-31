@@ -20,20 +20,20 @@
     </div>
     <div class="box-search">
         <p>Search notes by tag : </p>
-        <form action="" method="get">
+        <form action="search/index" method="post">
             <?php foreach ($labels as $label) : ?>
                 <label for="<?= $label ?>" class="radio-label">
-                    <input type="checkbox" id="<?= $label ?>" name="<?= $label ?>" value="<?= $label ?>" class="check-box-label">
+                    <input type="checkbox" id="<?= $label ?>" name="check[]" value="<?= $label ?>" class="check-box-label" <?php if(isset($_POST['check'])) { if(in_array($label, $_POST['check'])) { echo 'checked'; } } ?>>
                     <span class="custom-checkbox-label"></span>
                     <?= $label ?>
                 </label>
             <?php endforeach; ?>
-            <button class="btn btn-primary">Search</button>
+            <br><button class="btn btn-primary" type="submit">Search</button>
         </form>
         <div class="result-note">
             <p>Your notes : </p>
             <div class="view-notes-search">
-                <div class="note" id="note_ ?>">
+                <div class="note" id="note">
                     <p class="note-title">titre</p>
                     <a class="link-note-archivee" href='note/open_note/ ?>'>
                         <div class="note-content">

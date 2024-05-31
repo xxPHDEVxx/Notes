@@ -17,7 +17,10 @@ class ControllerSearch extends Controller
         $user = $this->get_user_or_redirect();
         $labels = $user->get_labels();
 
-
+        if (isset($_POST['check'])) {
+            $notes[] = NoteLabel::get_notes_by_label($user, $_POST['check']);
+            var_dump($notes);
+        }
         //recherche
         (new View("search"))->show(["sharers" => $user->shared_by(),
         "currentPage" => "search", "labels"=>$labels
