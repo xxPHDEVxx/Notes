@@ -917,7 +917,8 @@ class ControllerNote extends Controller
         if (isset($_POST['items'], $_POST['id'])) {
             // Récupération de l'identifiant de l'élément et de son contenu
             $id = $_POST['id'];
-            $content = $_POST['items'];
+            $content = Tools::sanitize($_POST['items']);
+
 
             // Récupération de l'élément de la checklist associé à l'identifiant
             $checklistItem = CheckListNoteItem::get_item_by_id($id);
@@ -935,6 +936,37 @@ class ControllerNote extends Controller
                 }
             } else {
                 $error[$id] = "Item not found in database"; // Erreur si l'élément n'est pas trouvé
+            }
+            // Retourne les messages d'erreur au format JSON
+            echo json_encode($error);
+        }
+    }
+
+    public function check_new_content_checklist_service()
+    {
+        $error = []; // Tableau pour stocker les messages d'erreur
+
+        // Vérifie si les données nécessaires sont présentes dans la requête POST
+        if (isset($_POST['new'], $_POST['note_id'])) {
+            // Récupération de l'identifiant de l'élément et de son contenu
+            $note_id = $_POST['note_id'];
+            $content = Tools::sanitize($_POST['new']);
+            $item = new CheckListNoteItem(0, $note_id, $content, false);
+
+
+            if ($item) {
+                // Vérification si le contenu est unique pour l'élément
+                if (!$item->is_unique_service($content)) {
+                    $error[] = "Item must be unique"; // Erreur si le contenu n'est pas unique
+                } else {
+                    // Validation du contenu de l'élément
+                    $contentErrors = $item->validate_item_service($content);
+                    if (!empty($contentErrors)) {
+                        $error[] = $contentErrors[0]; // Erreur de validation du contenu
+                    }
+                }
+            } else {
+                $error[] = "Item not found in database"; // Erreur si l'élément n'est pas trouvé
             }
             // Retourne les messages d'erreur au format JSON
             echo json_encode($error);
