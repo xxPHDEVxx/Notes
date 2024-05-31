@@ -5,7 +5,9 @@ require_once "framework/Controller.php";
 require_once "framework/View.php";
 require_once "model/User.php";
 require_once "framework/Tools.php";
+require_once "model/ChecklistNoteItem.php";
 require_once "model/NoteShare.php";
+require_once "model/NoteLabel.php";
 require_once "model/ChecklistNote.php";
 
 // Définition de la classe ControllerNote, héritant de la classe Controller
@@ -307,7 +309,7 @@ class ControllerNote extends Controller
             foreach ($items as $key => $item) {
                 if (!empty($item)) {
                     //on crée une instance pour vérifier la longueur de l'item
-                    $checklistItem = new CheckListNoteItem(0, 0, $item, 0);
+                    $checklistItem = new ChecklistNoteItem(0, 0, $item, 0);
                     $contentErrors = $checklistItem->validate_item();
                     if (!empty($contentErrors)) {
                         $errors["item_$key"] = implode($contentErrors);
@@ -336,7 +338,7 @@ class ControllerNote extends Controller
                     $checklistNoteId = $note->note_id;
                     $checked = false;
 
-                    $checklistItem = new CheckListNoteItem(
+                    $checklistItem = new ChecklistNoteItem(
                         0,
                         $checklistNoteId,
                         $content,
@@ -451,8 +453,7 @@ class ControllerNote extends Controller
                 $errors["title"] = implode($note->validate_title());
             }
 
-
-            //action delete item
+            // Suppression d'un élément de la liste de contrôle
             if (isset($_POST['delete']) && $_POST['delete']) {
                 $item_id = $_POST["delete"];
                 $item = CheckListNoteItem::get_item_by_id($item_id);
@@ -463,7 +464,7 @@ class ControllerNote extends Controller
                 $this->redirect("note", "edit_checklist", $note_id);
             }
 
-            //action add item
+            // Ajout d'un nouvel élément à la liste de contrôle
             if (isset($_POST['new']) && $_POST["new"] != "") {
                 $new_item_content = Tools::sanitize($_POST['new']);
                 $new_item = new CheckListNoteItem(0, $note->note_id, $new_item_content, false);
@@ -489,7 +490,7 @@ class ControllerNote extends Controller
             // Vérification des éléments
             if (isset($_POST['items'])) {
                 foreach ($_POST['items'] as $key => $item) {
-                    $checklistItem = CheckListNoteItem::get_item_by_id($key);
+                    $checklistItem = ChecklistNoteItem::get_item_by_id($key);
                     $checklistItem->content = $item;
                     if (!$checklistItem->is_unique()) {
                         $errorsItem["item_$key"] = "item must be unique";
@@ -1077,5 +1078,60 @@ class ControllerNote extends Controller
     }
 
 
+    public function labels() {
+        $labels_note = [];
+        $default = ["Priv&eacute;", "Maison", "Loisirs", "Travail"];
+        $nvlab = [];
+        $user = $this->get_user_or_redirect();
+        $all = [];
+        if (!empty($user->get_labels())) {
+            //on récupere les label des notes de l'utilisateur connecté
+            $user_labels = $user->get_labels();
+            // Fusionner les labels de l'utilisateur et les labels par défaut sans doublon
+            $all = array_unique(array_merge($default, $user_labels));
+        } else {
+            $all = $default;
+        } 
+        $errors= [];
+        //vérifier et récupérer l'id en paramètre
+        if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
+            $note_id = $_GET["param1"];
+            // Récupération de la note par son identifiant
+            $note = Note::get_note_by_id($note_id);
+            $labels_note = $note->get_labels();     
+            
+            //verifier et mis en tableau les labels non utilisé
+            foreach ($all as $label) {
+                if (!in_array($label, $labels_note)) {
+                    $nvlab[] = $label;
+                }
+            }
+
+            //rajouter un nouveau label
+            if (isset($_POST["new_label"]) && isset($_POST["new_label"]) !== "") {
+                $content = $_POST["new_label"];
+                $new_label = new NoteLabel($note->note_id, $content);
+                $errors = $new_label->validate_label();
+                if (empty($errors)) {
+                    $new_label->persist();
+                    $this->redirect("note", "labels", $note->note_id);
+                }
+            }
+        }
+        (new View("labels"))->show(["labels" => $labels_note, "note"=>$note, "all"=>$nvlab, "errors"=> $errors]);
+    }
+
+    public function delete_label()  {
+        $user = $this->get_user_or_redirect();
+        if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
+            $note_id = $_GET["param1"];
+            // Récupération de la note par son identifiant
+            $note = Note::get_note_by_id($note_id);
+            $content = $_POST["label"];
+            $label  = NoteLabel::get_note_label($note->note_id, $content);
+            $label->delete();
+            $this->redirect("note", "labels", $note->note_id);
+        }
+    }
 
 }

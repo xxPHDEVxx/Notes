@@ -274,4 +274,7 @@ class User extends Model
             throw new Exception("Erreur lors de la mise à jour du mot de passe : " . $e->getMessage());
         }
     }
+    public function get_labels(): array {
+        return NoteLabel::get_labels($this);
+    }
 }

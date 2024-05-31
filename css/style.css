@@ -215,10 +215,10 @@ h2 {
   border: 1.5px solid #43464c;
   color: white;
   border-radius: 5px;
-  width: 188px;
+  width: 210px;
   background: #202325;
   margin: 3px;
-  height: 200px;
+  height: 210px;
 }
 
 .link-note-archivee,
@@ -228,7 +228,7 @@ h2 {
 }
 
 .note-title {
-  font-size: 18px;
+  font-size: 17px;
   border-bottom: 1.5px solid #43464c;
   ;
   border-top-right-radius: 5px;
@@ -362,14 +362,13 @@ h2 {
   border: 1.5px solid #43464c;
   color: white;
   border-radius: 5px;
-  width: 188px;
+  width: 210px;
   background: #202325;
   margin: 3px;
   position: relative;
-  position: relative;
   display: flex;
   flex-direction: column;
-  height: 200px;
+  height: 210px;
   /* Hauteur maximale fixe pour la note */
 }
 
@@ -393,7 +392,6 @@ h2 {
   border-radius: 5px;
   color: lightgray;
   width: 75%;
-
 }
 
 .form-box-share {
@@ -1048,3 +1046,104 @@ textarea:focus {
 .modal-content {
   background-color: #313538;
 }
+
+
+/* Note label*/
+.box-label-note {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+  position: absolute;
+  bottom: 8%;
+  width: 80%;
+}
+
+.form-control-label {
+  background-color: transparent;
+  border: 1.6px solid #494c51;
+  padding: 7px;
+  border-radius: 5px;
+  color: lightgray;
+  width: 90%;
+}
+
+.label-note {
+  margin: 1px;
+}
+
+/* Cache l'input checkbox natif */
+.radio-label input[type="checkbox"] {
+  display: none;
+}
+
+/* Style de la span représentant la checkbox */
+.custom-checkbox-label {
+  width: 15px;
+  height: 15px;
+  background-color: transparent;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 4px;
+  position: relative;
+  transition: background-color 0.3s, border-color 0.3s;
+  cursor: pointer;
+}
+
+/* Style de la checkbox quand elle est cochée */
+.radio-label input[type="checkbox"]:checked + .custom-checkbox-label {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+/* Style du "check" quand la checkbox est cochée */
+.custom-checkbox-label::after {
+  content: '';
+  position: absolute;
+  display: none;
+}
+
+.radio-label input[type="checkbox"]:checked + .custom-checkbox-label::after {
+  display: block;
+}
+
+.custom-checkbox-label::after {
+  left: 4px;
+  top: 0px;
+  width: 6px;
+  height: 12px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* Style du label de la checkbox */
+.radio-label {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 0 8px;
+}
+
+/* Page recherche*/
+.box-search {
+  margin: 2% auto 0 auto;
+  width: 90%;
+}
+.result-note {
+  margin: 4% auto 0 auto;
+}
+
+.view-notes_search {
+  display: flex;
+  flex-wrap: wrap;
+  top: 3px;
+  position: relative;
+  left: 2%;
+  min-height: 100px;
+
+}
+

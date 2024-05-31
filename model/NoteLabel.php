@@ -30,7 +30,7 @@ class NoteLabel extends Model
 
         // Vérifie si la longueur du label est comprise entre la longueur minimale et maximale
         if (strlen($this->label) < $minLength || strlen($this->label) > $maxLength) {
-            $errors[] = "Le label doit contenir entre $minLength et $maxLength caractères.";
+            $errors[] = "Label lenght must be between $minLength and $maxLength.";
         }
 
         // Vérifie si un autre label avec le même contenu existe déjà dans la base de données
@@ -39,7 +39,7 @@ class NoteLabel extends Model
             'note' => $this->note
         ]);
         if ($data_sql->fetchColumn() > 0) {
-            $errors[] = "Un autre label avec le même contenu existe déjà.";
+            $errors[] = "A note cannot contain the same label twice.";
         }
 
         // Vérifie si le label contient un espace
@@ -50,7 +50,79 @@ class NoteLabel extends Model
         return $errors;
     }
 
+    public function persist()
+    {
+        self::execute(
+            "INSERT INTO note_labels (note, label) VALUES (:note,:label)",
+            [
+                "note" => $this->note,
+                "label" => $this->label
+            ]
+        );
+    }
 
+    public static function get_note_label(int $note, string $label)
+    {
+        $query = self::execute(
+            "SELECT * FROM note_labels WHERE note = :note AND label = :label",
+            [
+                "note" => $note,
+                "label"  => $label
+            ]
+        );
+        $data = $query->fetch();
+        if (count($data) !== 0) {
+            return new NoteLabel($data["note"], $data["label"]);
+        }
+    }
+
+    public function delete()
+    {
+        self::execute(
+            "DELETE FROM note_labels WHERE note = :note AND label = :label",
+            [
+                "note" => $this->note,
+                "label" => $this->label
+            ]
+        );
+    }
+
+    public static function get_labels(User $user)
+    {
+        $query = self::execute(
+            "SELECT DISTINCT nl.label
+            FROM note_labels nl
+            INNER JOIN notes n ON nl.note = n.id
+            WHERE n.owner = :owner",
+            ["owner" => $user->id]
+        );
+        $labels = [];
+        $data = $query->fetchAll();
+        foreach ($data as $row) {
+            $labels[] = $row["label"];
+        }
+        return $labels;
+    }
+
+
+    public static function get_notes_by_label(User $user, array $labels)
+    {
+        $notes = [];
+        $placeholders = implode(',', array_fill(0, count($labels), '?'));
+        
+        $query = self::execute("            
+        SELECT nl.note
+        FROM note_labels nl
+        JOIN notes n ON n.id = nl.note
+        WHERE n.owner = :owner AND IN ($placeholders)
+        GROUP BY nl.note
+        HAVING COUNT(DISTINCT nl.label) = :label_count",
+        array_merge(["owner" => $user->id], $labels, ["label_count" => count($labels)]));
+
+        $data = $query->fetchAll();
+        foreach ($data as $row) {
+            $notes[] = $row["note"];
+        }
+        return $notes;
+    }
 }
-
-
