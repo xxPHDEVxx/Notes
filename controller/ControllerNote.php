@@ -704,14 +704,16 @@ class ControllerNote extends Controller
     // Méthode pour obtenir le temps d'édition d'une note
     public function get_edited_time(int $note_id): string|bool
     {
-        $edited_date = Note::get_edited_at($note_id);
+        $note = Note::get_note_by_id($note_id);
+        $edited_date = $note->get_edited_at();
         return $edited_date != null ? $this->get_elapsed_time($edited_date) : false;
     }
 
     // Méthode pour obtenir le temps de création d'une note
     public function get_created_time(int $note_id): string
     {
-        $created_date = Note::get_created_at($note_id);
+        $note = Note::get_note_by_id($note_id);
+        $created_date = $note->get_created_at();
         return $this->get_elapsed_time($created_date);
     }
 

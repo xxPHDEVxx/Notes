@@ -64,16 +64,16 @@ abstract class Note extends Model
     }
 
 
-    public static function get_created_at(int $id): string
+    public function get_created_at(): string
     {
-        $query = self::execute("SELECT created_at from notes WHERE id = :id", ["id" => $id]);
+        $query = self::execute("SELECT created_at from notes WHERE id = :id", ["id" => $this->note_id]);
         $data = $query->fetchColumn();
 
         return $data;
     }
-    public static function get_edited_at(int $id): string|null
+    public function get_edited_at(): string|null
     {
-        $query = self::execute("SELECT edited_at from notes WHERE id = :id", ["id" => $id]);
+        $query = self::execute("SELECT edited_at from notes WHERE id = :id", ["id" => $this->note_id]);
         $data = $query->fetchColumn();
 
         return $data;
