@@ -40,6 +40,30 @@ abstract class Note extends Model
     {
         return 5;
     }
+
+    /**
+     * Récupère les libellés associés à la note.
+     *
+     * @return array Les libellés associés à la note.
+     */
+    public function get_labels()
+    {
+        // Initialise un tableau vide pour stocker les libellés
+        $labels = [];
+
+        // Exécute une requête SQL pour récupérer les libellés de la base de données
+        $data_sql = self::execute("SELECT label FROM note_labels WHERE note = :id", ["id" => $this->note_id]);
+
+        // Récupère les résultats de la requête sous forme de tableau de colonnes
+        // Utilise FETCH_COLUMN pour obtenir uniquement la première colonne des résultats
+        // (dans ce cas, la colonne contenant les libellés)
+        $labels = $data_sql->fetchAll(PDO::FETCH_COLUMN, 0);
+
+        // Retourne le tableau des libellés
+        return $labels;
+    }
+
+
     public static function get_created_at(int $id): string
     {
         $query = self::execute("SELECT created_at from notes WHERE id = :id", ["id" => $id]);
@@ -117,8 +141,7 @@ abstract class Note extends Model
     }
     public function unpin(): void
     {
-        $user = $this->owner;
-        if ($this->is_pinned($user) == 1) {
+        if ($this->is_pinned($this->owner) == 1) {
             self::execute("UPDATE notes SET pinned = :val WHERE id = :id", ["val" => 0, "id" => $this->note_id]);
             $this->order_notes();
         }
@@ -135,9 +158,8 @@ abstract class Note extends Model
     // Donne poids négatif unique aux notes
     public function temporary_weights($array_id)
     {
-        $user = $this->owner;
         $notes = $array_id;
-        $nb = count($this->get_all_notes_by_user($user));
+        $nb = count($this->get_all_notes_by_user($this->owner)) + 50;// 50 pour éviter conflit de poids lors de plusieurs supressions
         foreach ($notes as $note) {
             self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => ++$nb, "id" => $note]);
         }
@@ -184,14 +206,14 @@ abstract class Note extends Model
     // Ordonnes les notes selon les règles métiers liées au poids (owner -> pin -> unpin -> ...) à factoriser 
     public function order_notes()
     {
+        // Identifiant de l'utilisateur
+        $user_id = $this->owner;
         // Récupérer toutes les notes de l'utilisateur
-        $notes = $this->get_all_notes_by_user($this->owner);
+        $notes = $this->get_all_notes_by_user($user_id);
         // Appliquer des poids temporaires aux notes
         $this->temporary_weights($notes);
         // Initialiser le compteur de poids
         $nb = count($notes);
-        // Identifiant de l'utilisateur
-        $user_id = $this->owner;
 
         // Récupération des notes épinglées de l'utilisateur
         if ($this->is_pinned($user_id) == 1) {
@@ -229,31 +251,6 @@ abstract class Note extends Model
             self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => $nb--, "id" => $note]);
         }
     }
-
-
-
-    // peut être nécessaire pour gérer ordre des unarchive
-    /*public function check_archived_order()
-    {
-        $user_id = $this->owner;
-        // Récupération des notes non archivées
-        if ($this->in_my_archives($user_id) == 1) {
-            // Si la note actuelle est archivée, la placer en tête de liste des archivées
-            self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => $nb--, "id" => $this->note_id]);
-            // Exclure la note actuelle de la liste des notes non épinglées
-            $dataSql = self::execute("SELECT id FROM notes WHERE archived = :archived AND id != :note_id ORDER BY weight DESC", ["archived" => 1, "note_id" => $this->note_id]);
-        } else {
-            // Récupérer toutes les notes archivées
-            $dataSql = self::execute("SELECT id FROM notes WHERE archived = :archived ORDER BY weight DESC", ["archived" => 1]);
-        }
-        $archived = $dataSql->fetchAll(PDO::FETCH_COLUMN, 0);
-
-        // Numéroter les notes archivées (en commençant par le plus grand poids)
-        foreach ($archived as $note) {
-            self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => $nb--, "id" => $note]);
-        }
-    }*/
-
 
     public function get_shared_users()
     {
@@ -334,6 +331,7 @@ abstract class Note extends Model
         $user = User::get_user_by_id($this->owner);
         // permet la suppression en cascade pour éviter problèmes suite aux dépendances
         if ($user == $initiator) {
+            self::execute("DELETE FROM note_labels WHERE note = :note_id", ['note_id' => $this->note_id]);
             self::execute("DELETE FROM checklist_note_items WHERE checklist_note = :note_id", ['note_id' => $this->note_id]);
             self::execute("DELETE FROM text_notes WHERE id = :note_id", ['note_id' => $this->note_id]);
             self::execute("DELETE FROM checklist_notes WHERE id = :note_id", ['note_id' => $this->note_id]);
@@ -451,7 +449,7 @@ abstract class Note extends Model
     }
 
     public static function validate_content_service($content)
-{
+    {
         $minLength = Configuration::get('description_min_length');
         $maxLength = Configuration::get('description_max_length');
         $errors = [];
@@ -463,7 +461,7 @@ abstract class Note extends Model
         }
 
         return $errors;
-}
+    }
 
 
 

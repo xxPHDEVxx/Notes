@@ -1,5 +1,6 @@
 <?php
 
+// Inclusion des dépendances et des classes nécessaires
 require_once "framework/Controller.php";
 require_once "framework/View.php";
 require_once "model/User.php";
@@ -7,13 +8,20 @@ require_once "framework/Tools.php";
 require_once "model/NoteShare.php";
 require_once "model/ChecklistNote.php";
 
+// Définition de la classe ControllerNote, héritant de la classe Controller
 class ControllerNote extends Controller
 {
+    // Méthode pour afficher la page principale des notes de l'utilisateur
     public function index(): void
     {
+        // Récupération de l'utilisateur connecté
         $user = $this->get_user_or_redirect();
+
+        // Récupération des notes épinglées et non épinglées de l'utilisateur
         $notes_pinned = $user->get_notes_pinned();
         $notes_unpinned = $user->get_notes_unpinned();
+
+        // Affichage de la vue avec les données récupérées
         (new View("notes"))->show([
             "currentPage" => "my_notes",
             "notes_pinned" => $notes_pinned,
@@ -23,9 +31,13 @@ class ControllerNote extends Controller
         ]);
     }
 
+    // Méthode pour déplacer une note vers le haut
     public function move_up(): void
     {
+        // Récupération de l'utilisateur connecté
         $user = $this->get_user_or_redirect();
+
+        // Vérification de la présence de l'identifiant de la note à déplacer
         if (isset($_POST["up"]) && $_POST["up"] != "") {
             $id = $_POST["up"];
             $note = Note::get_note_by_id($id);
@@ -38,9 +50,14 @@ class ControllerNote extends Controller
             throw new Exception("Missing ID");
         }
     }
+
+    // Méthode pour déplacer une note vers le bas
     public function move_down(): void
     {
+        // Récupération de l'utilisateur connecté
         $user = $this->get_user_or_redirect();
+
+        // Vérification de la présence de l'identifiant de la note à déplacer
         if (isset($_POST["down"]) && $_POST["down"] != "") {
             $id = $_POST["down"];
             $note = Note::get_note_by_id($id);
@@ -54,11 +71,16 @@ class ControllerNote extends Controller
             throw new Exception("Missing ID");
         }
     }
+
+    // Méthode pour gérer le partage des notes avec d'autres utilisateurs
     public function shares()
     {
+        // Initialisation des variables
         $errors = [];
         $note = "";
         $connected = $this->get_user_or_redirect();
+
+        // Vérification de la présence de l'identifiant de la note à partager dans l'URL
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = filter_var($_GET['param1'], FILTER_VALIDATE_INT);
             if ($note_id === false) {
@@ -67,12 +89,13 @@ class ControllerNote extends Controller
                 $note = Note::get_note_by_id($note_id);
             }
 
+            // Vérification des autorisations de partage
             if ($note->owner != $connected->id) {
                 $err = "pas la bonne personne connecté";
                 Tools::abort($err);
             }
 
-            //données visibles sur la vue
+            // Récupération des utilisateurs partageant déjà la note et des autres utilisateurs
             $sharers = $note->get_shared_users();
             $others = [];
             $all_users = User::get_users();
@@ -91,37 +114,41 @@ class ControllerNote extends Controller
                 }
             }
 
-            //vérifier qu'on a une bonne valeur pour le user et l'editor
+            // Vérification des données postées pour le partage de la note
             if (isset($_POST['user'], $_POST['editor']) && ($_POST["user"] == "null" || $_POST["editor"] == "null")) {
                 $errors[] = "erreurs";
             }
 
+            // Si les données postées sont valides, partager la note
             if (isset($_POST['user'], $_POST['editor']) && empty($errors)) {
                 $nv_us = User::get_user_by_id($_POST['user']);
-                $editor = ($_POST['editor'] == 1) ? true : false;;
+                $editor = ($_POST['editor'] == 1) ? true : false;
+                ;
                 $note_share = new NoteShare($note_id, $nv_us->id, $editor);
                 $note_share->persist();
                 $this->redirect("note", "shares", $note_id);
             }
         }
 
-
-
+        // Affichage de la vue de partage avec les données récupérées
         (new View("share"))->show(["sharers" => $sharers, "others" => $others, "note" => $note]);
     }
 
     public function toggle_permission()
     {
+        // Récupération de l'utilisateur connecté
         $this->get_user_or_redirect();
+
+        // Vérification de la présence de l'identifiant de la note dans l'URL
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = Tools::sanitize($_GET["param1"]);
 
-            // execution du form delete et toggle
+            // Exécution du formulaire de suppression et de bascule
             if (isset($_POST["action"])) {
                 $action = $_POST["action"];
                 // Exécuter les actions en fonction de la valeur soumise
                 if ($action == "toggle") {
-                    //on récupére une note share existante et on fait la modification dessus 
+                    // Récupération de la note partagée existante et modification
                     $sharer = User::get_user_by_id($_POST['share']);
                     $edit = ($_POST['edit'] == 0) ? true : false;
                     $note_sh = NoteShare::get_share_note($note_id, $sharer->id);
@@ -129,7 +156,7 @@ class ControllerNote extends Controller
                     $note_sh->persist();
                     $this->redirect("note", "shares", $note_id);
                 } elseif ($action == "delete") {
-                    //on récupére la note share existante et on la supprime
+                    // Récupération de la note partagée existante et suppression
                     $sharer = User::get_user_by_id($_POST['share']);
                     $note_sh = NoteShare::get_share_note($note_id, $sharer->id);
                     $note_sh->delete();
@@ -141,11 +168,15 @@ class ControllerNote extends Controller
 
     public function toggle_js()
     {
+        // Récupération de l'utilisateur connecté
         $this->get_user_or_redirect();
 
+        // Récupération de l'identifiant de la note et de l'utilisateur partageant la note
         $note_id = Tools::sanitize($_POST["note"]);
         $sharer = User::get_user_by_id($_POST['share']);
+        // Conversion de la valeur d'édition en booléen
         $edit = ($_POST['edit'] == 0) ? true : false;
+        // Récupération de la note partagée existante et mise à jour
         $note_sh = NoteShare::get_share_note($note_id, $sharer->id);
         $note_sh->editor = $edit;
         $note_sh->persist();
@@ -154,9 +185,12 @@ class ControllerNote extends Controller
 
     public function delete_js()
     {
+        // Récupération de l'utilisateur connecté
         $this->get_user_or_redirect();
+        // Récupération de l'identifiant de la note et de l'utilisateur partageant la note
         $note_id = Tools::sanitize($_POST["note"]);
         $sharer = User::get_user_by_id($_POST['share']);
+        // Récupération de la note partagée existante et suppression
         $note_sh = NoteShare::get_share_note($note_id, $sharer->id);
         $note_sh->delete();
         $this->redirect("note", "shares", $note_id);
@@ -164,8 +198,10 @@ class ControllerNote extends Controller
 
     public function add_note(): void
     {
+        // Affichage de la vue pour ajouter une note
         (new view("add_text_note"))->show();
     }
+
 
     function extractIdsFromString($string)
     {
@@ -189,10 +225,10 @@ class ControllerNote extends Controller
     }
 
     public function drag_and_drop()
-{
-    // Vérifie si les données nécessaires sont présentes dans la requête POST
-    if (
-        isset(
+    {
+        // Vérifie si les données nécessaires sont présentes dans la requête POST
+        if (
+            isset(
             $_POST['moved'],
             $_POST['update'],
             $_POST['source'],
@@ -200,36 +236,36 @@ class ControllerNote extends Controller
             $_POST['sourceItems'],
             $_POST['targetItems']
         )
-    ) {
-        // Récupère l'ID de la note déplacée
-        $note_id = $_POST['moved'];
+        ) {
+            // Récupère l'ID de la note déplacée
+            $note_id = $_POST['moved'];
 
-        // Récupère l'objet de la note à partir de l'ID
-        $note = Note::get_note_by_id($note_id);
+            // Récupère l'objet de la note à partir de l'ID
+            $note = Note::get_note_by_id($note_id);
 
-        // Extrait les IDs des éléments source et target à partir des chaînes JSON
-        $source_ids = $this->extractIdsFromString($_POST['sourceItems']);
-        $target_ids = $this->extractIdsFromString($_POST['targetItems']);
+            // Extrait les IDs des éléments source et target à partir des chaînes JSON
+            $source_ids = $this->extractIdsFromString($_POST['sourceItems']);
+            $target_ids = $this->extractIdsFromString($_POST['targetItems']);
 
-        // Détermine si la cible est "pinned" ou "unpinned"
-        $target = $_POST['target'] == "pinned" ? 1 : 0;
+            // Détermine si la cible est "pinned" ou "unpinned"
+            $target = $_POST['target'] == "pinned" ? 1 : 0;
 
-        // Détermine si la source est "pinned" ou "unpinned"
-        $source = $_POST['source'] == "pinned" ? 1 : 0;
+            // Détermine si la source est "pinned" ou "unpinned"
+            $source = $_POST['source'] == "pinned" ? 1 : 0;
 
-        // Si la cible est différente de la source, effectue l'opération de "pin" ou "unpin"
-        if ($target != $source) {
-            // Si la cible est "pinned", épingle la note, sinon désépingle la note
-            $target == 1 ? $note->pin() : $note->unpin();
-            // Met à jour l'ordre des notes dans les listes source et target
-            $note->new_order($source_ids);
-            $note->new_order($target_ids);
-        } else {
-            // Si la cible est égale à la source, met simplement à jour l'ordre dans la source
-            $note->new_order($source_ids);
+            // Si la cible est différente de la source, effectue l'opération de "pin" ou "unpin"
+            if ($target != $source) {
+                // Si la cible est "pinned", épingle la note, sinon désépingle la note
+                $target == 1 ? $note->pin() : $note->unpin();
+                // Met à jour l'ordre des notes dans les listes source et target
+                $note->new_order($source_ids);
+                $note->new_order($target_ids);
+            } else {
+                // Si la cible est égale à la source, met simplement à jour l'ordre dans la source
+                $note->new_order($source_ids);
+            }
         }
     }
-}
 
 
 
@@ -338,14 +374,24 @@ class ControllerNote extends Controller
 
     public function delete_confirmation()
     {
+        // Vérification de la méthode de requête
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            // Vérification de la demande de suppression
             if (isset($_POST["delete"])) {
+                // Vérification de la présence de l'identifiant de la note dans l'URL
                 if (isset($_GET['param1'])) {
                     $note_id = Tools::sanitize($_GET["param1"]);
+                    // Récupération de la note par son identifiant
                     $note = Note::get_note_by_id($note_id);
+                    // Récupération de l'utilisateur connecté
                     $user = $this->get_user_or_redirect();
-                    if ($user->id == $note->owner) {
+                    $user_id = $user->id;
+                    // Vérification si l'utilisateur est le propriétaire de la note
+                    if ($user_id == $note->owner) {
+                        // Suppression de la note
                         $note->delete($user);
+                        //Note::delete_order($user_id);
+                        // Redirection vers les archives de l'utilisateur
                         $this->redirect("user", "my_archives");
                     } else {
                         throw new Exception("Vous n'êtes pas autorisé à supprimer cette note.");
@@ -374,15 +420,21 @@ class ControllerNote extends Controller
 
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = Tools::sanitize($_GET["param1"]);
+            // Récupération de la note par son identifiant
             $note = CheckListNote::get_note_by_id($note_id);
+            // Vérification si la note existe
             if ($note === false) {
                 throw new Exception("Undefined note");
             }
             $user_id = $user->id;
             $archived = $note->in_my_archives($user_id);
+            // Vérification si la note est épinglée par l'utilisateur
             $pinned = $note->is_pinned($user_id);
+            // Vérification si la note est partagée comme éditeur par l'utilisateur
             $is_shared_as_editor = $note->is_shared_as_editor($user_id);
+            // Vérification si la note est partagée comme lecteur par l'utilisateur
             $is_shared_as_reader = $note->is_shared_as_reader($user_id);
+            // Récupération du contenu de la note
             $body = $note->get_content();
 
 
@@ -407,7 +459,6 @@ class ControllerNote extends Controller
                 if ($item === false) {
                     throw new Exception("Undefined checklist item");
                 }
-                // Supprime l'élément de la liste de contrôle
                 $item->delete();
                 $this->redirect("note", "edit_checklist", $note_id);
             }
@@ -452,8 +503,8 @@ class ControllerNote extends Controller
                         }
                     }
                 }
-                
-            }   
+
+            }
             $errors = array_merge($errors, $errorsItem);
             if (empty($errors["title"]) && empty($errorsItem)) {
                 $note->persist();
@@ -461,6 +512,7 @@ class ControllerNote extends Controller
             }
         }
 
+        // Affichage de la vue d'édition de la liste de contrôle
         (new View("edit_checklist_note"))->show([
             "note" => $note,
             "note_id" => $note_id,
@@ -476,30 +528,41 @@ class ControllerNote extends Controller
         ]);
     }
 
+
     public function save_edit_text_note()
     {
+        // Récupération de l'utilisateur connecté
         $user = $this->get_user_or_redirect();
+        // Initialisation des tableaux d'erreurs
         $content_errors = [];
         $title_errors = [];
         $errors = [];
 
+        // Vérification si le titre est vide
         if (isset($_POST['title']) && $_POST['title'] == "") {
             array_push($title_errors, "Title required");
         }
 
+        // Vérification de la présence des données nécessaires
         if (isset($_GET['param1'], $_POST['title'], $_POST['content'])) {
             $note_id = (int) $_GET['param1'];
+            // Vérification de la validité de l'identifiant de la note
             if ($note_id > 0) {
+                // Récupération de la note par son identifiant
                 $note = TextNote::get_note_by_id($note_id);
 
+                // Vérification si la note existe et si l'utilisateur est le propriétaire
                 if ($note && $note->owner == $user->id) {
+                    // Mise à jour du titre et du contenu de la note
                     $note->title = Tools::sanitize($_POST['title']);
                     $note->set_content(Tools::sanitize($_POST['content']));
 
+                    // Validation du titre et du contenu de la note
                     if ($note->validate_title() != null)
                         array_push($title_errors, $note->validate_title()[0]);
                     $content_errors = $note->validate_content();
 
+                    // Si des erreurs sont présentes, affichage de la vue avec les erreurs
                     if (!empty($content_errors) || !empty($title_errors)) {
                         (new View("edit_text_note"))->show([
                             "note" => $note,
@@ -515,6 +578,7 @@ class ControllerNote extends Controller
                         exit();
                     }
 
+                    // Si tout est valide, mise à jour de la note et redirection vers la page de la note
                     $note->update();
                     $this->redirect("note", "open_note", $note_id);
                     exit();
@@ -525,30 +589,35 @@ class ControllerNote extends Controller
                 $errors = "ID de note invalide.";
             }
         } else {
-            var_dump($_GET['param1']);
             $errors = "Les informations requises sont manquantes.";
         }
     }
 
-
     public function save_add_text_note()
     {
+        // Récupération de l'utilisateur connecté
         $user = $this->get_user_or_redirect();
+        // Initialisation des tableaux d'erreurs
         $content_errors = [];
         $title_errors = [];
         $errors = [];
         $title = "";
         $content = "";
 
+        // Vérification si le titre est vide
         if (isset($_POST['title']) && $_POST['title'] == "") {
             array_push($title_errors, "Title required");
         }
 
+        // Vérification de la méthode de requête
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Vérification de la présence des données nécessaires
             if (isset($_POST['title'], $_POST['content'])) {
+                // Récupération et nettoyage du titre et du contenu de la note
                 $title = Tools::sanitize($_POST['title']);
                 $content = Tools::sanitize($_POST['content']);
 
+                // Création d'une nouvelle note de type texte
                 $note = new TextNote(
                     0,
                     $title,
@@ -561,10 +630,12 @@ class ControllerNote extends Controller
                 );
                 $note->set_content($content);
 
+                // Validation du contenu de la note
                 $content_errors = $note->validate_content();
                 if ($note->validate_title() != null)
                     array_push($title_errors, $note->validate_title()[0]);
 
+                // Si les données sont valides, enregistrement de la note et redirection
                 if (empty($title_errors) && empty($content_errors)) {
                     $result = $note->persist();
                     if ($result instanceof TextNote) {
@@ -580,6 +651,7 @@ class ControllerNote extends Controller
             }
         }
 
+        // Affichage de la vue d'ajout de note de texte
         (new View("add_text_note"))->show([
             'note' => $note,
             'user' => $user,
@@ -595,19 +667,25 @@ class ControllerNote extends Controller
 
 
 
+
     public function open_note()
     {
+        // Récupération de l'utilisateur connecté
         $this->get_user_or_redirect();
+        // Vérification de la présence et de la validité de l'identifiant de la note
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
+            // Récupération de la note par son identifiant
             $note = Note::get_note_by_id($note_id);
             $user_id = $this->get_user_or_redirect()->id;
+            // Vérification des états de la note
             $archived = $note->in_my_archives($user_id);
             $pinned = $note->is_pinned($user_id);
             $is_shared_as_editor = $note->is_shared_as_editor($user_id);
             $is_shared_as_reader = $note->is_shared_as_reader($user_id);
             $body = $note->get_content();
         }
+        // Affichage de la vue appropriée en fonction du type de note (texte ou checklist)
         ($note->get_type() == "TextNote" ? new View("open_text_note") : new View("open_checklist_note"))->show([
             "note" => $note,
             "note_id" => $note_id,
@@ -621,23 +699,29 @@ class ControllerNote extends Controller
             "user_id" => $user_id
         ]);
     }
+
+    // Méthode pour obtenir le temps d'édition d'une note
     public function get_edited_time(int $note_id): string|bool
     {
         $edited_date = Note::get_edited_at($note_id);
         return $edited_date != null ? $this->get_elapsed_time($edited_date) : false;
     }
+
+    // Méthode pour obtenir le temps de création d'une note
     public function get_created_time(int $note_id): string
     {
         $created_date = Note::get_created_at($note_id);
         return $this->get_elapsed_time($created_date);
     }
 
+    // Méthode pour obtenir le temps écoulé depuis une date donnée
     public function get_elapsed_time(string $date): string
     {
         $localDateNow = new DateTime();
         $dateTime = new DateTime($date);
         $diff = $localDateNow->diff($dateTime);
         $res = '';
+        // Calcul du temps écoulé
         if ($diff->y == 0 && $diff->m == 0 && $diff->d == 0 && $diff->h == 0 && $diff->i == 0) {
             $res = $diff->s . " secondes ago.";
         } elseif ($diff->y == 0 && $diff->m == 0 && $diff->d == 0 && $diff->h == 0 && $diff->i != 0) {
@@ -653,9 +737,12 @@ class ControllerNote extends Controller
         }
         return $res;
     }
+
+    // Méthode pour mettre à jour l'état de vérification d'un élément de liste de contrôle
     public function update_checked(): void
     {
         $this->get_user_or_redirect();
+        // Vérification des données postées
         if (isset($_POST["check"])) {
             $checklist_item_id = $_POST["check"];
             $note_id = CheckListNoteItem::get_checklist_note($checklist_item_id);
@@ -670,21 +757,29 @@ class ControllerNote extends Controller
         $this->redirect("note", "open_note/$note_id");
     }
 
+    // Méthodes pour épingler, dépingler, archiver et désarchiver une note
     public function pin(): void
     {
+        // Récupération de l'utilisateur connecté
         $this->get_user_or_redirect();
+        // Vérification de la présence et de la validité de l'identifiant de la note
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
+            // Récupération de la note par son identifiant et épinglage
             $note = Note::get_note_by_id($note_id);
             $note->pin();
             $this->redirect("note", "open_note", $note_id);
         }
     }
+
     public function unpin(): void
     {
+        // Récupération de l'utilisateur connecté
         $this->get_user_or_redirect();
+        // Vérification de la présence et de la validité de l'identifiant de la note
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
+            // Récupération de la note par son identifiant et dépinglage
             $note = Note::get_note_by_id($note_id);
             $note->unpin();
             $this->redirect("note", "open_note", $note_id);
@@ -692,40 +787,54 @@ class ControllerNote extends Controller
     }
     public function archive(): void
     {
+        // Vérifie si l'utilisateur est connecté, sinon le redirige
         $this->get_user_or_redirect();
+        // Vérifie si l'identifiant de la note est présent et valide dans l'URL
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
+            // Récupère la note par son identifiant
             $note = Note::get_note_by_id($note_id);
+            // Archive la note et la désépingle
+            echo $note->archive();
             $note->archive();
             $note->unpin();
+            // Redirige vers la page d'affichage de la note
             $this->redirect("note", "open_note", $note_id);
         }
     }
 
     public function unarchive(): void
     {
+        // Vérifie si l'utilisateur est connecté, sinon le redirige
         $this->get_user_or_redirect();
+        // Vérifie si l'identifiant de la note est présent et valide dans l'URL
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
+            // Récupère la note par son identifiant et la désarchive
             $note = Note::get_note_by_id($note_id);
             $note->unarchive();
+            // Redirige vers la page d'affichage de la note
             $this->redirect("note", "open_note", $note_id);
         }
     }
 
     public function edit(): void
     {
-
+        // Vérifie si l'identifiant de la note est présent et valide dans l'URL
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
+            // Récupère la note par son identifiant
             $note = Note::get_note_by_id($note_id);
+            // Récupère l'identifiant de l'utilisateur connecté
             $user_id = $this->get_user_or_redirect()->id;
+            // Vérifie si la note est archivée, épinglée, partagée comme éditeur ou partagée comme lecteur
             $archived = $note->in_my_archives($user_id);
             $pinned = $note->is_pinned($user_id);
             $is_shared_as_editor = $note->is_shared_as_editor($user_id);
             $is_shared_as_reader = $note->is_shared_as_reader($user_id);
             $content = $note->get_content();
         }
+        // Affiche la vue appropriée en fonction du type de note (texte ou checklist)
         ($note->get_type() == "TextNote" ? new View("edit_text_note") : new View("edit_checklist_note"))->show([
             "note" => $note,
             "note_id" => $note_id,
@@ -740,12 +849,13 @@ class ControllerNote extends Controller
         ]);
     }
 
-    // Ouvre la vue d'ajout d'une note
+    // Méthode pour ouvrir la vue d'ajout d'une note
     public function add_text_note(): void
     {
+        // Récupère l'identifiant de l'utilisateur connecté
         $user_id = $this->get_user_or_redirect()->id;
 
-        // Créez une instance de vue pour l'ajout de note texte
+        // Crée une instance de vue pour l'ajout de note texte
         $view = new View("add_text_note");
 
         // Prépare les données par défaut pour initialiser la vue
@@ -764,6 +874,7 @@ class ControllerNote extends Controller
         $view->show($data);
     }
 
+    // Méthode pour vérifier le titre d'une note via un service AJAX
     public function check_title_service()
     {
         $title_error = "";
@@ -784,6 +895,7 @@ class ControllerNote extends Controller
         }
     }
 
+    // Méthode pour vérifier le contenu d'une note via un service AJAX
     public function check_content_service()
     {
         $content_error = "";
@@ -796,4 +908,37 @@ class ControllerNote extends Controller
             }
         }
     }
+
+    public function check_content_checklist_service()
+    {
+        $error = []; // Tableau pour stocker les messages d'erreur
+
+        // Vérifie si les données nécessaires sont présentes dans la requête POST
+        if (isset($_POST['items'], $_POST['id'])) {
+            // Récupération de l'identifiant de l'élément et de son contenu
+            $id = $_POST['id'];
+            $content = $_POST['items'];
+
+            // Récupération de l'élément de la checklist associé à l'identifiant
+            $checklistItem = CheckListNoteItem::get_item_by_id($id);
+
+            if ($checklistItem) {
+                // Vérification si le contenu est unique pour l'élément
+                if (!$checklistItem->is_unique_service($content)) {
+                    $error[$id] = "Item must be unique"; // Erreur si le contenu n'est pas unique
+                } else {
+                    // Validation du contenu de l'élément
+                    $contentErrors = $checklistItem->validate_item_service($content);
+                    if (!empty($contentErrors)) {
+                        $error[$id] = $contentErrors[0]; // Erreur de validation du contenu
+                    }
+                }
+            } else {
+                $error[$id] = "Item not found in database"; // Erreur si l'élément n'est pas trouvé
+            }
+            // Retourne les messages d'erreur au format JSON
+            echo json_encode($error);
+        }
+    }
+
 }
