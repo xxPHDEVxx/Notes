@@ -1057,7 +1057,7 @@ textarea:focus {
 
 
 /* Note label*/
-.box-label {
+.box-label-note {
   display: flex;
   align-items: center;
   flex-wrap: wrap;

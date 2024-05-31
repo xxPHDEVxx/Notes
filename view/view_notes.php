@@ -57,7 +57,7 @@
                                 </div>
                             <?php endif; ?>
 
-                            <div class="box-label">
+                            <div class="box-label-note">
                                 <?php $note = Note::get_note_by_id($notes_pinned[$i]["id"]);
                                 foreach ($note->get_labels() as $label) :?>
                                 <span class="badge label-note text-bg-secondary"><?= $label ?></span>

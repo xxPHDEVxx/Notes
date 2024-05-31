@@ -24,7 +24,7 @@
                 <div class="note-archivee">
                     <a class="link-note-archivee" href="note/open_note/<?= $note_item["id"] ?>">
                         <?php include("note_in_list.php") ?>
-                        <div class="box-label">
+                        <div class="box-label-note">
                             <?php $note = Note::get_note_by_id($note_item["id"]);
                             foreach ($note->get_labels() as $label) : ?>
                                 <span class="badge label-note text-bg-secondary"><?= $label ?></span>
