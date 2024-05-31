@@ -16,6 +16,9 @@ class ControllerSearch extends Controller
     {
         $user = $this->get_user_or_redirect();
         $labels = $user->get_labels();
+
+
+        //recherche
         (new View("search"))->show(["sharers" => $user->shared_by(),
         "currentPage" => "search", "labels"=>$labels
     ]);

@@ -1136,3 +1136,22 @@ textarea:focus {
   margin: 0 8px;
 }
 
+/* Page recherche*/
+.box-search {
+  margin: 2% auto 0 auto;
+  width: 90%;
+}
+.result-note {
+  margin: 4% auto 0 auto;
+}
+
+.view-notes_search {
+  display: flex;
+  flex-wrap: wrap;
+  top: 3px;
+  position: relative;
+  left: 2%;
+  min-height: 100px;
+
+}
+

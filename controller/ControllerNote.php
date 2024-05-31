@@ -883,8 +883,8 @@ class ControllerNote extends Controller
         $user = $this->get_user_or_redirect();
         $all = [];
         if (!empty($user->get_labels())) {
+            //on récupere les label des notes de l'utilisateur connecté
             $user_labels = $user->get_labels();
-    
             // Fusionner les labels de l'utilisateur et les labels par défaut sans doublon
             $all = array_unique(array_merge($default, $user_labels));
         } else {

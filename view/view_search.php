@@ -19,8 +19,8 @@
         <h1>Search my notes</h1>
     </div>
     <div class="box-search">
-        <div class="form-check">
-            <p>Search notes by tag : </p>
+        <p>Search notes by tag : </p>
+        <form action="" method="get">
             <?php foreach ($labels as $label) : ?>
                 <label for="<?= $label ?>" class="radio-label">
                     <input type="checkbox" id="<?= $label ?>" name="<?= $label ?>" value="<?= $label ?>" class="check-box-label">
@@ -28,7 +28,47 @@
                     <?= $label ?>
                 </label>
             <?php endforeach; ?>
+            <button class="btn btn-primary">Search</button>
+        </form>
+        <div class="result-note">
+            <p>Your notes : </p>
+            <div class="view-notes-search">
+                <div class="note" id="note_ ?>">
+                    <p class="note-title">titre</p>
+                    <a class="link-note-archivee" href='note/open_note/ ?>'>
+                        <div class="note-content">
+                            text
+                            <!-- <?php if ($notes_pinned[$i]["content"]) : ?>
+                                <div class="content_text">
+                                    <?= $notes_pinned[$i]["content"] ?>
+                                </div>
+                            <?php else : ?> -->
+                                <!-- <div class="content_check">
+                                    <div class="check_item">
+                                        <?php foreach ($notes_pinned[$i]["content_checklist"] as $checklist_item) : ?>
+                                            <?php if (!$checklist_item["checked"]) : ?>
+                                                <div class="unchecked_item"><?= $checklist_item["content"] ?></div>
+                                            <?php else : ?>
+                                                <div class="checked_item"><?= $checklist_item["content"] ?></div>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?> -->
 
+                            <div class="box-label-note">
+                                <span class="badge label-note text-bg-secondary">label</span>
+                                <!-- <?php $note = Note::get_note_by_id($notes_pinned[$i]["id"]);
+                                foreach ($note->get_labels() as $label) : ?>
+                                    <span class="badge label-note text-bg-secondary"><?= $label ?></span>
+
+                                <?php endforeach; ?> -->
+                            </div>
+
+                        </div>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
