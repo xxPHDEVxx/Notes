@@ -25,32 +25,32 @@
             <p class="share-empty" id="share-empty">This note does not yet have a label.</p>
         <?php else : ?>
             <?php foreach ($labels as $label) : ?>
-                <form action="note/delete_label/<?=$note->note_id?>" class="form_toggle" method="post">
+                <form action="note/delete_label/<?= $note->note_id ?>" class="form_toggle" method="post">
                     <div class="box-label">
                         <input type="text" id="note" name="label" value="<?= $label ?>" class="form-control-label my-1" disabled>
-                        <button class="btn btn-danger btn-share btn-del" type="submit" name="label" value="<?= $label ?>"><span class="material-symbols-outlined "><span class="material-symbols-outlined">
+                        <button class="btn btn-danger btn-share btn-del" type="submit" name="label" value="<?= $label ?>"><span class="material-symbols-outlined">
                                     minimize
                                 </span></button>
                     </div>
                 </form>
             <?php endforeach; ?>
+        <?php endif; ?>
+        <form action="note/labels/<?= $note->note_id ?>" method="post">
+            <label for="new-label">Add a new label:</label>
+            <input list="new-label-list" id="new-label" name="new_label" class="form-control-label" placeholder="Type to search or create...">
+            <button class="btn btn-primary btn-share" type="submit">
+                    <span class="material-symbols-outlined">add</span></button>
+            <?php if (!empty($errors)) : ?>
+                <?php foreach ($errors as $error) : ?>
+                    <p class="text-danger"><?= $error ?></p>
+                <?php endforeach; ?>
             <?php endif; ?>
-            <form action="note/labels/<?= $note->note_id ?>" method="post">
-                <label for="new-label">Add a new label:</label>
-                <input list="new-label-list" id="new-label" name="new_label" class="form-control-label" placeholder="Type to search or create...">
-                <button class="btn btn-primary btn-share" type="submit"><span class="material-symbols-outlined ">
-                        <span class="material-symbols-outlined">add</span></button>
-                <?php if (!empty($errors)) : ?>
-                    <?php foreach ($errors as $error) : ?>
-                        <p class="text-danger"><?= $error?></p>
-                    <?php endforeach;?>
-                <?php endif; ?>
-                <datalist id="new-label-list">
-                    <?php foreach ($all as $lab) : ?>
-                        <option value="<?= $lab ?>"></option>
-                    <?php endforeach; ?>
-                </datalist>
-            </form>
+            <datalist id="new-label-list">
+                <?php foreach ($all as $lab) : ?>
+                    <option value="<?= $lab ?>"></option>
+                <?php endforeach; ?>
+            </datalist>
+        </form>
     </div>
 </body>
 

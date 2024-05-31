@@ -23,7 +23,11 @@
         <form action="search/index" method="post">
             <?php foreach ($labels as $label) : ?>
                 <label for="<?= $label ?>" class="radio-label">
-                    <input type="checkbox" id="<?= $label ?>" name="check[]" value="<?= $label ?>" class="check-box-label" <?php if(isset($_POST['check'])) { if(in_array($label, $_POST['check'])) { echo 'checked'; } } ?>>
+                    <input type="checkbox" id="<?= $label ?>" name="check[]" value="<?= $label ?>" class="check-box-label" <?php if (isset($_POST['check'])) {
+                                                                                                                                if (in_array($label, $_POST['check'])) {
+                                                                                                                                    echo 'checked';
+                                                                                                                                }
+                                                                                                                            } ?>>
                     <span class="custom-checkbox-label"></span>
                     <?= $label ?>
                 </label>
@@ -35,42 +39,20 @@
             <div class="view-notes-search">
                 <div class="note" id="note">
                     <p class="note-title">titre</p>
-                    <a class="link-note-archivee" href='note/open_note/ ?>'>
-                        <div class="note-content">
-                            text
-                            <!-- <?php if ($notes_pinned[$i]["content"]) : ?>
-                                <div class="content_text">
-                                    <?= $notes_pinned[$i]["content"] ?>
-                                </div>
-                            <?php else : ?> -->
-                                <!-- <div class="content_check">
-                                    <div class="check_item">
-                                        <?php foreach ($notes_pinned[$i]["content_checklist"] as $checklist_item) : ?>
-                                            <?php if (!$checklist_item["checked"]) : ?>
-                                                <div class="unchecked_item"><?= $checklist_item["content"] ?></div>
-                                            <?php else : ?>
-                                                <div class="checked_item"><?= $checklist_item["content"] ?></div>
-                                            <?php endif; ?>
-                                        <?php endforeach; ?>
-                                    </div>
-                                </div>
-                            <?php endif; ?> -->
+                    <div class="note-content">
+                        text
+                    </div>
 
-                            <div class="box-label-note">
-                                <span class="badge label-note text-bg-secondary">label</span>
-                                <!-- <?php $note = Note::get_note_by_id($notes_pinned[$i]["id"]);
-                                foreach ($note->get_labels() as $label) : ?>
-                                    <span class="badge label-note text-bg-secondary"><?= $label ?></span>
+                    <div class="box-label-note">
+                        <span class="badge label-note text-bg-secondary">label</span>
+                    </div>
 
-                                <?php endforeach; ?> -->
-                            </div>
-
-                        </div>
-                    </a>
                 </div>
+
             </div>
         </div>
     </div>
+
 
 </body>
 
