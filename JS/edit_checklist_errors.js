@@ -104,6 +104,24 @@ $(document).ready(function () {
 
     }
 
+    function isDuplicateContent(content, itemId) {
+        const checklistItems = document.querySelectorAll('.checklist_elements');
+        let isDuplicate = false;
+        for (let i = 0; i < checklistItems.length; i++) {
+            let itemContent = checklistItems[i];
+            // Récupération de l'ID de l'élément
+            let name = itemContent.getAttribute('name');
+            let itemIdMatch = name.match(/\[(\d+)\]/); // Extraction de l'ID
+            let existingItemId = itemIdMatch[1];
+            if (existingItemId != itemId && itemContent.value == content) {
+                isDuplicate = true;
+                break;
+            }
+        }
+        return isDuplicate;
+    }
+
+
     // Fonction pour vérifier le contenu d'un élément
     function checkContent(itemInput, itemId, errorSpan) {
         // Envoi d'une requête AJAX pour vérifier si le contenu de la note est valide
@@ -112,12 +130,12 @@ $(document).ready(function () {
             id: itemId
         };
 
+
         $.ajax({
             url: "note/check_content_checklist_service", // L'URL où envoyer la requête
             type: "POST", // Méthode de la requête (POST)
             data: requestData, // Les données à envoyer (le titre de la note)
             success: function (data) { // Fonction exécutée en cas de succès de la requête
-                console.log(data);
                 if (data.length > 2) {
                     let message = JSON.parse(data)[itemId];
                     if (errorSpan) {
@@ -129,10 +147,18 @@ $(document).ready(function () {
                     }
                 } else {
                     if (errorSpan) {
-                        // Masquage de l'erreur
-                        errorSpan.style.display = 'none';
-                        itemInput.classList.remove('is-invalid');
-                        itemInput.classList.add('is-valid');
+                        if (isDuplicateContent(itemInput.value, itemId)) {
+                            // Affichage de l'erreur
+                            errorSpan.textContent = "it must be unique";
+                            errorSpan.style.display = 'block';
+                            itemInput.classList.add('is-invalid');
+                            itemInput.classList.remove('is-valid');
+                        } else {
+                            // Masquage de l'erreur
+                            errorSpan.style.display = 'none';
+                            itemInput.classList.remove('is-invalid');
+                            itemInput.classList.add('is-valid');
+                        }
                     }
                 }
 
