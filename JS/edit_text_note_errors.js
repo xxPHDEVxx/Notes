@@ -4,7 +4,7 @@ $(document).ready(function () {
     const titleErrorDiv = document.getElementById('titleError');
     const contentErrorDiv = document.getElementById('contentError');  // Div pour les erreurs de contenu
     const saveButton = document.getElementById('saveButton');
-    if(!(document.title === "Edit note"))
+    if(!(document.title === "Edit note "))
         saveButton.disabled = true;
 
     // Désactiver le bouton save si une des classes 'is-invalid' est présente
