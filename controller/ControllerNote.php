@@ -8,6 +8,7 @@ require_once "framework/Tools.php";
 require_once "model/ChecklistNoteItem.php";
 require_once "model/NoteShare.php";
 require_once "model/NoteLabel.php";
+require_once "model/ChecklistNote.php";
 
 // Définition de la classe ControllerNote, héritant de la classe Controller
 class ControllerNote extends Controller
@@ -123,8 +124,7 @@ class ControllerNote extends Controller
             // Si les données postées sont valides, partager la note
             if (isset($_POST['user'], $_POST['editor']) && empty($errors)) {
                 $nv_us = User::get_user_by_id($_POST['user']);
-                $editor = ($_POST['editor'] == 1) ? true : false;
-                ;
+                $editor = ($_POST['editor'] == 1) ? true : false;;
                 $note_share = new NoteShare($note_id, $nv_us->id, $editor);
                 $note_share->persist();
                 $this->redirect("note", "shares", $note_id);
@@ -308,7 +308,7 @@ class ControllerNote extends Controller
             foreach ($items as $key => $item) {
                 if (!empty($item)) {
                     //on crée une instance pour vérifier la longueur de l'item
-                    $checklistItem = new CheckListNoteItem(0, 0, $item, 0);
+                    $checklistItem = new ChecklistNoteItem(0, 0, $item, 0);
                     $contentErrors = $checklistItem->validate_item();
                     if (!empty($contentErrors)) {
                         $errors["item_$key"] = implode($contentErrors);
@@ -337,7 +337,7 @@ class ControllerNote extends Controller
                     $checklistNoteId = $note->note_id;
                     $checked = false;
 
-                    $checklistItem = new CheckListNoteItem(
+                    $checklistItem = new ChecklistNoteItem(
                         0,
                         $checklistNoteId,
                         $content,
@@ -412,12 +412,14 @@ class ControllerNote extends Controller
         }
     }
 
-    public function edit_checklist(): void
+    public function edit_checklist()
     {
-        // Récupération de l'utilisateur connecté
+        // Vérification de la présence de l'identifiant de la note dans l'URL
         $user = $this->get_user_or_redirect();
         $errors = [];
-        // Vérification de la présence de l'identifiant de la note dans l'URL
+        $errorsItem = [];
+        $edit_item = [];
+
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = Tools::sanitize($_GET["param1"]);
             // Récupération de la note par son identifiant
@@ -426,8 +428,7 @@ class ControllerNote extends Controller
             if ($note === false) {
                 throw new Exception("Undefined note");
             }
-            $user_id = $this->get_user_or_redirect()->id;
-            // Vérification si la note est archivée par l'utilisateur
+            $user_id = $user->id;
             $archived = $note->in_my_archives($user_id);
             // Vérification si la note est épinglée par l'utilisateur
             $pinned = $note->is_pinned($user_id);
@@ -438,15 +439,18 @@ class ControllerNote extends Controller
             // Récupération du contenu de la note
             $body = $note->get_content();
 
-            // Validation du titre de la note
+
+
+            //verification si champ titre vide + si c'est le titre initial
             if (isset($_POST['title']) && $_POST['title'] == "") {
                 $errors["title"] = "Title required";
             }
-            if (isset($_POST['title']) && $_POST['title'] != "") {
+
+            if (isset($_POST['title']) && $_POST['title'] != $note->title) {
                 $title = Tools::sanitize($_POST["title"]);
                 $note = Note::get_note_by_id($note_id);
                 $note->title = $title;
-                $errors["title"] = $note->validate_title();
+                $errors["title"] = implode($note->validate_title());
             }
 
             // Suppression d'un élément de la liste de contrôle
@@ -464,18 +468,49 @@ class ControllerNote extends Controller
             if (isset($_POST['new']) && $_POST["new"] != "") {
                 $new_item_content = Tools::sanitize($_POST['new']);
                 $new_item = new CheckListNoteItem(0, $note->note_id, $new_item_content, false);
+
                 if (!$new_item->is_unique()) {
                     $errors["items"] = "item must be unique";
                 }
+                $contentErrors = $new_item->validate_item();
+                if (!empty($contentErrors)) {
+                    $errors["items"] = implode($contentErrors);
+                }
+
+                //si item oke -> modif db
                 if (empty($errors['items'])) {
                     $new_item->persist();
+                    $this->redirect("note", "edit_checklist", $note_id);
+                    exit;
                 }
             }
         }
-        // Redirection vers la page de la note si le titre est valide et non vide
-        if (empty($errors["title"]) && (isset($_POST['title']) && $_POST['title'] != "")) {
-            $note->persist();
-            $this->redirect("note", "open_note", $note->note_id);
+        if (isset($_POST["save"])) {
+            //action edit item 
+            // Vérification des éléments
+            if (isset($_POST['items'])) {
+                foreach ($_POST['items'] as $key => $item) {
+                    $checklistItem = ChecklistNoteItem::get_item_by_id($key);
+                    $checklistItem->content = $item;
+                    if (!$checklistItem->is_unique()) {
+                        $errorsItem["item_$key"] = "item must be unique";
+                    } else {
+                        $contentErrors = $checklistItem->validate_item();
+                        if (!empty($contentErrors)) {
+                            $errorsItem["item_$key"] = implode("; ", $contentErrors);
+                        }
+                        if (empty($errorsItem["item_$key"])) {
+                            $checklistItem->persist();
+                        }
+                    }
+                }
+                
+            }   
+            $errors = array_merge($errors, $errorsItem);
+            if (empty($errors["title"]) && empty($errorsItem)) {
+                $note->persist();
+                $this->redirect("note", "open_note", $note->note_id);
+            }
         }
 
         // Affichage de la vue d'édition de la liste de contrôle

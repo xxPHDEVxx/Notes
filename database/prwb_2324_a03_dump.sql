@@ -1,6 +1,6 @@
 -- MariaDB dump 10.19  Distrib 10.4.28-MariaDB, for Win64 (AMD64)
 --
--- Host: 127.0.0.1    Database: prwb_2324_a03
+-- Host: 127.0.0.1    Database: prwb_2324_xyy
 -- ------------------------------------------------------
 -- Server version	10.4.28-MariaDB
 

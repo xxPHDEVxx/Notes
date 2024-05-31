@@ -840,6 +840,10 @@ textarea:focus {
   width: 94%;
   top: 30px;
 }
+.container_edit {
+  margin: 22% auto;
+  width: 90%;
+}
 
 /* style edit et add text_note le plus récent */
 
@@ -877,21 +881,15 @@ textarea:focus {
 
 
 .note_body_edit {
-  position: absolute;
-  top: 220px;
-  left: 3.5%;
+
   color: white;
   font-size: 18px;
 }
 
 .note_body_checklist_edit {
-  color: lightgray;
-  position: absolute;
-  top: 260px;
-  left: 3%;
-  width: 94%;
-
+  color : lightgray;
 }
+
 
 .save {
   position: absolute;
@@ -901,9 +899,6 @@ textarea:focus {
 }
 
 .title_edit_note {
-  position: absolute;
-  top: 125px;
-  left: 3%;
   color: lightgray;
   background-color: transparent;
   width: 94%;
@@ -914,10 +909,6 @@ textarea:focus {
 
 .erreur_edit {
   color: red;
-  position: absolute;
-  top: 160px;
-  left: 4%;
-
 }
 
 .edit_checklist_form {
@@ -991,6 +982,8 @@ textarea:focus {
   padding: 7px;
   margin-left: 14%;
   width: 70%;
+  background-color: unset;
+  color: lightgray;
 }
 
 .input_add {
