@@ -40,12 +40,13 @@
             <div class="note_body_checklist_edit">
                 <?php foreach ($content as $row):
                     $id = $row['id'] ?>
-                    <div class="edit_checklist_form">
+                    <div class="edit_checklist_form" id="div<?=$id?>">
                         <div class="edit_check_div">
                             <input class="check_square" type="checkbox" value="<?= $id ?>" name="box" <?= $row["checked"] ? 'checked' : '' ?> disabled>
                         </div>
                         <input type="text" name="items[<?= $id ?>]"
                             class="checklist_elements <?= $row["checked"] ? 'check_label' : '' ?>"
+                            id="item_content"
                             value="<?= $row["content"] ?>">
 
                         <input type="hidden" name="remove" value="<?= $id ?>">

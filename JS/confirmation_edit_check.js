@@ -1,32 +1,24 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Récupération des éléments nécessaires
     const originalTitle = document.getElementById('title').value;
+    const checklistItems = document.querySelectorAll('.checklist_elements');
     const checklistDiv = document.querySelector('.note_body_checklist_edit');
     const backButton = document.querySelector('.back');
     const modal = new bootstrap.Modal(document.getElementById('unsavedChangesModal'));
     const confirmExitButton = document.getElementById('confirmExitButton');
+    let initialContents = [];
 
-    // Stockage du nombre d'éléments de la checklist initial
-    const originalItemCount = checklistDiv.children.length;
-
-    // Observer pour détecter les changements dans la checklist
-    const observer = new MutationObserver(function () {
-        if (dataHasChanged(originalTitle)) {
-            modal.show();
-        }
+    // Parcourir chaque élément de checklist pour stocker les valeurs initiales
+    checklistItems.forEach(function (itemContent) {
+        itemContent = document.getElementById('item_content');
+        // Récupération de l'ID de l'élément
+        let name = itemContent.getAttribute('name');
+        let itemIdMatch = name.match(/\[(\d+)\]/); // Extraction de l'ID
+        let itemId = itemIdMatch[1];
+        initialContents[itemId] = itemContent.value;
     });
 
-    // Configuration de l'observer
-    const config = { childList: true };
-
-    // Commence à observer la div checklist
-    observer.observe(checklistDiv, config);
-
-    // Vérifie si des données ont changé (titre ou nombre d'éléments dans la checklist)
-    function dataHasChanged(originalTitle) {
-        return originalTitle !== document.getElementById('title').value ||
-            originalItemCount !== checklistDiv.children.length;
-    }
+    console.log(initialContents);
 
     // Événement du bouton retour
     backButton.addEventListener('click', function (event) {
@@ -41,4 +33,22 @@ document.addEventListener('DOMContentLoaded', function () {
         modal.hide();
         window.location.href = backButton.getAttribute('href');
     });
+
+    // Vérifie si des données ont changé (titre ou nombre d'éléments dans la checklist)
+    function dataHasChanged(originalTitle) {
+        let changed = false;
+        // Parcourir chaque élément de checklist pour stocker les valeurs initiales
+        checklistItems.forEach(function (itemContent) {
+            itemContent = document.getElementById('item_content');
+            // Récupération de l'ID de l'élément
+            let name = itemContent.getAttribute('name');
+            let itemIdMatch = name.match(/\[(\d+)\]/); // Extraction de l'ID
+            let itemId = itemIdMatch[1];
+            if (initialContents[itemId] != itemContent.value)
+                changed = true;
+        });
+        if (originalTitle !== document.getElementById('title').value)
+            changed = true;
+        return changed;
+    }
 });

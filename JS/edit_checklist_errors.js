@@ -28,8 +28,6 @@ $(document).ready(function () {
 
     });
 
-
-
     // Ajout d'un gestionnaire d'événements pour le titre
     titleInput.addEventListener('input', checkTitle);
 
@@ -38,11 +36,13 @@ $(document).ready(function () {
         checkNewContent(newItemTag);
     });
 
+    // gestionnaire pour ajout d'item
     $('.icone-add').click(function (event) {
         event.preventDefault(); // Empêche le comportement par défaut du formulaire (soumission)
         addNewContent(newItemTag);
     });
 
+    // gestionnaire pour supression d'item
     $('.icone-delete').click(function (event) {
         event.preventDefault(); // Empêche le comportement par défaut du formulaire (soumission)
 
@@ -240,7 +240,9 @@ $(document).ready(function () {
             type: "POST", // Méthode de la requête (POST)
             data: requestData, // Les données à envoyer (le titre de la note)
             success: function (data) { // Fonction exécutée en cas de succès de la requête
-                console.log(data);
+                // Suppression du div contenant l'élément après la suppression réussie
+                $('#div' + itemId).remove();
+                console.log("Item successfully deleted.");
             },
             error: function (xhr, status, error) { // Fonction exécutée en cas d'erreur de la requête
                 console.error("Erreur lors de l'ajout du contenu de la note : ", error); // Affichage de l'erreur dans la console
