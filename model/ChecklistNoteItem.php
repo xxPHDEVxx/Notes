@@ -1,7 +1,6 @@
 <?php
 require_once "Note.php";
 require_once "ChecklistNote.php";
-require_once "ChecklistNoteItem.php";
 
 class CheckListNoteItem extends Model
 {

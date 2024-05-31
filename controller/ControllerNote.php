@@ -5,7 +5,9 @@ require_once "framework/Controller.php";
 require_once "framework/View.php";
 require_once "model/User.php";
 require_once "framework/Tools.php";
+require_once "model/ChecklistNoteItem.php";
 require_once "model/NoteShare.php";
+require_once "model/NoteLabel.php";
 require_once "model/ChecklistNote.php";
 
 // Définition de la classe ControllerNote, héritant de la classe Controller
@@ -307,7 +309,7 @@ class ControllerNote extends Controller
             foreach ($items as $key => $item) {
                 if (!empty($item)) {
                     //on crée une instance pour vérifier la longueur de l'item
-                    $checklistItem = new CheckListNoteItem(0, 0, $item, 0);
+                    $checklistItem = new ChecklistNoteItem(0, 0, $item, 0);
                     $contentErrors = $checklistItem->validate_item();
                     if (!empty($contentErrors)) {
                         $errors["item_$key"] = implode($contentErrors);
@@ -336,7 +338,7 @@ class ControllerNote extends Controller
                     $checklistNoteId = $note->note_id;
                     $checked = false;
 
-                    $checklistItem = new CheckListNoteItem(
+                    $checklistItem = new ChecklistNoteItem(
                         0,
                         $checklistNoteId,
                         $content,
@@ -451,8 +453,7 @@ class ControllerNote extends Controller
                 $errors["title"] = implode($note->validate_title());
             }
 
-
-            //action delete item
+            // Suppression d'un élément de la liste de contrôle
             if (isset($_POST['delete']) && $_POST['delete']) {
                 $item_id = $_POST["delete"];
                 $item = CheckListNoteItem::get_item_by_id($item_id);
@@ -463,7 +464,7 @@ class ControllerNote extends Controller
                 $this->redirect("note", "edit_checklist", $note_id);
             }
 
-            //action add item
+            // Ajout d'un nouvel élément à la liste de contrôle
             if (isset($_POST['new']) && $_POST["new"] != "") {
                 $new_item_content = Tools::sanitize($_POST['new']);
                 $new_item = new CheckListNoteItem(0, $note->note_id, $new_item_content, false);
@@ -489,7 +490,7 @@ class ControllerNote extends Controller
             // Vérification des éléments
             if (isset($_POST['items'])) {
                 foreach ($_POST['items'] as $key => $item) {
-                    $checklistItem = CheckListNoteItem::get_item_by_id($key);
+                    $checklistItem = ChecklistNoteItem::get_item_by_id($key);
                     $checklistItem->content = $item;
                     if (!$checklistItem->is_unique()) {
                         $errorsItem["item_$key"] = "item must be unique";
