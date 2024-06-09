@@ -392,7 +392,6 @@ class ControllerNote extends Controller
                     if ($user_id == $note->owner) {
                         // Suppression de la note
                         $note->delete($user);
-                        //Note::delete_order($user_id);
                         // Redirection vers les archives de l'utilisateur
                         $this->redirect("user", "my_archives");
                     } else {

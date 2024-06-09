@@ -50,6 +50,7 @@
     </div>
 
     <?php include ("view/view_modal_delete.php"); ?>
+    <?php include ("view_modal_delete_confirmation.php"); ?>
     <?php include ("view_modal.php"); ?>
 
     <script> var note = <?= json_encode($note_id) ?>;</script>
