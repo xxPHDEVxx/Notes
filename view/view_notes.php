@@ -57,6 +57,8 @@
                                 </div>
                             <?php endif; ?>
 
+                            
+                            </div>
                             <div class="box-label-note">
                                 <?php $note = Note::get_note_by_id($notes_pinned[$i]["id"]);
                                 foreach ($note->get_labels() as $label) :?>
@@ -64,8 +66,6 @@
     
                                 <?php endforeach; ?>
                             </div>
-
-                        </div>
                     </a>
                     <div class="card-footer">
                         <?php if ($i > 0): ?>
@@ -108,6 +108,7 @@
                                     </div>
                                 </div>
                             <?php endif; ?>
+                            </div>
                             <div class="box-label-note">
                                 <?php $note = Note::get_note_by_id($notes_unpinned[$i]["id"]);
                                 foreach ($note->get_labels() as $label) :?>
@@ -115,7 +116,6 @@
     
                                 <?php endforeach; ?>
                             </div>
-                        </div>
                     </a>
                     <div class="card-footer">
                         <?php if ($i > 0): ?>
