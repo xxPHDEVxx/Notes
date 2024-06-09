@@ -7,14 +7,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const confirmExitButton = document.getElementById('confirmExitButton');
     let originalTitle = document.getElementById('title').value;
     let initialContents = [];
+    let initialNewContent = document.getElementById('new').value;
     let changed = false;
-    let numberItems;
+    let numberItems = 0;
 
     saveData();
 
     // Événement du bouton retour
     backButton.addEventListener('click', function (event) {
-        if (dataHasChanged(originalTitle)) {
+        if (dataHasChanged(originalTitle, initialNewContent)) {
             event.preventDefault();
             modal.show();
         }
@@ -26,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
         numberItems = 0;
         saveData();
         originalTitle = document.getElementById('title').value;
+        initialNewContent = document.getElementById('new').value;
         changed = false;
     });
 
@@ -36,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
         window.location.href = backButton.getAttribute('href');
     });
 
-    // sauvegarde des data avant changement pour afichage modal 
+    // sauvegarde des data avant changement pour affichage modal 
     function saveData() {
         checklistItems.forEach(function (itemContent) {
             itemContent = document.getElementById('item_content');
@@ -50,13 +52,17 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Vérifie si des données ont changé (titre ou nombre d'éléments dans la checklist)
-    function dataHasChanged(originalTitle) {
+    function dataHasChanged(originalTitle,initialNewContent) {
         let changed = false;
         // Vérification du changement dans le titre
         if (titleChanged(originalTitle)) {
             changed = true;
-
-        } else {
+            console.log("yo");
+        } else if (newContentChanged(initialNewContent)) {
+            changed = true;
+            console.log("ya");
+        }
+        else {
             // Parcourir chaque élément de checklist pour comparer les valeurs initiales
             checklistItems.forEach(function (itemContent) {
                 itemContent = document.getElementById('item_content');
@@ -75,6 +81,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function titleChanged(originalTitle) {
         return (originalTitle !== document.getElementById('title').value);
+    }
+
+    function newContentChanged(initialNewContent) {
+        return (initialNewContent !== document.getElementById('new').value);
     }
 });
 
