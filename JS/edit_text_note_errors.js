@@ -9,7 +9,7 @@ $(document).ready(function () {
 
     // Désactiver le bouton save si une des classes 'is-invalid' est présente
     function updateSaveButtonState() {
-        if (titleInput.classList.contains('is-valid')
+        if (!(titleInput.classList.contains('is-invalid'))
             && !(contentInput.classList.contains('is-invalid'))) { saveButton.disabled = false; }
         else
             saveButton.disabled = true;

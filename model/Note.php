@@ -457,7 +457,7 @@ abstract class Note extends Model
 
         // Vérifie que le contenu est soit vide, soit entre minLength et maxLength caractères
         if (($contentLength > 0 && $contentLength < $minLength) || $contentLength > $maxLength) {
-            $errors[] = "Le contenu de la note doit contenir 5 et 800 caractères ou être vide.";
+            $errors[] = "Le contenu de la note doit contenir entre 5 et 800 caractères ou être vide.";
         }
 
         return $errors;
