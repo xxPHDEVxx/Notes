@@ -13,6 +13,7 @@
 
 
     <?php elseif ($is_shared_as_editor == 1): ?>
+        <a class="label" href="note/labels/<?= $note_id ?>"><span class="material-symbols-outlined">label</span></a>
         <a class="isShared" href="note/edit/<?= $note_id ?>"><span class="material-symbols-outlined">edit</span></a>
     <?php elseif ($archived == 0 && $is_shared_as_editor == 0 && $is_shared_as_reader == 0): ?>
         <a class="share" href="note/shares/<?= $note_id ?>"><span class="material-symbols-outlined">share</span></a>
