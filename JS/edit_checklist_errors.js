@@ -5,11 +5,11 @@ $(document).ready(function () {
     const saveButton = document.getElementById('saveButton');
     const itemContents = document.querySelectorAll('.checklist_elements');
     const newItemTag = document.getElementById('new');
+    const addButton = $('#addButton');
 
     // Désactiver le bouton de sauvegarde si le titre de la page n'est pas "Edit checklist note"
     if (!(document.title === "Edit checklist note"))
         saveButton.disabled = true;
-
 
     /* ******Gestionnaire d'évènements****** */
 
@@ -24,6 +24,9 @@ $(document).ready(function () {
             let errorSpan = document.getElementById(`contentError_${itemId}`);
             // Vérification du contenu de l'élément
             checkContent(itemContent, itemId, errorSpan);
+            $('#delete').click(function () {
+                errorSpan.style.display = 'none';
+            });
         });
 
     });
@@ -37,9 +40,11 @@ $(document).ready(function () {
     });
 
     // gestionnaire pour ajout d'item
-    $('.icone-add').click(function (event) {
+    addButton.click(function (event) {
         event.preventDefault(); // Empêche le comportement par défaut du formulaire (soumission)
         addNewContent(newItemTag);
+        newItemTag.classList.remove('is-valid');
+        newItemTag.classList.remove('is-invalid');
     });
 
     // gestionnaire pour supression d'item
@@ -183,7 +188,6 @@ $(document).ready(function () {
             type: "POST", // Méthode de la requête (POST)
             data: requestData, // Les données à envoyer (le titre de la note)
             success: function (data) { // Fonction exécutée en cas de succès de la requête
-                console.log(data);
             },
             error: function (xhr, status, error) { // Fonction exécutée en cas d'erreur de la requête
                 console.error("Erreur lors de l'ajout du contenu de la note : ", error); // Affichage de l'erreur dans la console
@@ -213,6 +217,7 @@ $(document).ready(function () {
                         errorSpan.style.display = 'block';
                         newItem.classList.add('is-invalid');
                         newItem.classList.remove('is-valid');
+                        addButton.prop('disabled', true); // Disable add button if new content is invalid
                     }
                 } else {
                     if (errorSpan) {
@@ -220,6 +225,7 @@ $(document).ready(function () {
                         errorSpan.style.display = 'none';
                         newItem.classList.remove('is-invalid');
                         newItem.classList.add('is-valid');
+                        addButton.prop('disabled', false); // Disable add button if new content is invalid
                     }
                 }
 
@@ -245,7 +251,6 @@ $(document).ready(function () {
             data: requestData, // Les données à envoyer (le titre de la note)
             success: function (data) {
                 let item = JSON.parse(data);
-                console.log(item);
                 let editChecklistItem = createEditChecklistItem(item.id, item.content, item.checked);
                 document.getElementById("container-item").appendChild(editChecklistItem);
             },

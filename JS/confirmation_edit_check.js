@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+$(document).ready(function () {
     // Récupération des éléments nécessaires
     const checklistItems = document.querySelectorAll('.checklist_elements');
     const backButton = document.querySelector('.back');
@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const confirmExitButton = document.getElementById('confirmExitButton');
     let originalTitle = document.getElementById('title').value;
     let initialContents = [];
-    let initialNewContent = document.getElementById('new').value;
     let changed = false;
     let numberItems = 0;
 
@@ -15,10 +14,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Événement du bouton retour
     backButton.addEventListener('click', function (event) {
-        if (dataHasChanged(originalTitle, initialNewContent)) {
+        if (dataHasChanged(originalTitle)) {
             event.preventDefault();
             modal.show();
         }
+    });
+
+    // reset new content input after added the item
+    $('.icone-add').click(function () {
+        $('#new').val('');
     });
 
 
@@ -41,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // sauvegarde des data avant changement pour affichage modal 
     function saveData() {
         checklistItems.forEach(function (itemContent) {
-            itemContent = document.getElementById('item_content');
+
             // Récupération de l'ID de l'élément
             let name = itemContent.getAttribute('name');
             let itemIdMatch = name.match(/\[(\d+)\]/); // Extraction de l'ID
@@ -52,24 +56,26 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Vérifie si des données ont changé (titre ou nombre d'éléments dans la checklist)
-    function dataHasChanged(originalTitle,initialNewContent) {
+    function dataHasChanged(originalTitle) {
         let changed = false;
         // Vérification du changement dans le titre
         if (titleChanged(originalTitle)) {
             changed = true;
-            console.log("yo");
-        } else if (newContentChanged(initialNewContent)) {
+        } else if (document.getElementById('new').value != '') {
             changed = true;
-            console.log("ya");
         }
         else {
             // Parcourir chaque élément de checklist pour comparer les valeurs initiales
             checklistItems.forEach(function (itemContent) {
-                itemContent = document.getElementById('item_content');
                 // Récupération de l'ID de l'élément
                 let name = itemContent.getAttribute('name');
                 let itemIdMatch = name.match(/\[(\d+)\]/); // Extraction de l'ID
                 let itemId = itemIdMatch[1];
+                console.log(initialContents[itemId]);
+                console.log(" vs ");
+                console.log(itemId);
+                console.log(" : ");
+                console.log(itemContent.value);
                 if (initialContents[itemId] !== itemContent.value) {
                     changed = true; // Si une différence est détectée, marquez la variable comme changée
                 }
@@ -81,10 +87,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function titleChanged(originalTitle) {
         return (originalTitle !== document.getElementById('title').value);
-    }
-
-    function newContentChanged(initialNewContent) {
-        return (initialNewContent !== document.getElementById('new').value);
     }
 });
 

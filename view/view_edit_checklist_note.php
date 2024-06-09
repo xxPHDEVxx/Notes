@@ -64,7 +64,7 @@
                 <label for="new">New item</label>
                 <div class="edit_checklist_form">
                     <input type="text" class="form-control-edit" id="new" name="new">
-                    <button type="submit" class="icone-add">+</button>
+                    <button type="submit" id="addButton" class="icone-add">+</button>
                     <span id="newContentError" class="text-danger" style="display: none;"></span>
                     <?php if (!empty($errors['items'])): ?>
                         <p class="text-danger erreur_edit"><?= $errors['items'] ?></p>
