@@ -1082,18 +1082,9 @@ class ControllerNote extends Controller
 
     public function labels() {
         $labels_note = [];
-        $default = ["Priv&eacute;", "Maison", "Loisirs", "Travail"];
         $nvlab = [];
         $user = $this->get_user_or_redirect();
-        $all = [];
-        if (!empty($user->get_labels())) {
-            //on récupere les label des notes de l'utilisateur connecté
-            $user_labels = $user->get_labels();
-            // Fusionner les labels de l'utilisateur et les labels par défaut sans doublon
-            $all = array_unique(array_merge($default, $user_labels));
-        } else {
-            $all = $default;
-        } 
+        $all = $user->get_labels();
         $errors= [];
         //vérifier et récupérer l'id en paramètre
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {

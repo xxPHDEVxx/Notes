@@ -37,7 +37,7 @@
         <?php endif; ?>
         <form action="note/labels/<?= $note->note_id ?>" method="post">
             <label for="new-label">Add a new label:</label>
-            <input list="new-label-list" id="new-label" name="new_label" class="form-control-label" placeholder="Type to search or create...">
+            <input list="new-label-list" id="new-label" name="new_label" class="form-control-label" placeholder="Type to search or create..." value="<?= isset($_POST['new_label']) ? htmlspecialchars($_POST['new_label']) : "" ?>">
             <button class="btn btn-primary btn-share" type="submit">
                     <span class="material-symbols-outlined">add</span></button>
             <?php if (!empty($errors)) : ?>

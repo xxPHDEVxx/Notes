@@ -34,13 +34,6 @@ abstract class Note extends Model
     public abstract function isPinned();
     public abstract function update();
 
-
-
-    public function get_id(): int
-    {
-        return 5;
-    }
-
     /**
      * Récupère les libellés associés à la note.
      *
@@ -52,7 +45,7 @@ abstract class Note extends Model
         $labels = [];
 
         // Exécute une requête SQL pour récupérer les libellés de la base de données
-        $data_sql = self::execute("SELECT label FROM note_labels WHERE note = :id", ["id" => $this->note_id]);
+        $data_sql = self::execute("SELECT label FROM note_labels WHERE note = :id ORDER BY label ", ["id" => $this->note_id]);
 
         // Récupère les résultats de la requête sous forme de tableau de colonnes
         // Utilise FETCH_COLUMN pour obtenir uniquement la première colonne des résultats

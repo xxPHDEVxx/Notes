@@ -93,7 +93,8 @@ class NoteLabel extends Model
             "SELECT DISTINCT nl.label
             FROM note_labels nl
             INNER JOIN notes n ON nl.note = n.id
-            WHERE n.owner = :owner",
+            WHERE n.owner = :owner
+            ORDER BY nl.label",
             ["owner" => $user->id]
         );
         $labels = [];
