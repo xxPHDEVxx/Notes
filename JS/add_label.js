@@ -39,6 +39,8 @@ $(document).ready(function () {
                 // Ajouter le formulaire à l'endroit désiré dans le DOM
                 form.appendTo('.box-all');
 
+                //on remet l'input pour le nv label vide
+                $(document).find('[name="new_label"]').val("");
             },
             error: function (xhr, status, error) {
                 console.error('Erreur lors de l\'envoi de la requête : ' + error);
