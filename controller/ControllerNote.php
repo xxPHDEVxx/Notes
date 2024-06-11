@@ -1127,4 +1127,23 @@ class ControllerNote extends Controller
         }
     }
 
+    public function add_label_service() {
+        $this->get_user_or_redirect();
+        if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
+            $note_id = $_GET["param1"];
+            // Récupération de la note par son identifiant
+            $note = Note::get_note_by_id($note_id);
+
+            //rajouter un nouveau label
+            if (isset($_POST["new_label"]) && isset($_POST["new_label"]) !== "") {
+                $content = $_POST["new_label"];
+                $new_label = new NoteLabel($note->note_id, $content);
+                $errors = $new_label->validate_label();
+                if (empty($errors)) {
+                    $new_label->persist();
+                }
+            }
+        }
+    }
+
 }
