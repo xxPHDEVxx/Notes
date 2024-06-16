@@ -11,7 +11,7 @@ $(document).ready(function () {
         // // Envoyer la requête AJAX au serveur
         $.ajax({
             type: 'POST',
-            url: "note/add_label_service/". $note,
+            url: "note/labels/". $note,
             data: formData,
             success: function (response) {
                 // Mettre à jour l'affichage selon la réponse du serveur
