@@ -53,6 +53,7 @@
                     <option value="<?= $lab ?>"></option>
                 <?php endforeach; ?>
             </datalist>
+            <input type="text" name="note_id" id="note_id" value="<?= $note->note_id ?>" hidden>
         </form>
     </div>
     <script src="JS/add_label.js"></script>

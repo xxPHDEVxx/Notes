@@ -1128,7 +1128,9 @@ class ControllerNote extends Controller
     }
 
     public function add_label_service() {
+
         $this->get_user_or_redirect();
+        $errors = [];
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
             // Récupération de la note par son identifiant
@@ -1142,6 +1144,9 @@ class ControllerNote extends Controller
                 if (empty($errors)) {
                     $new_label->persist();
                 }
+            }
+            if (!empty($errors)) {
+                echo 'errors';
             }
         }
     }

@@ -11,12 +11,12 @@ $(document).ready(function () {
         // // Envoyer la requête AJAX au serveur
         $.ajax({
             type: 'POST',
-            url: "note/labels/". $note,
+            url: "note/add_label_service/". $note,
             data: formData,
             success: function (response) {
                 // Mettre à jour l'affichage selon la réponse du serveur
                 console.log('La requête a été envoyée avec succès.');
-
+                console.log(response)
                 // Créer le formulaire pour le delete
                 var form = $('<form>').addClass('form_toggle').attr('action', 'note/delete_label/' + note).attr('method', 'post');
                 //on créé la box label
