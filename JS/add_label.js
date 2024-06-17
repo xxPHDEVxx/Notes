@@ -18,7 +18,6 @@ $(document).ready(function () {
                 // Mettre à jour l'affichage selon la réponse du serveur
                 console.log('La requête a été envoyée avec succès.');
                 if(data != "") {
-                    console.log(data);
                     titleErrorDiv.text(data);
                     console.log(titleErrorDiv);
                     
@@ -60,6 +59,5 @@ $(document).ready(function () {
 
 
     })
-
 
 })

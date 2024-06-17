@@ -1151,4 +1151,16 @@ class ControllerNote extends Controller
         }
     }
 
+    public function delete_label_service()  {
+        $user = $this->get_user_or_redirect();
+        if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
+            $note_id = $_GET["param1"];
+            // Récupération de la note par son identifiant
+            $note = Note::get_note_by_id($note_id);
+            $content = $_POST["label"];
+            $label  = NoteLabel::get_note_label($note->note_id, $content);
+            $label->delete();
+        }
+    }
+
 }
