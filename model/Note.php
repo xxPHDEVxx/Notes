@@ -150,7 +150,7 @@ abstract class Note extends Model
     // récupérer nombre total de notes d'un user spécifique
     public function get_all_notes_by_user($user)
     {
-        $dataSql = self::execute("SELECT id FROM notes WHERE owner = :user", ["user" => $user]);
+        $dataSql = self::execute("SELECT id FROM notes WHERE owner = :user ORDER BY weight ASC", ["user" => $user]);
         $data = $dataSql->fetchAll(PDO::FETCH_COLUMN, 0);
         return $data;
     }
