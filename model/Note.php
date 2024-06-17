@@ -159,7 +159,7 @@ abstract class Note extends Model
     public function temporary_weights($array_id)
     {
         $notes = $array_id;
-        $nb = count($this->get_all_notes_by_user($this->owner)) + 50;// 50 pour éviter conflit de poids lors de plusieurs supressions
+        $nb = count($this->get_all_notes_by_user($this->owner)) + 1000;// 1000 pour éviter conflit de poids lors de plusieurs supressions
         foreach ($notes as $note) {
             self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => ++$nb, "id" => $note]);
         }
@@ -363,7 +363,7 @@ abstract class Note extends Model
 
         // Vérifie la longueur du titre
         if (strlen($this->title) < $minLength || strlen($this->title) > $maxLength) {
-            $errors[] = "Le titre doit avoir au minimum 3 caractères et au maximum 25 caractères.";
+            $errors[] = "Le titre doit avoir au minimum $minLength caractères et au maximum $maxLength caractères.";
         }
 
         // Vérifie si le titre est unique pour cet utilisateur
@@ -387,11 +387,11 @@ abstract class Note extends Model
 
         // Vérifie la longueur du titre
         if (strlen($title) < $minLength) {
-            $errors[] = "Le titre doit contenir au minimum 3 caractères";
+            $errors[] = "Le titre doit contenir au minimum $minLength caractères";
         }
 
         if (strlen($title) > $maxLength) {
-            $errors[] = "Le titre doit contenir au maximum 25 caractères.";
+            $errors[] = "Le titre doit contenir au maximum $maxLength caractères.";
         }
 
         // Vérifie si le titre est unique pour cet utilisateur
@@ -415,11 +415,11 @@ abstract class Note extends Model
 
         // Vérifie la longueur du titre
         if (strlen($title) < $minLength) {
-            $errors[] = "Le titre doit contenir au minimum 3 caractères";
+            $errors[] = "Le titre doit contenir au minimum $minLength caractères";
         }
 
         if (strlen($title) > $maxLength) {
-            $errors[] = "Le titre doit contenir au maximum 25 caractères.";
+            $errors[] = "Le titre doit contenir au maximum $maxLength caractères.";
         }
 
         // Vérifie si le titre est unique pour cet utilisateur
@@ -442,7 +442,7 @@ abstract class Note extends Model
 
         // Vérifie que le contenu est soit vide, soit entre minLength et maxLength caractères
         if (($contentLength > 0 && $contentLength < $minLength) || $contentLength > $maxLength) {
-            $errors[] = "Le contenu de la note doit contenir entre 5 et 800 caractères ou être vide.";
+            $errors[] = "Le contenu de la note doit contenir entre $minLength et $maxLength caractères ou être vide.";
         }
 
         return $errors;
@@ -457,7 +457,7 @@ abstract class Note extends Model
 
         // Vérifie que le contenu est soit vide, soit entre minLength et maxLength caractères
         if (($contentLength > 0 && $contentLength < $minLength) || $contentLength > $maxLength) {
-            $errors[] = "Le contenu de la note doit contenir entre 5 et 800 caractères ou être vide.";
+            $errors[] = "Le contenu de la note doit contenir entre $minLength et $maxLength caractères ou être vide.";
         }
 
         return $errors;
@@ -599,9 +599,5 @@ abstract class Note extends Model
                     $data['edited_at']
                 );
         }
-    }
-    public static function update_drag_and_drop($count, $idval)
-    {
-        self::execute("UPDATE notes SET weight = :count, WHERE id = :id", ['count' => $count, 'id' => $idval]);
     }
 }
