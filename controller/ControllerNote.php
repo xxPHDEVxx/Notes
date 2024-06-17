@@ -365,7 +365,7 @@ class ControllerNote extends Controller
             $note = Note::get_note_by_id($note_id);
             $user = $this->get_user_or_redirect();
             if ($user->id == $note->owner) {
-                (new View('delete_confirmation'))->show(['note_id' => $note_id]);
+                (new View('delete_confirmation'))->show(['note' => $note]);
             } else {
                 throw new Exception("vous n'êtes pas l'auteur de cette note");
             }

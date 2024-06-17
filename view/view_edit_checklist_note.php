@@ -42,23 +42,26 @@
 
                     <?php foreach ($content as $row):
                         $id = $row['id'] ?>
-                        <div class="edit_checklist_form" id="div<?= $id ?>">
-                            <div class="edit_check_div">
-                                <input class="check_square" type="checkbox" value="<?= $id ?>" name="box" <?= $row["checked"] ? 'checked' : '' ?> disabled>
-                            </div>
-                            <input type="text" name="items[<?= $id ?>]"
-                                class="checklist_elements <?= $row["checked"] ? 'check_label' : '' ?>" id="item_content"
-                                value="<?= $row["content"] ?>">
+                        <div>
+                            <div class="edit_checklist_form" id="div<?= $id ?>">
+                                <div class="edit_check_div">
+                                    <input class="check_square" type="checkbox" value="<?= $id ?>" name="box"
+                                        <?= $row["checked"] ? 'checked' : '' ?> disabled>
+                                </div>
+                                <input type="text" name="items[<?= $id ?>]"
+                                    class="checklist_elements <?= $row["checked"] ? 'check_label' : '' ?>" id="item_content"
+                                    value="<?= $row["content"] ?>">
 
-                            <input type="hidden" name="remove" value="<?= $id ?>">
-                            <button type="submit" id="delete<?= $id ?> " name="delete" value="<?= $id ?>"
-                                class="icone-delete">-</button>
+                                <input type="hidden" name="remove" value="<?= $id ?>">
+                                <button type="submit" id="delete<?= $id ?> " name="delete" value="<?= $id ?>"
+                                    class="icone-delete">-</button>
+                            </div>
+                            <span id="contentError_<?= $id ?>" class="text-danger" style="display: none;"></span>
+                            <?php if (!empty($errors["item_$id"])): ?>
+                                <p class="text-danger"><?= $errors["item_$id"] ?></p>
+                                <?php
+                            endif; ?>
                         </div>
-                        <span id="contentError_<?= $id ?>" class="text-danger" style="display: none;"></span>
-                        <?php if (!empty($errors["item_$id"])): ?>
-                            <p class="text-danger"><?= $errors["item_$id"] ?></p>
-                            <?php
-                        endif; ?>
                     <?php endforeach; ?>
                 </div>
                 <label for="new">New item</label>

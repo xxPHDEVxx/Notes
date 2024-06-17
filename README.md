@@ -62,7 +62,9 @@
 
 ## Notes de version itération 3 
 
-  * itération 1 corrigée à 100% (hormis bug non remarqués).
+  * itération 1 : 
+    - PRG EditProfile et ChangePassword en cas de succès + Delete_Confirmation
+    
   * Drag and Drop : ok.
   * Edit_Checklist_Note gestion en JS : ok ( 2 bugs mineurs décelés   -> gestion accent + validation newItem après ajout).
   * Edit_Text_Note validations : ok ( 1 bug mineur -> gestion accent).

@@ -98,6 +98,7 @@ $(document).ready(function () {
         // Vérification pour le titre
         if (titleInput.classList.contains('is-invalid')) {
             saveButton.disabled = true;
+            return;
         } else
             saveButton.disabled = false;
 
@@ -272,7 +273,7 @@ $(document).ready(function () {
             data: requestData, // Les données à envoyer (le titre de la note)
             success: function (data) { // Fonction exécutée en cas de succès de la requête
                 // Suppression du div contenant l'élément après la suppression réussie
-                $('#div' + itemId).remove();
+                $('#div' + itemId).parent().remove();
                 console.log("Item successfully deleted.");
             },
             error: function (xhr, status, error) { // Fonction exécutée en cas d'erreur de la requête
