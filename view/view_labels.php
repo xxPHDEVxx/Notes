@@ -41,8 +41,10 @@
         <form action="note/labels/<?= $note->note_id ?>" method="post" id="add_label">
             <label for="new-label">Add a new label:</label>
             <input list="new-label-list" id="new-label" name="new_label" class="form-control-label" placeholder="Type to search or create..." value="<?= isset($_POST['new_label']) ? htmlspecialchars($_POST['new_label']) : "" ?>">
-            <button class="btn btn-primary btn-share" type="submit">
+            <button class="btn btn-primary btn-share" type="submit" id="btn-add">
                     <span class="material-symbols-outlined">add</span></button>
+                    <p id="newContentError" class="text-danger"></p>
+
             <?php if (!empty($errors)) : ?>
                 <?php foreach ($errors as $error) : ?>
                     <p class="text-danger"><?= $error ?></p>
