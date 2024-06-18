@@ -255,7 +255,10 @@ $(document).ready(function () {
                 let editChecklistItem = createEditChecklistItem(item.id, item.content, item.checked);
                 let container = document.getElementById("container-item");
                 let firstChecked = container.querySelector('.check_square:checked');
-                container.insertBefore(editChecklistItem, firstChecked.closest('.item'));
+                if(firstChecked)
+                    container.insertBefore(editChecklistItem, firstChecked.closest('.item'));
+                else
+                    container.appendChild(editChecklistItem);
 
             },
             error: function (xhr, status, error) { // Fonction exécutée en cas d'erreur de la requête
