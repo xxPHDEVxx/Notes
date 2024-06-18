@@ -18,13 +18,14 @@ $(document).ready(function () {
                 // Mettre à jour l'affichage selon la réponse du serveur
                 console.log('La requête a été envoyée avec succès.');
                 if(data != "") {
+                    titleErrorDiv.show();
                     titleErrorDiv.text(data);
                     console.log(titleErrorDiv);
                     
                     $(this).prop('disabled', true);
                 } else {
                     $(this).prop('disabled', false);
-
+                    titleErrorDiv.hide();
                     // Créer le formulaire pour le delete
                     var form = $('<form>').addClass('form_toggle').attr('action', 'note/delete_label/' + note).attr('method', 'post');
                     //on créé la box label
@@ -45,7 +46,7 @@ $(document).ready(function () {
                     form.append(boxLabel);
     
                     // Ajouter le formulaire à l'endroit désiré dans le DOM
-                    form.appendTo('.box-all');
+                    form.appendTo('.box-labels');
     
                     //on remet l'input pour le nv label vide
                     $(document).find('[name="new_label"]').val("");

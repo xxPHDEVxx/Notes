@@ -1,6 +1,14 @@
 $(document).ready(function () {
+    var boxLabels = $('.box-label:visible');
+    
+    if(boxLabels.length == 0) {
+        $('#label-empty').show();
+    } else {
+        $('#label-empty').hide();
+    }
     $("#form_delete").submit(function (event) {
         event.preventDefault();
+    
 
         //récuperer les données du form
         // Identifier l'action soumise
@@ -18,9 +26,14 @@ $(document).ready(function () {
             success: function (response) {
                 // Mettre à jour l'affichage selon la réponse du serveur
                 console.log('La requête a été envoyée avec succès.');
-                console.log(response);
                 $('.box-label').hide();
 
+                boxLabels = $('.box-label:visible')
+                if(boxLabels.length == 0) {
+                    $('#label-empty').show();
+                } else {
+                    $('#label-empty').hide();
+                }
             },
             error: function (xhr, status, error) {
                 console.error('Erreur lors de l\'envoi de la requête : ' + error);
