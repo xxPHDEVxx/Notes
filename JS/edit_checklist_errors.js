@@ -253,7 +253,10 @@ $(document).ready(function () {
             success: function (data) {
                 let item = JSON.parse(data);
                 let editChecklistItem = createEditChecklistItem(item.id, item.content, item.checked);
-                document.getElementById("container-item").appendChild(editChecklistItem);
+                let container = document.getElementById("container-item");
+                let firstChecked = container.querySelector('.check_square:checked');
+                container.insertBefore(editChecklistItem, firstChecked.closest('.item'));
+
             },
             error: function (xhr, status, error) { // Fonction exécutée en cas d'erreur de la requête
                 console.error("Erreur lors de la vérification du contenu de la note : ", error); // Affichage de l'erreur dans la console

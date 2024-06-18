@@ -42,7 +42,7 @@
 
                     <?php foreach ($content as $row):
                         $id = $row['id'] ?>
-                        <div>
+                        <div class="item">
                             <div class="edit_checklist_form" id="div<?= $id ?>">
                                 <div class="edit_check_div">
                                     <input class="check_square" type="checkbox" value="<?= $id ?>" name="box"
