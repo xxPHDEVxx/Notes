@@ -65,9 +65,6 @@
   * itération 1 : 
     - PRG EditProfile et ChangePassword en cas de succès + Delete_Confirmation
     
-  * Edit_Checklist_Note gestion en JS : 
-    - Ajouter item avant item coché.
-    - Ajouter validations dès l'ajout d'une note.
 
   * Gestion partage : ok ( 1 bug mineur -> select ne reaparait pas après supression tant qu'on refresh pas)
   * Check_uncheck : ok -> oublié de l'ajouté sur le dernier commit.
