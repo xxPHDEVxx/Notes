@@ -73,3 +73,4 @@
   
   * petit bug affichage css potentiels.
   *  fonctionnalité search non aboutie.
+  * Labels : delete non dynamique à part pour le premier label -> à corriger.
