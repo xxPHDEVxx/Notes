@@ -67,7 +67,7 @@ class NoteLabel extends Model
             "SELECT * FROM note_labels WHERE note = :note AND label = :label",
             [
                 "note" => $note,
-                "label"  => $label
+                "label" => $label
             ]
         );
         $data = $query->fetch();
@@ -93,7 +93,8 @@ class NoteLabel extends Model
             "SELECT DISTINCT nl.label
             FROM note_labels nl
             INNER JOIN notes n ON nl.note = n.id
-            WHERE n.owner = :owner",
+            WHERE n.owner = :owner
+            ORDER BY nl.label",
             ["owner" => $user->id]
         );
         $labels = [];
@@ -102,27 +103,5 @@ class NoteLabel extends Model
             $labels[] = $row["label"];
         }
         return $labels;
-    }
-
-
-    public static function get_notes_by_label(User $user, array $labels)
-    {
-        $notes = [];
-        $placeholders = implode(',', array_fill(0, count($labels), '?'));
-        
-        $query = self::execute("            
-        SELECT nl.note
-        FROM note_labels nl
-        JOIN notes n ON n.id = nl.note
-        WHERE n.owner = :owner AND IN ($placeholders)
-        GROUP BY nl.note
-        HAVING COUNT(DISTINCT nl.label) = :label_count",
-        array_merge(["owner" => $user->id], $labels, ["label_count" => count($labels)]));
-
-        $data = $query->fetchAll();
-        foreach ($data as $row) {
-            $notes[] = $row["note"];
-        }
-        return $notes;
     }
 }

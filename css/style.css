@@ -230,18 +230,13 @@ h2 {
 .note-title {
   font-size: 17px;
   border-bottom: 1.5px solid #43464c;
-  ;
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;
   padding: 3px 10px;
   background: #292c30;
+  margin-bottom: 1px;
 }
 
-.note-content {
-  padding: 20px;
-  font-weight: 350;
-  font-size: 15px;
-}
 
 .content_text {
   display: -webkit-box;
@@ -355,6 +350,8 @@ h2 {
 .note-content {
   padding: 5px;
   margin-bottom: 3em;
+  font-weight: 350;
+  font-size: 15px;
 }
 
 .note {
@@ -368,7 +365,7 @@ h2 {
   position: relative;
   display: flex;
   flex-direction: column;
-  height: 210px;
+  height: 220px;
   /* Hauteur maximale fixe pour la note */
 }
 
@@ -1054,9 +1051,10 @@ textarea:focus {
   align-items: center;
   flex-wrap: wrap;
   flex-direction: row;
-  position: absolute;
-  bottom: 8%;
+  position: relative;
+  bottom: 20%;
   width: 80%;
+  left: 2%;
 }
 
 .form-control-label {
@@ -1127,6 +1125,19 @@ textarea:focus {
   font-size: 16px;
   margin: 0 8px;
 }
+
+
+.label-empty {
+  font-style: italic;
+}
+
+.box-labels {
+  margin-top: 18%;
+  margin-left: auto;
+  margin-right: auto;
+  width: 98%;
+}
+
 
 /* Page recherche*/
 .box-search {

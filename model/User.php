@@ -232,6 +232,9 @@ class User extends Model
     {
         return Note::get_notes_unpinned($this);
     }
+    public function get_notes_search($labels){
+        return Note::get_notes_search($this, $labels);
+    }
 
 
     public function updateProfile(string $newFullName, string $newMail): void

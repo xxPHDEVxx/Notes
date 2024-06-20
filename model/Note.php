@@ -34,13 +34,6 @@ abstract class Note extends Model
     public abstract function isPinned();
     public abstract function update();
 
-
-
-    public function get_id(): int
-    {
-        return 5;
-    }
-
     /**
      * Récupère les libellés associés à la note.
      *
@@ -52,7 +45,7 @@ abstract class Note extends Model
         $labels = [];
 
         // Exécute une requête SQL pour récupérer les libellés de la base de données
-        $data_sql = self::execute("SELECT label FROM note_labels WHERE note = :id", ["id" => $this->note_id]);
+        $data_sql = self::execute("SELECT label FROM note_labels WHERE note = :id ORDER BY label ", ["id" => $this->note_id]);
 
         // Récupère les résultats de la requête sous forme de tableau de colonnes
         // Utilise FETCH_COLUMN pour obtenir uniquement la première colonne des résultats
@@ -276,6 +269,79 @@ abstract class Note extends Model
         $notes = [];
         $query = self::execute("SELECT * FROM notes WHERE owner = :ownerid AND archived = 0 AND pinned = :pinned ORDER BY -weight", ["ownerid" => $user->id, "pinned" => $pinnedCondition]);
         $notes = $query->fetchAll();
+        $content_checklist = [];
+        foreach ($notes as &$row) {
+            $dataQuery = self::execute("SELECT content FROM text_notes WHERE id = :note_id", ["note_id" => $row["id"]]);
+            $content = $dataQuery->fetchColumn();
+
+            if (!$content) {
+                $dataQuery = self::execute("SELECT content, checked FROM checklist_note_items WHERE checklist_note = :note_id order by checked, id ", ["note_id" => $row["id"]]);
+                $content_checklist = $dataQuery->fetchAll();
+            }
+            $row["content"] = $content;
+            $row["content_checklist"] = $content_checklist;
+        }
+
+        return $notes;
+    }
+
+    public static function get_notes_search(User $user, $labels): array
+    {
+        $notes = [];
+
+        // à remplacer par cette version corrigée
+
+        /*$stringLabels = '("' . implode('", "', $labels) . '")';
+        var_dump($stringLabels);
+
+        $query = self::execute("SELECT n.*, COUNT(*) AS label_count
+        FROM notes n
+        JOIN note_labels nl ON n.id = nl.note
+        WHERE nl.label IN (:placeholders)
+        GROUP BY n.id
+        HAVING label_count = :num_labels
+    ", ["placeholders" => $stringLabels, "num_labels" => count($labels)]);*/
+
+        // filtrage fais manuellement car soucis avec requête SQL avec IN ( à simplifier)
+
+        foreach ($labels as $label) {
+            $query = self::execute("SELECT * FROM notes n join note_labels nl on n.id = nl.note WHERE label = :label", ["label" => $label]);
+            $notes = array_merge($notes, $query->fetchAll());
+
+            // Tableau pour compter les occurrences des notes
+            $noteCounts = [];
+
+            // Compter le nombre d'occurrences de chaque note
+            foreach ($notes as $note) {
+                $noteId = $note['id'];
+
+                // Incrémenter le compteur d'occurrences pour cette note
+                if (!isset($noteCounts[$noteId])) {
+                    $noteCounts[$noteId] = 0;
+                }
+                $noteCounts[$noteId]++;
+            }
+
+            // Tableau pour stocker les notes qui apparaissent exactement count($labels) fois
+            $filteredNotes = [];
+
+            // Filtrer les notes qui apparaissent exactement count($labels) fois
+            foreach ($noteCounts as $noteId => $count) {
+                if ($count === count($labels)) {
+                    // Trouver la note dans le tableau $notes
+                    $filteredNote = array_values(array_filter($notes, function ($note) use ($noteId) {
+                        return $note['id'] === $noteId;
+                    }));
+
+                    // Ajouter la note filtrée au tableau $filteredNotes
+                    if (!empty($filteredNote)) {
+                        $filteredNotes[] = $filteredNote[0]; // On ajoute le premier élément trouvé
+                    }
+                }
+            }
+        }
+        $notes = $filteredNotes;
+
         $content_checklist = [];
         foreach ($notes as &$row) {
             $dataQuery = self::execute("SELECT content FROM text_notes WHERE id = :note_id", ["note_id" => $row["id"]]);
