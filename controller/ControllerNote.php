@@ -460,6 +460,10 @@ class ControllerNote extends Controller
                     throw new Exception("Undefined checklist item");
                 }
                 $item->delete();
+                $note = Note::get_note_by_id($item->checklist_note);
+                $date = new DateTime();
+                $note->edited_at = $date->format('Y-m-d H:i:s');
+                $note->persist();
                 $this->redirect("note", "edit_checklist", $note_id);
             }
 
