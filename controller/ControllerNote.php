@@ -485,6 +485,7 @@ class ControllerNote extends Controller
             }
         }
         if (isset($_POST["save"])) {
+
             //action edit item 
             // Vérification des éléments
             if (isset($_POST['items'])) {
@@ -503,7 +504,10 @@ class ControllerNote extends Controller
                         }
                     }
                 }
-
+                $note = Note::get_note_by_id($checklistItem->checklist_note);
+                $date = new DateTime();
+                $note->edited_at = $date->format('Y-m-d H:i:s');
+                $note->persist();
             }
             $errors = array_merge($errors, $errorsItem);
             if (empty($errors["title"]) && empty($errorsItem)) {
