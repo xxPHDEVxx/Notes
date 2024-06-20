@@ -17,7 +17,7 @@ class ControllerSearch extends Controller
         $user = $this->get_user_or_redirect();
         $labels = $user->get_labels();
         // Récupération des notes de l'utilisateur
-        $notes = $user->get_notes_search(null);
+        $notes = [];
 
         if (isset($_POST['check'])) {
             $notes = $user->get_notes_search($_POST['check']);

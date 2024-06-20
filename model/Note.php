@@ -289,64 +289,59 @@ abstract class Note extends Model
     {
         $notes = [];
 
-        if ($labels == null) {
-            $query = self::execute("SELECT * FROM notes WHERE owner = :ownerid  ORDER BY -weight", ["ownerid" => $user->id]);
-            $notes = $query->fetchAll();
-        } else {
-            
-            // à remplacer par cette version corrigée
+        // à remplacer par cette version corrigée
 
-            /*$stringLabels = '("' . implode('", "', $labels) . '")';
-            var_dump($stringLabels);
+        /*$stringLabels = '("' . implode('", "', $labels) . '")';
+        var_dump($stringLabels);
 
-            $query = self::execute("SELECT n.*, COUNT(*) AS label_count
-            FROM notes n
-            JOIN note_labels nl ON n.id = nl.note
-            WHERE nl.label IN (:placeholders)
-            GROUP BY n.id
-            HAVING label_count = :num_labels
-        ", ["placeholders" => $stringLabels, "num_labels" => count($labels)]);*/
+        $query = self::execute("SELECT n.*, COUNT(*) AS label_count
+        FROM notes n
+        JOIN note_labels nl ON n.id = nl.note
+        WHERE nl.label IN (:placeholders)
+        GROUP BY n.id
+        HAVING label_count = :num_labels
+    ", ["placeholders" => $stringLabels, "num_labels" => count($labels)]);*/
 
-            // filtrage fais manuellement car soucis avec requête SQL avec IN ( à simplifier)
+        // filtrage fais manuellement car soucis avec requête SQL avec IN ( à simplifier)
 
-            foreach ($labels as $label) {
-                $query = self::execute("SELECT * FROM notes n join note_labels nl on n.id = nl.note WHERE label = :label", ["label" => $label]);
-                $notes = array_merge($notes, $query->fetchAll());
+        foreach ($labels as $label) {
+            $query = self::execute("SELECT * FROM notes n join note_labels nl on n.id = nl.note WHERE label = :label", ["label" => $label]);
+            $notes = array_merge($notes, $query->fetchAll());
 
-                // Tableau pour compter les occurrences des notes
-                $noteCounts = [];
+            // Tableau pour compter les occurrences des notes
+            $noteCounts = [];
 
-                // Compter le nombre d'occurrences de chaque note
-                foreach ($notes as $note) {
-                    $noteId = $note['id'];
+            // Compter le nombre d'occurrences de chaque note
+            foreach ($notes as $note) {
+                $noteId = $note['id'];
 
-                    // Incrémenter le compteur d'occurrences pour cette note
-                    if (!isset($noteCounts[$noteId])) {
-                        $noteCounts[$noteId] = 0;
-                    }
-                    $noteCounts[$noteId]++;
+                // Incrémenter le compteur d'occurrences pour cette note
+                if (!isset($noteCounts[$noteId])) {
+                    $noteCounts[$noteId] = 0;
                 }
+                $noteCounts[$noteId]++;
+            }
 
-                // Tableau pour stocker les notes qui apparaissent exactement count($labels) fois
-                $filteredNotes = [];
+            // Tableau pour stocker les notes qui apparaissent exactement count($labels) fois
+            $filteredNotes = [];
 
-                // Filtrer les notes qui apparaissent exactement count($labels) fois
-                foreach ($noteCounts as $noteId => $count) {
-                    if ($count === count($labels)) {
-                        // Trouver la note dans le tableau $notes
-                        $filteredNote = array_values(array_filter($notes, function ($note) use ($noteId) {
-                            return $note['id'] === $noteId;
-                        }));
+            // Filtrer les notes qui apparaissent exactement count($labels) fois
+            foreach ($noteCounts as $noteId => $count) {
+                if ($count === count($labels)) {
+                    // Trouver la note dans le tableau $notes
+                    $filteredNote = array_values(array_filter($notes, function ($note) use ($noteId) {
+                        return $note['id'] === $noteId;
+                    }));
 
-                        // Ajouter la note filtrée au tableau $filteredNotes
-                        if (!empty($filteredNote)) {
-                            $filteredNotes[] = $filteredNote[0]; // On ajoute le premier élément trouvé
-                        }
+                    // Ajouter la note filtrée au tableau $filteredNotes
+                    if (!empty($filteredNote)) {
+                        $filteredNotes[] = $filteredNote[0]; // On ajoute le premier élément trouvé
                     }
                 }
             }
-            $notes = $filteredNotes;
         }
+        $notes = $filteredNotes;
+
         $content_checklist = [];
         foreach ($notes as &$row) {
             $dataQuery = self::execute("SELECT content FROM text_notes WHERE id = :note_id", ["note_id" => $row["id"]]);
