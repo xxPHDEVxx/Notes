@@ -305,7 +305,7 @@ abstract class Note extends Model
         // filtrage fais manuellement car soucis avec requête SQL avec IN ( à simplifier)
 
         foreach ($labels as $label) {
-            $query = self::execute("SELECT * FROM notes n join note_labels nl on n.id = nl.note WHERE label = :label", ["label" => $label]);
+            $query = self::execute("SELECT * FROM notes n join note_labels nl on n.id = nl.note WHERE label = :label ORDER BY weight desc", ["label" => $label]);
             $notes = array_merge($notes, $query->fetchAll());
 
             // Tableau pour compter les occurrences des notes
@@ -336,11 +336,20 @@ abstract class Note extends Model
                     // Ajouter la note filtrée au tableau $filteredNotes
                     if (!empty($filteredNote)) {
                         $filteredNotes[] = $filteredNote[0]; // On ajoute le premier élément trouvé
+                        $note = Note::get_note_by_id($filteredNote[0]['id']);
+                        $filteredNote[0]['label'] = $note->get_labels();
                     }
                 }
             }
         }
+
+        // ajout d'un tableau contenant tous ses labels à la note
         $notes = $filteredNotes;
+        foreach ($notes as &$note) {
+            $n = Note::get_note_by_id($note['id']);
+            $note['labels'] = $n->get_labels();
+        }
+
 
         $content_checklist = [];
         foreach ($notes as &$row) {
@@ -354,7 +363,6 @@ abstract class Note extends Model
             $row["content"] = $content;
             $row["content_checklist"] = $content_checklist;
         }
-
         return $notes;
     }
 

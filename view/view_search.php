@@ -13,6 +13,8 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0">
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 </head>
 
@@ -36,7 +38,7 @@
                     <?= $label ?>
                 </label>
             <?php endforeach; ?>
-            <br><button class="btn btn-primary" type="submit">Search</button>
+            <br><button id="searchButton" class="btn btn-primary" type="submit">Search</button>
         </form>
         <div class="result-note">
             <p class="title_note_pinned">Your notes : </p>
@@ -88,18 +90,10 @@
     
 
         </footer>
-        <script src="JS/drag_and_drop.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
-            integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
-            crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
-            integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
-            crossorigin="anonymous"></script>
-
     </div>
     </div>
 
-
+<script src="JS/search.js"></script>
 </body>
 
 </html>
