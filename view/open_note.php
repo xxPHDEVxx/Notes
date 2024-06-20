@@ -1,8 +1,21 @@
 <div class="barre">
 
-    <a class="back"
-        href="<?php echo ($archived == 1) ? 'user/my_archives' : (($is_shared_as_reader == 1 || $is_shared_as_editor == 1) ? "user/get_shared_by/$note->owner" : 'note/index'); ?>"><span
-            class="material-symbols-outlined">arrow_back_ios</span></a>
+    <?php
+    $backHref = '';
+    if (isset($labels_checked_coded)) {
+        $backHref = "search/search/$notes_coded/$labels_checked_coded";
+    } else {
+        if ($archived == 1) {
+            $backHref = 'user/my_archives';
+        } elseif ($is_shared_as_reader == 1 || $is_shared_as_editor == 1) {
+            $backHref = "user/get_shared_by/$note->owner";
+        } else {
+            $backHref = 'note/index';
+        }
+    }
+    ?>
+
+    <a class="back" href="<?= $backHref; ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
     <?php if ($archived == 1): ?>
         <form action="note/delete_note/<?= $note_id ?>" id="deleteForm" method="post">
             <button class="delete" type="submit" id="delete_icon"><span

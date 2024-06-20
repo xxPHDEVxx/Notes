@@ -29,8 +29,8 @@
             <?php foreach ($labels as $label): ?>
                 <label for="<?= $label ?>" class="radio-label">
                     <input type="checkbox" id="<?= $label ?>" name="check[]" value="<?= $label ?>" class="check-box-label"
-                        <?php if (isset($_POST['check'])) {
-                            if (in_array($label, $_POST['check'])) {
+                        <?php if (isset($labels_checked)) {
+                            if (in_array($label, $labels_checked)) {
                                 echo 'checked';
                             }
                         } ?>>
@@ -47,7 +47,7 @@
                     <?php for ($i = 0; $i < count($notes); $i++): ?>
                         <div class="note" id="note_<?= $notes[$i]["id"] ?>">
                             <p class="note-title"><?= $notes[$i]["title"] ?></p>
-                            <a class="link-note-archivee" href='note/open_note/<?= $notes[$i]["id"] ?>'>
+                            <a class="link-note-archivee" href='note/open_note/<?= $notes[$i]["id"] ?>/<?= $notes_coded ?>/<?= $labels_checked_coded ?>'>
                                 <div class="note-content">
                                     <?php if ($notes[$i]["content"]): ?>
                                         <div class="content_text">
