@@ -20,7 +20,6 @@ $(document).ready(function () {
                 if(data != "") {
                     titleErrorDiv.show();
                     titleErrorDiv.text(data);
-                    console.log(titleErrorDiv);
                     
                     $(this).prop('disabled', true);
                 } else {

@@ -6,13 +6,14 @@ $(document).ready(function () {
     } else {
         $('#label-empty').hide();
     }
-    $("#form_delete").submit(function (event) {
+    $(".form_delete").submit(function (event) {
         event.preventDefault();
     
 
         //récuperer les données du form
         // Identifier l'action soumise
         var note = $(this).find('[name="note_id"]').val()
+        console.log( $(this).find('[name="label"]').val());
         // Créer l'objet formData en conséquence
         var formData = {
             note: note,
@@ -26,7 +27,7 @@ $(document).ready(function () {
             success: function (response) {
                 // Mettre à jour l'affichage selon la réponse du serveur
                 console.log('La requête a été envoyée avec succès.');
-                $('.box-label').hide();
+                $(event.target).find('.box-label').hide();
 
                 boxLabels = $('.box-label:visible')
                 if(boxLabels.length == 0) {
