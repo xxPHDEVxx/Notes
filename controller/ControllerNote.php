@@ -365,7 +365,7 @@ class ControllerNote extends Controller
             $note = Note::get_note_by_id($note_id);
             $user = $this->get_user_or_redirect();
             if ($user->id == $note->owner) {
-                (new View('delete_confirmation'))->show(['note_id' => $note_id]);
+                (new View('delete_confirmation'))->show(['note' => $note]);
             } else {
                 throw new Exception("vous n'êtes pas l'auteur de cette note");
             }
@@ -392,7 +392,6 @@ class ControllerNote extends Controller
                     if ($user_id == $note->owner) {
                         // Suppression de la note
                         $note->delete($user);
-                        //Note::delete_order($user_id);
                         // Redirection vers les archives de l'utilisateur
                         $this->redirect("user", "my_archives");
                     } else {
@@ -461,6 +460,10 @@ class ControllerNote extends Controller
                     throw new Exception("Undefined checklist item");
                 }
                 $item->delete();
+                $note = Note::get_note_by_id($item->checklist_note);
+                $date = new DateTime();
+                $note->edited_at = $date->format('Y-m-d H:i:s');
+                $note->persist();
                 $this->redirect("note", "edit_checklist", $note_id);
             }
 
@@ -486,6 +489,7 @@ class ControllerNote extends Controller
             }
         }
         if (isset($_POST["save"])) {
+
             //action edit item 
             // Vérification des éléments
             if (isset($_POST['items'])) {
@@ -504,7 +508,10 @@ class ControllerNote extends Controller
                         }
                     }
                 }
-
+                $note = Note::get_note_by_id($checklistItem->checklist_note);
+                $date = new DateTime();
+                $note->edited_at = $date->format('Y-m-d H:i:s');
+                $note->persist();
             }
             $errors = array_merge($errors, $errorsItem);
             if (empty($errors["title"]) && empty($errorsItem)) {
@@ -1080,7 +1087,8 @@ class ControllerNote extends Controller
     }
 
 
-    public function labels() {
+    public function labels()
+    {
         $labels_note = [];
         $nvlab = [];
         $user = $this->get_user_or_redirect();
@@ -1091,8 +1099,8 @@ class ControllerNote extends Controller
             $note_id = $_GET["param1"];
             // Récupération de la note par son identifiant
             $note = Note::get_note_by_id($note_id);
-            $labels_note = $note->get_labels();     
-            
+            $labels_note = $note->get_labels();
+
             //verifier et mis en tableau les labels non utilisé
             foreach ($all as $label) {
                 if (!in_array($label, $labels_note)) {
@@ -1111,17 +1119,18 @@ class ControllerNote extends Controller
                 }
             }
         }
-        (new View("labels"))->show(["labels" => $labels_note, "note"=>$note, "all"=>$nvlab, "errors"=> $errors]);
+        (new View("labels"))->show(["labels" => $labels_note, "note" => $note, "all" => $nvlab, "errors" => $errors]);
     }
 
-    public function delete_label()  {
+    public function delete_label()
+    {
         $user = $this->get_user_or_redirect();
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
             // Récupération de la note par son identifiant
             $note = Note::get_note_by_id($note_id);
             $content = $_POST["label"];
-            $label  = NoteLabel::get_note_label($note->note_id, $content);
+            $label = NoteLabel::get_note_label($note->note_id, $content);
             $label->delete();
             $this->redirect("note", "labels", $note->note_id);
         }

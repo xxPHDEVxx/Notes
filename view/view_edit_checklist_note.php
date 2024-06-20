@@ -42,29 +42,32 @@
 
                     <?php foreach ($content as $row):
                         $id = $row['id'] ?>
-                        <div class="edit_checklist_form" id="div<?= $id ?>">
-                            <div class="edit_check_div">
-                                <input class="check_square" type="checkbox" value="<?= $id ?>" name="box" <?= $row["checked"] ? 'checked' : '' ?> disabled>
-                            </div>
-                            <input type="text" name="items[<?= $id ?>]"
-                                class="checklist_elements <?= $row["checked"] ? 'check_label' : '' ?>" id="item_content"
-                                value="<?= $row["content"] ?>">
+                        <div class="item">
+                            <div class="edit_checklist_form" id="div<?= $id ?>">
+                                <div class="edit_check_div">
+                                    <input class="check_square" type="checkbox" value="<?= $id ?>" name="box"
+                                        <?= $row["checked"] ? 'checked' : '' ?> disabled>
+                                </div>
+                                <input type="text" name="items[<?= $id ?>]"
+                                    class="checklist_elements <?= $row["checked"] ? 'check_label' : '' ?>" id="item_content"
+                                    value="<?= isset($_POST["items[<?= $id ?>]"]) ? htmlspecialchars($_POST["items[<?= $id ?>]"]) : $row["content"]  ?>">
 
-                            <input type="hidden" name="remove" value="<?= $id ?>">
-                            <button type="submit" id="delete<?= $id ?> " name="delete" value="<?= $id ?>"
-                                class="icone-delete">-</button>
+                                <input type="hidden" name="remove" value="<?= $id ?>">
+                                <button type="submit" id="delete<?= $id ?> " name="delete" value="<?= $id ?>"
+                                    class="icone-delete">-</button>
+                            </div>
+                            <span id="contentError_<?= $id ?>" class="text-danger" style="display: none;"></span>
+                            <?php if (!empty($errors["item_$id"])): ?>
+                                <p class="text-danger"><?= $errors["item_$id"] ?></p>
+                                <?php
+                            endif; ?>
                         </div>
-                        <span id="contentError_<?= $id ?>" class="text-danger" style="display: none;"></span>
-                        <?php if (!empty($errors["item_$id"])): ?>
-                            <p class="text-danger"><?= $errors["item_$id"] ?></p>
-                            <?php
-                        endif; ?>
                     <?php endforeach; ?>
                 </div>
                 <label for="new">New item</label>
                 <div class="edit_checklist_form">
-                    <input type="text" class="form-control-edit" id="new" name="new">
-                    <button type="submit" class="icone-add">+</button>
+                    <input type="text" class="form-control-edit" id="new" name="new" value="<?= isset($_POST["new"]) ? htmlspecialchars($_POST["new"]) : "" ?>">
+                    <button type="submit" id="addButton" class="icone-add">+</button>
                     <span id="newContentError" class="text-danger" style="display: none;"></span>
                     <?php if (!empty($errors['items'])): ?>
                         <p class="text-danger erreur_edit"><?= $errors['items'] ?></p>

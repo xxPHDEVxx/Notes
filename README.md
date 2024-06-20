@@ -60,17 +60,19 @@
 
 ...
 
-## Notes de version itération 3 
+## Notes de version itération 3 -> 2ème session :  
 
-  * itération 1 corrigée à 100% (hormis bug non remarqués).
-  * Drag and Drop : ok.
-  * Edit_Checklist_Note gestion en JS : ok ( 2 bugs mineurs décelés   -> gestion accent + validation newItem après ajout).
-  * Edit_Text_Note validations : ok ( 1 bug mineur -> gestion accent).
-  * Modal Delete : ok.
-  * Modal Edit : ok ( 1 bug mineur -> modal s'affiche à la supression d'un item ).
+  * itération 1 : 
+    - PRG EditProfile et ChangePassword en cas de succès + Delete_Confirmation
+    
+
   * Gestion partage : ok ( 1 bug mineur -> select ne reaparait pas après supression tant qu'on refresh pas)
   * Check_uncheck : ok -> oublié de l'ajouté sur le dernier commit.
   
+<<<<<<< HEAD
+  *  fonctionnalité search non aboutie.
+=======
   * petit bug affichage css potentiels.
   *  fonctionnalité search non aboutie.
   * Labels : delete non dynamique à part pour le premier label -> à corriger.
+>>>>>>> labels_view

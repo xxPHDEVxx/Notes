@@ -83,7 +83,7 @@
                 </div>
 
             <?php else: ?>
-                <p class="title-empty">No such note</p>
+                <p class="title-empty">Nothing checked</p>
             <?php endif; ?>
         </div>
         <footer>
