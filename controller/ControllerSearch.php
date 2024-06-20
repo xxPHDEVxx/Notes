@@ -30,4 +30,16 @@ class ControllerSearch extends Controller
             "notes" => $notes
         ]);
     }
+
+    // Recherche de notes selon ses labels par Ajax
+    public function search_service()
+    {
+        $notes = [];
+        if (isset($_POST["check"])) {
+            $user = $this->get_user_or_redirect();
+            $notes = $user->get_notes_search($_POST["check"]);
+        }
+        // Retourner les notes en JSON
+        echo json_encode($notes);
+    }
 }
