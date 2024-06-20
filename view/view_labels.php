@@ -62,8 +62,7 @@
         </form>
 
     </div>
-    <script src="JS/add_label.js"></script>
-    <script src="JS/delete_label.js"></script>
+    <script src="JS/add_delete_label.js"></script>
 </body>
 
 </html>
