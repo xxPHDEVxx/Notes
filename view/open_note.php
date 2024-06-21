@@ -2,7 +2,7 @@
 
     <?php
     $backHref = '';
-    if (isset($labels_checked_coded)) {
+    if ($labels_checked_coded != "") {
         $backHref = "search/search/$notes_coded/$labels_checked_coded";
     } else {
         if ($archived == 1) {
@@ -12,6 +12,14 @@
         } else {
             $backHref = 'note/index';
         }
+    }
+    ?>
+
+    <?php
+    if ($labels_checked_coded != "") {
+        $param = "$note->note_id/$notes_coded/$labels_checked_coded";
+    } else {
+        $param = "$note->note_id";
     }
     ?>
 
@@ -25,19 +33,24 @@
                 class="material-symbols-outlined">unarchive</span></a>
 
 
+
     <?php elseif ($is_shared_as_editor == 1): ?>
         <a class="label" href="note/labels/<?= $note_id ?>"><span class="material-symbols-outlined">label</span></a>
-        <a class="isShared" href="note/edit/<?= $note_id ?>"><span class="material-symbols-outlined">edit</span></a>
+        <a class="isShared" href="note/edit/<?= $note_id ?>/<?= $notes_coded ?>/<?= $labels_checked_coded ?>"><span
+                class="material-symbols-outlined">edit</span></a>
     <?php elseif ($archived == 0 && $is_shared_as_editor == 0 && $is_shared_as_reader == 0): ?>
-        <a class="share" href="note/shares/<?= $note_id ?>"><span class="material-symbols-outlined">share</span></a>
+        <a class="share" href="note/shares/<?= $param ?>"><span
+                class="material-symbols-outlined">share</span></a>
         <?php if ($pinned): ?>
             <a class="pinned" href="note/unpin/<?= $note_id ?>"><span class="material-symbols-rounded">push_pin</span></a>
         <?php else: ?>
             <a class="pinned" href="note/pin/<?= $note_id ?>"><span class="material-symbols-outlined">push_pin</span></a>
         <?php endif; ?>
         <a class="archive" href="note/archive/<?= $note_id ?>"><span class="material-symbols-outlined">archive</span></a>
-        <a class="label" href="note/labels/<?= $note_id ?>"><span class="material-symbols-outlined">label</span></a>
-        <a class="isShared" href="note/edit/<?= $note_id ?>"><span class="material-symbols-outlined">edit</span></a>
+        <a class="label" href="note/labels/<?= $param ?>"><span
+                class="material-symbols-outlined">label</span></a>
+        <a class="isShared" href="note/edit/<?= $param ?>"><span
+                class="material-symbols-outlined">edit</span></a>
     <?php endif; ?>
 
 </div>

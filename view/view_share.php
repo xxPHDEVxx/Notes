@@ -16,7 +16,14 @@
 
 <body>
     <div class="barre">
-        <a class="back" href="note/open_note/<?= $note->note_id?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
+    <?php
+            if ($labels_checked_coded != "") {
+                $href = "note/open_note/$note->note_id/$notes_coded/$labels_checked_coded";
+            } else {
+                $href = "note/open_note/$note->note_id";
+            }
+            ?>
+            <a class="back" href="<?= $href ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
     </div>
 
     <div class="container box-shares">
