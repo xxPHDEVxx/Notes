@@ -45,7 +45,7 @@
         <div class="dates">Created <?= $created ?><?= ($edited ? " Edited " . $edited : " Not edited yet") ?></div>
         <div class="container_edit">
             <label for="title">Title</label>
-            <input type="text" class="title_edit_note" id="title" name="title" value="<?= $note->title ?>">
+            <input type="text" class="title_edit_note" id="title" name="title" value="<?= isset($_POST['title']) ? htmlspecialchars($_POST['title']) : htmlspecialchars($note->title) ?>">
             <span id="titleError" class="text-danger" style="display: none;"></span>
             <?php if (!empty($errors['title'])): ?>
                 <p class="text-danger erreur_edit"><?= $errors['title'] ?></p>
@@ -64,7 +64,7 @@
                                 </div>
                                 <input type="text" name="items[<?= $id ?>]"
                                     class="checklist_elements <?= $row["checked"] ? 'check_label' : '' ?>" id="item_content"
-                                    value="<?= isset($_POST["items[<?= $id ?>]"]) ? htmlspecialchars($_POST["items[<?= $id ?>]"]) : $row["content"] ?>">
+                                    value="<?= !empty($errors["item_$id"]) ? $_POST["items"][$id] : $row["content"] ?>">
 
                                 <input type="hidden" name="remove" value="<?= $id ?>">
                                 <button type="submit" id="delete<?= $id ?> " name="delete" value="<?= $id ?>"
