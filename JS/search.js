@@ -6,7 +6,6 @@ $(document).ready(function () {
     selectedLabels = [];
 
     $('#searchButton').hide();
-
     // Gestionnaire évènements :
 
     // Récupération des labels cochés sous forme de tableau
@@ -32,8 +31,8 @@ $(document).ready(function () {
             success: function (data) {
                 // mise à jour affichage des notes
                 notesContainer.innerHTML = "";
-                console.log(JSON.parse(data));
-                if (data.length > 12) {
+                console.log(data);
+                if (data.length > 2 ) {
                     JSON.parse(data).notes.forEach(note => {
                         notesContainer.innerHTML += `
                         <div class="note" id="note_${note.id}">
