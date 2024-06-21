@@ -31,11 +31,11 @@ class ControllerSettings extends Controller
                 try {
                     if ($user->mail == $newEmail && $user->full_name == $newFullName) {
                         $successMessage = "nothing";
-                        $this->redirect("settings", "success", $successMessage);
+                        $this->redirect("settings", "success_profile", $successMessage);
                     } else {
                         $user->updateProfile($newFullName, $newEmail);
                         $successMessage = "update";
-                        $this->redirect("settings", "success", $successMessage);
+                        $this->redirect("settings", "success_profile", $successMessage);
                     }
                 } catch (Exception $e) {
                     $errors[] = "Error updating profile : " . $e->getMessage();
@@ -46,7 +46,7 @@ class ControllerSettings extends Controller
 
     }
 
-    public function success() {
+    public function success_profile() {
         $user = $this->get_user_or_redirect();
         if (isset($_GET["param1"])) {
             if ($_GET["param1"] == "nothing") {
@@ -64,7 +64,7 @@ class ControllerSettings extends Controller
         $user = $this->get_user_or_redirect();
 
         $successMessage = null;
-        $errors[] = [];
+        $errors = [];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $currentPassword = $_POST['currentPassword'];
@@ -83,9 +83,8 @@ class ControllerSettings extends Controller
                     try {
                         $user->setPassword($newPassword);
                         $user->updatePassword($newPassword);
-                        $successMessage = "Password changed successfully!";
-                        (new View("change_password"))->show(["user" => $user, "successMessage" => $successMessage, "errors" => $errors]);
-                        return;
+                        $successMessage = "success";
+                        $this->redirect("settings","success_password", $successMessage );
                     } catch (Exception $e) {
                         $errors[] = "Erreur lors de la mise à jour du mot de passe : " . $e->getMessage();
                     }
@@ -93,12 +92,20 @@ class ControllerSettings extends Controller
                     $errors = array_merge($errors, $passwordErrors);
                 }
             }
-            (new View("change_password"))->show(["user" => $user, "successMessage" => $successMessage, "errors" => $errors]);
-        } else {
-            (new View("change_password"))->show(["user" => $user]);
-        }
+
+        } 
+        (new View("change_password"))->show(["user" => $user, "successMessage" => $successMessage, "errors" => $errors]);
     }
 
+    public function success_password() {
+        $user = $this->get_user_or_redirect();
+        if (isset($_GET["param1"])) {
+            if ($_GET["param1"] == "success") {
+                $successMessage = "Password changed successfully!";
+            }
+            (new View("change_password"))->show(["user" => $user, "successMessage" => $successMessage]);
+        }    
+    }
     public function index(): void
     {
     }
