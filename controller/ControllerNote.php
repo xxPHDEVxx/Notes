@@ -435,6 +435,12 @@ class ControllerNote extends Controller
         $notes_coded = "";
         $labels_checked_coded = "";
 
+        // paramètres pour navigation search
+        if (isset($_GET["param2"]) && isset($_GET["param3"])) {
+            $notes_coded = $_GET["param2"];
+            $labels_checked_coded = $_GET["param3"];
+        }
+
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = Tools::sanitize($_GET["param1"]);
             // Récupération de la note par son identifiant
@@ -540,13 +546,13 @@ class ControllerNote extends Controller
                 $date = new DateTime();
                 $note->edited_at = $date->format('Y-m-d H:i:s');
                 $note->persist();
-                // mise à jour notes après modification pour navigation search
-                if ($labels_checked_coded != "")
-                    $notes_coded = Util::url_safe_encode($user->get_notes_search(Util::url_safe_decode($labels_checked_coded)));
             }
             $errors = array_merge($errors, $errorsItem);
             if (empty($errors["title"]) && empty($errorsItem)) {
                 $note->persist();
+                // mise à jour notes après modification pour navigation search
+                if ($labels_checked_coded != "")
+                    $notes_coded = Util::url_safe_encode($user->get_notes_search(Util::url_safe_decode($labels_checked_coded)));
                 $this->redirect("note", "open_note", $note->note_id, $notes_coded, $labels_checked_coded);
             }
         }
@@ -984,7 +990,6 @@ class ControllerNote extends Controller
             }
             if (empty($title_error)) {
                 $note->title = Tools::sanitize($_POST['title']);
-                echo ("yo");
                 $note->persist();
             }
         }
