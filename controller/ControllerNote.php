@@ -1130,6 +1130,11 @@ class ControllerNote extends Controller
                 }
                 if (empty($errors)) {
                     $item->persist();
+                    // màj date edition
+                    $note = Note::get_note_by_id($item->checklist_note);
+                    $date = new DateTime();
+                    $note->edited_at = $date->format('Y-m-d H:i:s');
+                    $note->persist();
                     echo json_encode($item);
                 }
             }
@@ -1147,6 +1152,11 @@ class ControllerNote extends Controller
                 throw new Exception("Undefined checklist item");
             }
             $item->delete();
+            // màj date édition
+            $note = Note::get_note_by_id($item->checklist_note);
+            $date = new DateTime();
+            $note->edited_at = $date->format('Y-m-d H:i:s');
+            $note->persist();
             echo ($id);
         }
     }

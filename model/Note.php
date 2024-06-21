@@ -289,23 +289,10 @@ abstract class Note extends Model
     {
         $notes = [];
 
-        // à remplacer par cette version corrigée
-
-        /*$stringLabels = '("' . implode('", "', $labels) . '")';
-        var_dump($stringLabels);
-
-        $query = self::execute("SELECT n.*, COUNT(*) AS label_count
-        FROM notes n
-        JOIN note_labels nl ON n.id = nl.note
-        WHERE nl.label IN (:placeholders)
-        GROUP BY n.id
-        HAVING label_count = :num_labels
-    ", ["placeholders" => $stringLabels, "num_labels" => count($labels)]);*/
-
         // filtrage fais manuellement car soucis avec requête SQL avec IN ( à simplifier)
 
         foreach ($labels as $label) {
-            $query = self::execute("SELECT * FROM notes n join note_labels nl on n.id = nl.note WHERE label = :label ORDER BY weight desc", ["label" => $label]);
+            $query = self::execute("SELECT * FROM notes n join note_labels nl on n.id = nl.note WHERE label = :label AND owner = :user ORDER BY weight desc", ["label" => $label, "user" => $user->id]);
             $notes = array_merge($notes, $query->fetchAll());
 
             // Tableau pour compter les occurrences des notes

@@ -72,7 +72,8 @@ class ControllerSearch extends Controller
                 'notes_coded' => $notes_coded,
                 'labels_checked_coded' => $labels_checked_coded
             ];
-        }
+        } else
+            $data = "";
         // Retourner les notes en JSON
         echo json_encode($data);
     }
