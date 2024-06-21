@@ -15,8 +15,8 @@
 
 <body>
     <?php include("menu.php"); ?>
-    <h1>My archives</h1>
-    <h2>Archives</h2>
+    <h1 class="page-title">My archives</h1>
+    <h2 class="page-subtitle">Archives</h2>
     <div class="my-archives">
         <?php if (count($archives) != 0) : ?>
 

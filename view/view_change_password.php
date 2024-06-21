@@ -23,9 +23,9 @@
         <div class="back-icon">
             <a href="settings/settings"><span class="material-symbols-outlined">arrow_back_ios</span></a>
         </div>
-        <h1 class="title">Settings</h1>
+        <h1 class="page-title">Settings</h1>
         <div id="settings_div">
-            <h2> Change password </h2>
+            <h2 class="page-subtitle"> Change password </h2>
         </div>
         <div class="edit_form">
             <form action="settings/change_password" method="post">

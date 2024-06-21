@@ -53,7 +53,6 @@ class ControllerSettings extends Controller
                 $successMessage = "Nothing to update !";
             } else {
                 $successMessage = "Profile updated";
-
             }
             (new View("edit_profile"))->show(["user" => $user, "successMessage" => $successMessage]);
         }

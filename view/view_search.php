@@ -21,7 +21,7 @@
 <body>
     <?php include ('view/menu.php'); ?>
     <div class="view_notes_header">
-        <h1>Search my notes</h1>
+        <h1 class="page-title">Search my notes</h1>
     </div>
     <div class="box-search">
         <p>Search notes by tag : </p>
