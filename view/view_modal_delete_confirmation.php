@@ -1,8 +1,8 @@
-<div class="modal fade" id="deleted" tabindex="-1" aria-labelledby="deleted" aria-hidden="true">
+<div class="modal fade" id="deleted" tabindex="-1" aria-labelledby="confirmationDeleteLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="deleted-label">Deleted </h5>
+        <h5 class="modal-title" id="confirmationDeleteLabel">Deleted </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
