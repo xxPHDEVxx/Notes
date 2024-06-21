@@ -30,11 +30,12 @@ class ControllerSettings extends Controller
             if (empty($errors)) {
                 try {
                     if ($user->mail == $newEmail && $user->full_name == $newFullName) {
-                        $successMessage = "Nothing to update.";
-                        $this->redirect("settings", "succes_edit_profile", $successMessage);
+                        $successMessage = "nothing";
+                        $this->redirect("settings", "success", $successMessage);
                     } else {
                         $user->updateProfile($newFullName, $newEmail);
-                        $successMessage = "Profil updated !";
+                        $successMessage = "update";
+                        $this->redirect("settings", "success", $successMessage);
                     }
                 } catch (Exception $e) {
                     $errors[] = "Error updating profile : " . $e->getMessage();
@@ -45,10 +46,15 @@ class ControllerSettings extends Controller
 
     }
 
-    public function succes_edit_profile() {
+    public function success() {
         $user = $this->get_user_or_redirect();
         if (isset($_GET["param1"])) {
-            $successMessage = $_GET["param1"];
+            if ($_GET["param1"] == "nothing") {
+                $successMessage = "Nothing to update !";
+            } else {
+                $successMessage = "Profile updated";
+
+            }
             (new View("edit_profile"))->show(["user" => $user, "successMessage" => $successMessage]);
         }
     }
