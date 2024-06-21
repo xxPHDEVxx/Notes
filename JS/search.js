@@ -1,38 +1,46 @@
+// Attendre que le DOM soit entièrement chargé avant d'exécuter le code
 $(document).ready(function () {
     // Récupération des éléments du DOM
-    const checkboxes = document.querySelectorAll('.check-box-label');
-    const notesContainer = document.getElementById('pinned');
-    const buttonSearch = document.getElementById('searchButton');
-    selectedLabels = [];
+    const checkboxes = document.querySelectorAll('.check-box-label'); // Sélectionne toutes les cases à cocher ayant la classe 'check-box-label'
+    const notesContainer = document.getElementById('pinned'); // Sélectionne l'élément avec l'ID 'pinned'
+    const buttonSearch = document.getElementById('searchButton'); // Sélectionne le bouton avec l'ID 'searchButton'
+    selectedLabels = []; // Initialise un tableau pour stocker les labels sélectionnés
 
+    // Cache le bouton de recherche
     $('#searchButton').hide();
-    // Gestionnaire évènements :
 
-    // Récupération des labels cochés sous forme de tableau
+    // Gestionnaire d'événements : surveille les changements des cases à cocher
     checkboxes.forEach(function (checkbox) {
         checkbox.addEventListener('change', function () {
+            // Convertit NodeList en tableau et récupère les labels des cases cochées
             selectedLabels = Array.from(checkboxes)
-                // map valeur du label avec checked(true/false)
+                // Filtre les cases cochées
                 .filter(cb => cb.checked)
+                // Extrait la valeur des cases cochées
                 .map(cb => cb.value);
+            // Appelle la fonction de recherche avec les labels sélectionnés
             search(selectedLabels);
         });
     });
 
+    // Fonction de recherche
     function search(selectedLabels) {
+        // Crée un objet pour les données de la requête
         var requestData = {
             check: selectedLabels
         };
 
+        // Envoie une requête AJAX au service de recherche
         $.ajax({
-            url: "search/search_service",
-            type: "POST",
-            data: requestData,
+            url: "search/search_service", // URL du service de recherche
+            type: "POST", // Type de requête HTTP
+            data: requestData, // Données envoyées au serveur
             success: function (data) {
-                // mise à jour affichage des notes
+                // Efface le contenu précédent du conteneur de notes
                 notesContainer.innerHTML = "";
-                console.log(data);
-                if (data.length > 2 ) {
+                console.log(data); // Affiche les données reçues dans la console
+                if (data.length > 2) {
+                    // Parse les données JSON et ajoute chaque note au conteneur
                     JSON.parse(data).notes.forEach(note => {
                         notesContainer.innerHTML += `
                         <div class="note" id="note_${note.id}">
@@ -55,10 +63,13 @@ $(document).ready(function () {
                         </div>
                     `;
                     })
-                } else
+                } else {
+                    // Affiche un message si aucune note ne correspond à la recherche
                     notesContainer.innerHTML = '<p class="title-empty">No such note</p>';
+                }
             },
             error: function (xhr, status, error) {
+                // Gère les erreurs de la requête AJAX
                 console.error("Erreur lors de la vérification du contenu de la note : ", error);
             }
         });

@@ -56,89 +56,124 @@ abstract class Note extends Model
         return $labels;
     }
 
-
+    // Méthode pour récupérer la date de création de la note
     public function get_created_at(): string
     {
-        $query = self::execute("SELECT created_at from notes WHERE id = :id", ["id" => $this->note_id]);
-        $data = $query->fetchColumn();
-
-        return $data;
+        $query = self::execute("SELECT created_at FROM notes WHERE id = :id", ["id" => $this->note_id]);
+        $data = $query->fetchColumn(); // Récupère la valeur de la colonne 'created_at'
+        return $data; // Retourne la date de création
     }
+
+    // Méthode pour récupérer la date de dernière édition de la note (peut être null)
     public function get_edited_at(): string|null
     {
-        $query = self::execute("SELECT edited_at from notes WHERE id = :id", ["id" => $this->note_id]);
-        $data = $query->fetchColumn();
-
-        return $data;
+        $query = self::execute("SELECT edited_at FROM notes WHERE id = :id", ["id" => $this->note_id]);
+        $data = $query->fetchColumn(); // Récupère la valeur de la colonne 'edited_at'
+        return $data; // Retourne la date de dernière édition (peut être null)
     }
+
+    // Méthode pour vérifier si la note est partagée en tant qu'éditeur pour un utilisateur donné
     public function is_shared_as_editor(int $userid): bool
     {
-        $query = self::execute("SELECT * FROM note_shares WHERE note = :id and user =:userid and editor = 1", ["id" => $this->note_id, "userid" => $userid]);
-        $data = $query->fetchAll();
-        return count($data) !== 0;
+        $query = self::execute("SELECT * FROM note_shares WHERE note = :id AND user = :userid AND editor = 1", ["id" => $this->note_id, "userid" => $userid]);
+        $data = $query->fetchAll(); // Récupère toutes les lignes correspondantes
+        return count($data) !== 0; // Retourne vrai si des lignes ont été trouvées (note partagée en tant qu'éditeur)
     }
+
+    // Méthode pour vérifier si la note est partagée en tant que lecteur pour un utilisateur donné
     public function is_shared_as_reader(int $userid): bool
     {
-        $query = self::execute("SELECT * FROM note_shares WHERE note = :id and user =:userid and editor = 0", ["id" => $this->note_id, "userid" => $userid]);
-        $data = $query->fetchAll();
-        return count($data) !== 0;
+        $query = self::execute("SELECT * FROM note_shares WHERE note = :id AND user = :userid AND editor = 0", ["id" => $this->note_id, "userid" => $userid]);
+        $data = $query->fetchAll(); // Récupère toutes les lignes correspondantes
+        return count($data) !== 0; // Retourne vrai si des lignes ont été trouvées (note partagée en tant que lecteur)
     }
+
+    // Méthode pour vérifier si la note est archivée pour un utilisateur donné
     public function in_my_archives(int $userid): int
     {
-        $query = self::execute("SELECT archived FROM notes WHERE owner = :userid and id = :id", ["userid" => $userid, "id" => $this->note_id]);
-        $data = $query->fetchColumn();
-        return $data;
+        $query = self::execute("SELECT archived FROM notes WHERE owner = :userid AND id = :id", ["userid" => $userid, "id" => $this->note_id]);
+        $data = $query->fetchColumn(); // Récupère la valeur de la colonne 'archived'
+        return $data; // Retourne la valeur de 'archived' (1 si archivée, 0 sinon)
     }
+
+    // Méthode pour vérifier si la note est épinglée pour un utilisateur donné
     public function is_pinned(int $userid): int
     {
-        $query = self::execute("SELECT pinned FROM notes WHERE owner = :userid and id = :id", ["userid" => $userid, "id" => $this->note_id]);
-        $data = $query->fetchColumn();
-        return $data;
+        $query = self::execute("SELECT pinned FROM notes WHERE owner = :userid AND id = :id", ["userid" => $userid, "id" => $this->note_id]);
+        $data = $query->fetchColumn(); // Récupère la valeur de la colonne 'pinned'
+        return $data; // Retourne la valeur de 'pinned' (1 si épinglée, 0 sinon)
     }
 
 
     public static function get_archives(User $user): array
     {
-        $archives = [];
+        $archives = []; // Initialisation du tableau qui contiendra les archives
+        // Requête pour récupérer les notes archivées de l'utilisateur spécifié, triées par poids décroissant
         $query = self::execute("SELECT id, title FROM notes WHERE owner = :ownerid AND archived = 1 ORDER BY -weight", ["ownerid" => $user->id]);
-        $archives = $query->fetchAll();
-        $content_checklist = [];
+        $archives = $query->fetchAll(); // Récupération de toutes les lignes de résultat sous forme de tableau associatif
+
+        // Boucle à travers chaque note archivée pour récupérer leur contenu spécifique
         foreach ($archives as &$row) {
+            $content_checklist = []; // Initialisation du tableau pour le contenu de checklist (vide par défaut)
+
+            // Vérifie d'abord s'il y a du contenu texte associé à la note
             $dataQuery = self::execute("SELECT content FROM text_notes WHERE id = :note_id", ["note_id" => $row["id"]]);
             $content = $dataQuery->fetchColumn();
 
             if (!$content) {
-                $dataQuery = self::execute("SELECT content, checked FROM checklist_note_items WHERE checklist_note = :note_id order by checked, id ", ["note_id" => $row["id"]]);
-                $content_checklist = $dataQuery->fetchAll();
+                // Si aucun contenu texte n'est trouvé, récupère le contenu de la checklist associé à la note
+                $dataQuery = self::execute("SELECT content, checked FROM checklist_note_items WHERE checklist_note = :note_id ORDER BY checked, id", ["note_id" => $row["id"]]);
+                $content_checklist = $dataQuery->fetchAll(); // Récupération de toutes les lignes de résultat de la checklist
             }
+
+            // Assignation du contenu récupéré à la note correspondante dans le tableau $archives
             $row["content"] = $content;
             $row["content_checklist"] = $content_checklist;
         }
-        return $archives;
+
+        return $archives; // Retourne le tableau complet des archives avec leur contenu
     }
+
+
     public function archive(): void
     {
+        // Archive the note by setting 'archived' to 1 for the note with ID $this->note_id
         self::execute("UPDATE notes SET archived = :val WHERE id = :id", ["val" => 1, "id" => $this->note_id]);
+
+        // Reorder notes after archiving (specific logic not detailed here)
         $this->order_notes();
     }
 
     public function unarchive(): void
     {
+        // Unarchive the note by setting 'archived' to 0 for the note with ID $this->note_id
         self::execute("UPDATE notes SET archived = :val WHERE id = :id", ["val" => 0, "id" => $this->note_id]);
+
+        // Reorder notes after unarchiving (specific logic not detailed here)
         $this->order_notes();
     }
+
     public function pin(): void
     {
+        // Pin the note by setting 'pinned' to 1 for the note with ID $this->note_id
         self::execute("UPDATE notes SET pinned = :val WHERE id = :id", ["val" => 1, "id" => $this->note_id]);
+
+        // Reorder notes after pinning (specific logic not detailed here)
         $this->order_notes();
     }
+
     public function unpin(): void
     {
+        // Check if the note is currently pinned before attempting to unpin it
         if ($this->is_pinned($this->owner) == 1) {
+            // Unpin the note by setting 'pinned' to 0 for the note with ID $this->note_id
             self::execute("UPDATE notes SET pinned = :val WHERE id = :id", ["val" => 0, "id" => $this->note_id]);
+
+            // Reorder notes after unpinning (specific logic not detailed here)
             $this->order_notes();
         }
     }
+
 
     // récupérer nombre total de notes d'un user spécifique
     public function get_all_notes_by_user($user)
@@ -180,21 +215,29 @@ abstract class Note extends Model
     public function new_order($new_order)
     {
         $i = 0;
+        $weights = [];
+
+        // Fetch current weights of notes based on the new order
         foreach ($new_order as $id) {
             $dataSql = self::execute("SELECT weight FROM notes WHERE id = :id", ["id" => $id]);
             $weights[$i] = $dataSql->fetchColumn();
             $i++;
         }
+
+        // Sort weights in descending order
         $new_weights = $this->sort_weights_desc($weights);
+
+        // Update temporary weights
         $this->temporary_weights($new_order);
 
+        // Update notes with new weights based on the sorted list
         $i = 0;
         foreach ($new_order as $id) {
             self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["id" => $id, "val" => $new_weights[$i]]);
             $i++;
         }
-
     }
+
 
     // Ordonnes les notes selon les règles métiers liées au poids (owner -> pin -> unpin -> ...) à factoriser 
     public function order_notes()
@@ -264,26 +307,37 @@ abstract class Note extends Model
 
     private static function get_notes(User $user, bool $pinned): array
     {
+        // Determine the pinned condition based on the boolean parameter
         $pinnedCondition = $pinned ? '1' : '0';
 
         $notes = [];
+
+        // Fetch notes from the database based on owner, archived status, and pinned condition
         $query = self::execute("SELECT * FROM notes WHERE owner = :ownerid AND archived = 0 AND pinned = :pinned ORDER BY -weight", ["ownerid" => $user->id, "pinned" => $pinnedCondition]);
         $notes = $query->fetchAll();
+
         $content_checklist = [];
+
+        // Iterate over each note to fetch additional content details
         foreach ($notes as &$row) {
+            // Fetch text content if available
             $dataQuery = self::execute("SELECT content FROM text_notes WHERE id = :note_id", ["note_id" => $row["id"]]);
             $content = $dataQuery->fetchColumn();
 
+            // If text content is not available, fetch checklist items
             if (!$content) {
-                $dataQuery = self::execute("SELECT content, checked FROM checklist_note_items WHERE checklist_note = :note_id order by checked, id ", ["note_id" => $row["id"]]);
+                $dataQuery = self::execute("SELECT content, checked FROM checklist_note_items WHERE checklist_note = :note_id ORDER BY checked, id", ["note_id" => $row["id"]]);
                 $content_checklist = $dataQuery->fetchAll();
             }
+
+            // Assign fetched content to the note
             $row["content"] = $content;
             $row["content_checklist"] = $content_checklist;
         }
 
         return $notes;
     }
+
 
     public static function get_notes_search(User $user, $labels): array
     {
