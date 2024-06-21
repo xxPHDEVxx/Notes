@@ -98,7 +98,7 @@ class User extends Model
         return $errors;
     }
 
-    public static function validateEdit($email, $fullname, $currentUser): array
+    public static function validate_edit($email, $fullname, $currentUser): array
     {
         $errors = [];
         if (!strlen($email) > 0) {
@@ -237,7 +237,7 @@ class User extends Model
     }
 
 
-    public function updateProfile(string $newFullName, string $newMail): void
+    public function update_profile(string $newFullName, string $newMail): void
     {
         $this->mail = $newMail;
         $this->full_name = $newFullName;

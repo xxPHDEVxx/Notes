@@ -25,7 +25,7 @@ class ControllerSettings extends Controller
             $newEmail = Tools::sanitize($_POST['email']);
             $newFullName = Tools::sanitize($_POST['fullName']);
 
-            $errors = User::validateEdit($newEmail, $newFullName, $user);
+            $errors = User::validate_edit($newEmail, $newFullName, $user);
 
             if (empty($errors)) {
                 try {
@@ -33,7 +33,7 @@ class ControllerSettings extends Controller
                         $successMessage = "nothing";
                         $this->redirect("settings", "success_profile", $successMessage);
                     } else {
-                        $user->updateProfile($newFullName, $newEmail);
+                        $user->update_profile($newFullName, $newEmail);
                         $successMessage = "update";
                         $this->redirect("settings", "success_profile", $successMessage);
                     }
