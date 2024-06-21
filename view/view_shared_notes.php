@@ -14,7 +14,7 @@
 
 <body>
     <?php include("menu.php"); ?>
-    <h1>Shared by <?= $shared_by_name ?></h1>
+    <h1 class="page-title">Shared by <?= $shared_by_name ?></h1>
 
     <div class="shared_by">
         <?php if (count($shared_notes_as_editor) != 0) : ?>

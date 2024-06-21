@@ -34,13 +34,6 @@ abstract class Note extends Model
     public abstract function isPinned();
     public abstract function update();
 
-
-
-    public function get_id(): int
-    {
-        return 5;
-    }
-
     /**
      * Récupère les libellés associés à la note.
      *
@@ -52,7 +45,7 @@ abstract class Note extends Model
         $labels = [];
 
         // Exécute une requête SQL pour récupérer les libellés de la base de données
-        $data_sql = self::execute("SELECT label FROM note_labels WHERE note = :id", ["id" => $this->note_id]);
+        $data_sql = self::execute("SELECT label FROM note_labels WHERE note = :id ORDER BY label ", ["id" => $this->note_id]);
 
         // Récupère les résultats de la requête sous forme de tableau de colonnes
         // Utilise FETCH_COLUMN pour obtenir uniquement la première colonne des résultats
@@ -150,7 +143,7 @@ abstract class Note extends Model
     // récupérer nombre total de notes d'un user spécifique
     public function get_all_notes_by_user($user)
     {
-        $dataSql = self::execute("SELECT id FROM notes WHERE owner = :user", ["user" => $user]);
+        $dataSql = self::execute("SELECT id FROM notes WHERE owner = :user ORDER BY weight ASC", ["user" => $user]);
         $data = $dataSql->fetchAll(PDO::FETCH_COLUMN, 0);
         return $data;
     }
@@ -159,7 +152,7 @@ abstract class Note extends Model
     public function temporary_weights($array_id)
     {
         $notes = $array_id;
-        $nb = count($this->get_all_notes_by_user($this->owner)) + 50;// 50 pour éviter conflit de poids lors de plusieurs supressions
+        $nb = count($this->get_all_notes_by_user($this->owner)) + 1000;// 1000 pour éviter conflit de poids lors de plusieurs supressions
         foreach ($notes as $note) {
             self::execute("UPDATE notes SET weight = :val WHERE id = :id", ["val" => ++$nb, "id" => $note]);
         }
@@ -292,6 +285,74 @@ abstract class Note extends Model
         return $notes;
     }
 
+    public static function get_notes_search(User $user, $labels): array
+    {
+        $notes = [];
+
+        // filtrage fais manuellement car soucis avec requête SQL avec IN ( à simplifier)
+
+        foreach ($labels as $label) {
+            $query = self::execute("SELECT * FROM notes n join note_labels nl on n.id = nl.note WHERE label = :label AND owner = :user ORDER BY weight desc", ["label" => $label, "user" => $user->id]);
+            $notes = array_merge($notes, $query->fetchAll());
+
+            // Tableau pour compter les occurrences des notes
+            $noteCounts = [];
+
+            // Compter le nombre d'occurrences de chaque note
+            foreach ($notes as $note) {
+                $noteId = $note['id'];
+
+                // Incrémenter le compteur d'occurrences pour cette note
+                if (!isset($noteCounts[$noteId])) {
+                    $noteCounts[$noteId] = 0;
+                }
+                $noteCounts[$noteId]++;
+            }
+
+            // Tableau pour stocker les notes qui apparaissent exactement count($labels) fois
+            $filteredNotes = [];
+
+            // Filtrer les notes qui apparaissent exactement count($labels) fois
+            foreach ($noteCounts as $noteId => $count) {
+                if ($count === count($labels)) {
+                    // Trouver la note dans le tableau $notes
+                    $filteredNote = array_values(array_filter($notes, function ($note) use ($noteId) {
+                        return $note['id'] === $noteId;
+                    }));
+
+                    // Ajouter la note filtrée au tableau $filteredNotes
+                    if (!empty($filteredNote)) {
+                        $filteredNotes[] = $filteredNote[0]; // On ajoute le premier élément trouvé
+                        $note = Note::get_note_by_id($filteredNote[0]['id']);
+                        $filteredNote[0]['label'] = $note->get_labels();
+                    }
+                }
+            }
+        }
+
+        // ajout d'un tableau contenant tous ses labels à la note
+        $notes = $filteredNotes;
+        foreach ($notes as &$note) {
+            $n = Note::get_note_by_id($note['id']);
+            $note['labels'] = $n->get_labels();
+        }
+
+
+        $content_checklist = [];
+        foreach ($notes as &$row) {
+            $dataQuery = self::execute("SELECT content FROM text_notes WHERE id = :note_id", ["note_id" => $row["id"]]);
+            $content = $dataQuery->fetchColumn();
+
+            if (!$content) {
+                $dataQuery = self::execute("SELECT content, checked FROM checklist_note_items WHERE checklist_note = :note_id order by checked, id ", ["note_id" => $row["id"]]);
+                $content_checklist = $dataQuery->fetchAll();
+            }
+            $row["content"] = $content;
+            $row["content_checklist"] = $content_checklist;
+        }
+        return $notes;
+    }
+
     public static function get_max_weight(User $user)
     {
         $query = self::execute("SELECT MAX(weight) FROM notes WHERE owner = :user", ["user" => $user->id]);
@@ -363,7 +424,7 @@ abstract class Note extends Model
 
         // Vérifie la longueur du titre
         if (strlen($this->title) < $minLength || strlen($this->title) > $maxLength) {
-            $errors[] = "Le titre doit avoir au minimum 3 caractères et au maximum 25 caractères.";
+            $errors[] = "Le titre doit avoir au minimum $minLength caractères et au maximum $maxLength caractères.";
         }
 
         // Vérifie si le titre est unique pour cet utilisateur
@@ -387,11 +448,11 @@ abstract class Note extends Model
 
         // Vérifie la longueur du titre
         if (strlen($title) < $minLength) {
-            $errors[] = "Le titre doit contenir au minimum 3 caractères";
+            $errors[] = "Le titre doit contenir au minimum $minLength caractères";
         }
 
         if (strlen($title) > $maxLength) {
-            $errors[] = "Le titre doit contenir au maximum 25 caractères.";
+            $errors[] = "Le titre doit contenir au maximum $maxLength caractères.";
         }
 
         // Vérifie si le titre est unique pour cet utilisateur
@@ -415,11 +476,11 @@ abstract class Note extends Model
 
         // Vérifie la longueur du titre
         if (strlen($title) < $minLength) {
-            $errors[] = "Le titre doit contenir au minimum 3 caractères";
+            $errors[] = "Le titre doit contenir au minimum $minLength caractères";
         }
 
         if (strlen($title) > $maxLength) {
-            $errors[] = "Le titre doit contenir au maximum 25 caractères.";
+            $errors[] = "Le titre doit contenir au maximum $maxLength caractères.";
         }
 
         // Vérifie si le titre est unique pour cet utilisateur
@@ -442,7 +503,7 @@ abstract class Note extends Model
 
         // Vérifie que le contenu est soit vide, soit entre minLength et maxLength caractères
         if (($contentLength > 0 && $contentLength < $minLength) || $contentLength > $maxLength) {
-            $errors[] = "Le contenu de la note doit contenir entre 5 et 800 caractères ou être vide.";
+            $errors[] = "Le contenu de la note doit contenir entre $minLength et $maxLength caractères ou être vide.";
         }
 
         return $errors;
@@ -457,7 +518,7 @@ abstract class Note extends Model
 
         // Vérifie que le contenu est soit vide, soit entre minLength et maxLength caractères
         if (($contentLength > 0 && $contentLength < $minLength) || $contentLength > $maxLength) {
-            $errors[] = "Le contenu de la note doit contenir entre 5 et 800 caractères ou être vide.";
+            $errors[] = "Le contenu de la note doit contenir entre $minLength et $maxLength caractères ou être vide.";
         }
 
         return $errors;
@@ -599,9 +660,5 @@ abstract class Note extends Model
                     $data['edited_at']
                 );
         }
-    }
-    public static function update_drag_and_drop($count, $idval)
-    {
-        self::execute("UPDATE notes SET weight = :count, WHERE id = :id", ['count' => $count, 'id' => $idval]);
     }
 }

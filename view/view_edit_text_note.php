@@ -19,18 +19,34 @@
 </head>
 
 <body>
-    <form method="post" class="edit_text_note_form" action="note/save_edit_text_note/<?= $note_id ?>">
+    <?php
+    if ($labels_checked_coded != "") {
+        $param = "$note->note_id/$notes_coded/$labels_checked_coded";
+    } else {
+        $param = "$note->note_id";
+    }
+    ?>
+
+    <form method="post"  action="note/save_edit_text_note/<?= $param ?>">
         <div class="edit">
-            <a class="back" href="note/index"><span class="material-symbols-outlined">arrow_back_ios</span></a>
+            <?php
+            if ($labels_checked_coded != "") {
+                $href = "note/open_note/$note_id/$notes_coded/$labels_checked_coded";
+            } else {
+                $href = "note/open_note/$note_id";
+            }
+            ?>
+            <a class="back" href="<?= $href ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
             <button class="save" type="submit" id="saveButton"><span
                     class="material-symbols-outlined">save</span></button>
         </div>
-        <div class="edit_text_note_date">Created
-            <?= $created ?><?= ($edited ? " Edited " . $edited : " Not edited yet") ?></div>
+        <div class="dates">Created
+            <?= $created ?><?= ($edited ? " Edited " . $edited : " Not edited yet") ?>
+        </div>
         <div>
             <div class="text_note_form_items">
-                <label for="title">Title</label>
-                <input type="text" id="title" name="title" class="form-control title_add" value="<?= $note->title ?>">
+                <label for="title" class="title_note_title">Title</label>
+                <input type="text" id="title" name="title" class="form-control title_add title_note" value="<?= $note->title ?>">
                 <span id="titleError" class="text-danger" style="display: none;"></span>
                 <?php if (!empty($title_errors)): ?>
                     <?php foreach ($title_errors as $error): ?>
@@ -41,8 +57,8 @@
                 <?php endif; ?>
             </div>
             <div class="text_note_form_items">
-                <label for="content">Text</label>
-                <textarea class="form-control title_add" id="content" name="content"><?= $content ?></textarea>
+                <label for="content" class="note_body_title">Text</label>
+                <textarea class="form-control title_add note_body_text" id="content" name="content"><?= $content ?></textarea>
                 <span id="contentError" class="text-danger" style="display: none;"></span>
                 <?php if (!empty($content_errors)): ?>
                     <?php foreach ($content_errors as $error): ?>

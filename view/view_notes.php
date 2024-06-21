@@ -29,12 +29,14 @@
 <body>
     <?php include ('view/menu.php'); ?>
     <div class="view_notes_header">
-        <h1>My notes</h1>
+        <h1 class="page-title">My notes</h1>
     </div>
     <p class="title_note_pinned">Pinned</p>
     <div id="pinned" class="view_notes_pinned_unpinned">
-        <?php if (count($notes_pinned) != 0 || count($notes_unpinned) != 0): ?>
-            <?php for ($i = 0; $i < count($notes_pinned); $i++): ?>
+        
+    <?php if (count($notes_pinned) != 0 || count($notes_unpinned) != 0): ?>
+        <?php if ($notes_pinned) :
+            for ($i = 0; $i < count($notes_pinned); $i++): ?>
                 <div class="note" id="note_<?= $notes_pinned[$i]["id"] ?>">
                     <p class="note-title"><?= $notes_pinned[$i]["title"] ?></p>
                     <a class="link-note-archivee" href='note/open_note/<?= $notes_pinned[$i]["id"] ?>'>
@@ -57,6 +59,8 @@
                                 </div>
                             <?php endif; ?>
 
+                            
+                            </div>
                             <div class="box-label-note">
                                 <?php $note = Note::get_note_by_id($notes_pinned[$i]["id"]);
                                 foreach ($note->get_labels() as $label) :?>
@@ -64,8 +68,6 @@
     
                                 <?php endforeach; ?>
                             </div>
-
-                        </div>
                     </a>
                     <div class="card-footer">
                         <?php if ($i > 0): ?>
@@ -83,10 +85,17 @@
                     </div>
                 </div>
             <?php endfor; ?>
+            <?php else: ?>
+                <p class="title-empty">Pinned notes are empty</p>
+                
+            <?php endif; ?>  
         </div>
         <p class="title_note_unpinned">Others</p>
         <div id="unpinned" class="view_notes_pinned_unpinned">
-            <?php for ($i = 0; $i < count($notes_unpinned); $i++): ?>
+            <?php
+            if ($notes_unpinned) :
+
+            for ($i = 0; $i < count($notes_unpinned); $i++): ?>
                 <div class="note" id="item_<?= $notes_unpinned[$i]["id"] ?>">
                     <p class="note-title"><?= $notes_unpinned[$i]["title"]; ?></p>
                     <a class="link-note-archivee" href='note/open_note/<?= $notes_unpinned[$i]["id"] ?>'>
@@ -108,6 +117,7 @@
                                     </div>
                                 </div>
                             <?php endif; ?>
+                            </div>
                             <div class="box-label-note">
                                 <?php $note = Note::get_note_by_id($notes_unpinned[$i]["id"]);
                                 foreach ($note->get_labels() as $label) :?>
@@ -115,7 +125,6 @@
     
                                 <?php endforeach; ?>
                             </div>
-                        </div>
                     </a>
                     <div class="card-footer">
                         <?php if ($i > 0): ?>
@@ -133,24 +142,21 @@
                     </div>
                 </div>
             <?php endfor; ?>
+            <?php else: ?>
+                <p class="title-empty">Other notes are empty</p>
+            <?php endif; ?>
         <?php else: ?>
             <p class="title-empty">Your notes are empty</p>
         <?php endif; ?>
     </div>
-    <footer>
-        <div class="position-absolute bottom-0 w-100 float-end">
+    <footer class="view_notes_footer">
             <a href="note/add_checklist_note">
 
-                <span class="material-symbols-outlined text-warning text-lg  text-lg-end m-2 float-end">checklist</span>
+                <span class="material-symbols-outlined text-warning">checklist</span>
             </a>
             <a href="note/add_text_note">
-                <span class="material-symbols-outlined text-warning text-lg  text-lg-end m-2 float-end">draft</span>
-            </a>
+                <span class="material-symbols-outlined text-warning">draft</span>
         </div>
-
-
-
-
     </footer>
     <script src="JS/drag_and_drop.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"

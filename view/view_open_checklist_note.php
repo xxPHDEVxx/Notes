@@ -31,7 +31,7 @@
             <?php if ($row['checked']): ?>
                 <form class="check_form" action="note/update_checked" method="post">
                     <input type="text" name="uncheck" value="<?= $row["id"] ?>" class="item" hidden>
-                    <input class="material-symbols-outlined check_submit " type="submit" value='check_box'
+                    <input class="material-symbols-outlined check_submit " type="submit" <?=$is_shared_as_reader == 1 ? "disabled" : "" ;?>  value='check_box'
                         id="uncheck<?= $row["id"] ?>">
                     <label class="check_label item_label" for="uncheck<?= $row["id"] ?>" id="<?= $row["id"] ?>">
                         <?= $row["content"] ?></label>
@@ -39,7 +39,7 @@
             <?php else: ?>
                 <form class="check_form" action="note/update_checked" method="post">
                     <input type="text" name="check" value="<?= $row["id"] ?>" class="item" hidden>
-                    <input class="material-symbols-outlined check_submit" type="submit" value="check_box_outline_blank"
+                    <input class="material-symbols-outlined check_submit" type="submit"  <?=$is_shared_as_reader == 1 ? "disabled" : "" ;?> value="check_box_outline_blank"
                         id="check<?= $row["id"] ?>">
                     <label class="uncheck_label item_label" for="check<?= $row["id"] ?>" id="<?= $row["id"] ?>">
                         <?= $row["content"] ?></label>
@@ -50,9 +50,9 @@
     </div>
 
     <?php include ("view/view_modal_delete.php"); ?>
+    <?php include ("view_modal_delete_confirmation.php"); ?>
     <?php include ("view_modal.php"); ?>
 
-    <script> var note = <?= json_encode($note_id) ?>;</script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="JS/confirmation_delete.js"></script>
     <script src="JS/check_uncheck.js"></script>

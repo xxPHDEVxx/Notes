@@ -9,6 +9,8 @@ require_once "model/ChecklistNoteItem.php";
 require_once "model/NoteShare.php";
 require_once "model/NoteLabel.php";
 require_once "model/ChecklistNote.php";
+require_once "model/Util.php";
+
 
 // Définition de la classe ControllerNote, héritant de la classe Controller
 class ControllerNote extends Controller
@@ -80,6 +82,8 @@ class ControllerNote extends Controller
         // Initialisation des variables
         $errors = [];
         $note = "";
+        $notes_coded = "";
+        $labels_checked_coded = "";
         $connected = $this->get_user_or_redirect();
 
         // Vérification de la présence de l'identifiant de la note à partager dans l'URL
@@ -121,6 +125,11 @@ class ControllerNote extends Controller
                 $errors[] = "erreurs";
             }
 
+            if (isset($_GET["param2"]) && isset($_GET["param3"])) {
+                $notes_coded = $_GET["param2"];
+                $labels_checked_coded = $_GET["param3"];
+            }
+
             // Si les données postées sont valides, partager la note
             if (isset($_POST['user'], $_POST['editor']) && empty($errors)) {
                 $nv_us = User::get_user_by_id($_POST['user']);
@@ -128,12 +137,18 @@ class ControllerNote extends Controller
                 ;
                 $note_share = new NoteShare($note_id, $nv_us->id, $editor);
                 $note_share->persist();
-                $this->redirect("note", "shares", $note_id);
+                $this->redirect("note", "shares", $note_id, $notes_coded, $labels_checked_coded);
             }
         }
 
         // Affichage de la vue de partage avec les données récupérées
-        (new View("share"))->show(["sharers" => $sharers, "others" => $others, "note" => $note]);
+        (new View("share"))->show([
+            "sharers" => $sharers,
+            "others" => $others,
+            "note" => $note,
+            "notes_coded" => $notes_coded,
+            "labels_checked_coded" => $labels_checked_coded
+        ]);
     }
 
     public function toggle_permission()
@@ -365,7 +380,7 @@ class ControllerNote extends Controller
             $note = Note::get_note_by_id($note_id);
             $user = $this->get_user_or_redirect();
             if ($user->id == $note->owner) {
-                (new View('delete_confirmation'))->show(['note_id' => $note_id]);
+                (new View('delete_confirmation'))->show(['note' => $note]);
             } else {
                 throw new Exception("vous n'êtes pas l'auteur de cette note");
             }
@@ -392,7 +407,6 @@ class ControllerNote extends Controller
                     if ($user_id == $note->owner) {
                         // Suppression de la note
                         $note->delete($user);
-                        //Note::delete_order($user_id);
                         // Redirection vers les archives de l'utilisateur
                         $this->redirect("user", "my_archives");
                     } else {
@@ -418,7 +432,14 @@ class ControllerNote extends Controller
         $user = $this->get_user_or_redirect();
         $errors = [];
         $errorsItem = [];
-        $edit_item = [];
+        $notes_coded = "";
+        $labels_checked_coded = "";
+
+        // paramètres pour navigation search
+        if (isset($_GET["param2"]) && isset($_GET["param3"])) {
+            $notes_coded = $_GET["param2"];
+            $labels_checked_coded = $_GET["param3"];
+        }
 
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = Tools::sanitize($_GET["param1"]);
@@ -439,6 +460,11 @@ class ControllerNote extends Controller
             // Récupération du contenu de la note
             $body = $note->get_content();
 
+            // if (isset($_GET["param2"]) && isset($_GET["param3"])) {
+            //     $notes_coded = $_GET["param2"];
+            //     $labels_checked_coded = $_GET["param3"];
+            // }
+
 
 
             //verification si champ titre vide + si c'est le titre initial
@@ -450,6 +476,7 @@ class ControllerNote extends Controller
                 $title = Tools::sanitize($_POST["title"]);
                 $note = Note::get_note_by_id($note_id);
                 $note->title = $title;
+                $note->persist();
                 $errors["title"] = implode($note->validate_title());
             }
 
@@ -461,7 +488,14 @@ class ControllerNote extends Controller
                     throw new Exception("Undefined checklist item");
                 }
                 $item->delete();
-                $this->redirect("note", "edit_checklist", $note_id);
+                $note = Note::get_note_by_id($item->checklist_note);
+                $date = new DateTime();
+                $note->edited_at = $date->format('Y-m-d H:i:s');
+                $note->persist();
+                // mise à jour notes après modification pour navigation search
+                if ($labels_checked_coded != "")
+                    $notes_coded = Util::url_safe_encode($user->get_notes_search(Util::url_safe_decode($labels_checked_coded)));
+                $this->redirect("note", "edit_checklist", $note_id, $notes_coded, $labels_checked_coded);
             }
 
             // Ajout d'un nouvel élément à la liste de contrôle
@@ -480,12 +514,16 @@ class ControllerNote extends Controller
                 //si item oke -> modif db
                 if (empty($errors['items'])) {
                     $new_item->persist();
-                    $this->redirect("note", "edit_checklist", $note_id);
+                    // mise à jour notes après modification pour navigation search
+                    if ($labels_checked_coded != "")
+                        $notes_coded = Util::url_safe_encode($user->get_notes_search(Util::url_safe_decode($labels_checked_coded)));
+                    $this->redirect("note", "edit_checklist", $note_id, $notes_coded, $labels_checked_coded);
                     exit;
                 }
             }
         }
         if (isset($_POST["save"])) {
+
             //action edit item 
             // Vérification des éléments
             if (isset($_POST['items'])) {
@@ -504,15 +542,20 @@ class ControllerNote extends Controller
                         }
                     }
                 }
-
+                $note = Note::get_note_by_id($checklistItem->checklist_note);
+                $date = new DateTime();
+                $note->edited_at = $date->format('Y-m-d H:i:s');
+                $note->persist();
             }
             $errors = array_merge($errors, $errorsItem);
             if (empty($errors["title"]) && empty($errorsItem)) {
                 $note->persist();
-                $this->redirect("note", "open_note", $note->note_id);
+                // mise à jour notes après modification pour navigation search
+                if ($labels_checked_coded != "")
+                    $notes_coded = Util::url_safe_encode($user->get_notes_search(Util::url_safe_decode($labels_checked_coded)));
+                $this->redirect("note", "open_note", $note->note_id, $notes_coded, $labels_checked_coded);
             }
         }
-
         // Affichage de la vue d'édition de la liste de contrôle
         (new View("edit_checklist_note"))->show([
             "note" => $note,
@@ -525,7 +568,9 @@ class ControllerNote extends Controller
             "content" => $body,
             "pinned" => $pinned,
             "user_id" => $user_id,
-            "errors" => $errors
+            "errors" => $errors,
+            "notes_coded" => $notes_coded,
+            "labels_checked_coded" => $labels_checked_coded
         ]);
     }
 
@@ -538,6 +583,8 @@ class ControllerNote extends Controller
         $content_errors = [];
         $title_errors = [];
         $errors = [];
+        $notes_coded = "";
+        $labels_checked_coded = "";
 
         // Vérification si le titre est vide
         if (isset($_POST['title']) && $_POST['title'] == "") {
@@ -563,6 +610,11 @@ class ControllerNote extends Controller
                         array_push($title_errors, $note->validate_title()[0]);
                     $content_errors = $note->validate_content();
 
+                    if (isset($_GET["param2"]) && isset($_GET["param3"])) {
+                        $notes_coded = $_GET["param2"];
+                        $labels_checked_coded = $_GET["param3"];
+                    }
+
                     // Si des erreurs sont présentes, affichage de la vue avec les erreurs
                     if (!empty($content_errors) || !empty($title_errors)) {
                         (new View("edit_text_note"))->show([
@@ -574,15 +626,19 @@ class ControllerNote extends Controller
                             "title" => $note->title,
                             'errors' => $errors,
                             'content_errors' => $content_errors,
-                            'title_errors' => $title_errors
+                            'title_errors' => $title_errors,
+                            "notes_coded" => $notes_coded,
+                            "labels_checked_coded" => $labels_checked_coded
                         ]);
                         exit();
                     }
 
                     // Si tout est valide, mise à jour de la note et redirection vers la page de la note
                     $note->update();
-                    $this->redirect("note", "open_note", $note_id);
-                    exit();
+                    // mise à jour notes après modification pour navigation search
+                    if ($labels_checked_coded != "")
+                        $notes_coded = Util::url_safe_encode($user->get_notes_search(Util::url_safe_decode($labels_checked_coded)));
+                    $this->redirect("note", "open_note", $note_id, $notes_coded, $labels_checked_coded);
                 } else {
                     $errors = "Note introuvable ou vous n'avez pas la permission de la modifier.";
                 }
@@ -671,6 +727,8 @@ class ControllerNote extends Controller
 
     public function open_note()
     {
+        $notes_coded = "";
+        $labels_checked_coded = "";
         // Récupération de l'utilisateur connecté
         $this->get_user_or_redirect();
         // Vérification de la présence et de la validité de l'identifiant de la note
@@ -685,6 +743,10 @@ class ControllerNote extends Controller
             $is_shared_as_editor = $note->is_shared_as_editor($user_id);
             $is_shared_as_reader = $note->is_shared_as_reader($user_id);
             $body = $note->get_content();
+            if (isset($_GET["param2"]) && isset($_GET["param3"])) {
+                $notes_coded = $_GET["param2"];
+                $labels_checked_coded = $_GET["param3"];
+            }
         }
         // Affichage de la vue appropriée en fonction du type de note (texte ou checklist)
         ($note->get_type() == "TextNote" ? new View("open_text_note") : new View("open_checklist_note"))->show([
@@ -697,7 +759,9 @@ class ControllerNote extends Controller
             "is_shared_as_reader" => $is_shared_as_reader,
             "note_body" => $body,
             "pinned" => $pinned,
-            "user_id" => $user_id
+            "user_id" => $user_id,
+            "notes_coded" => $notes_coded,
+            "labels_checked_coded" => $labels_checked_coded
         ]);
     }
 
@@ -823,6 +887,9 @@ class ControllerNote extends Controller
 
     public function edit(): void
     {
+        $notes_coded = "";
+        $labels_checked_coded = "";
+
         // Vérifie si l'identifiant de la note est présent et valide dans l'URL
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
@@ -836,6 +903,10 @@ class ControllerNote extends Controller
             $is_shared_as_editor = $note->is_shared_as_editor($user_id);
             $is_shared_as_reader = $note->is_shared_as_reader($user_id);
             $content = $note->get_content();
+            if (isset($_GET["param2"]) && isset($_GET["param3"])) {
+                $notes_coded = $_GET["param2"];
+                $labels_checked_coded = $_GET["param3"];
+            }
         }
         // Affiche la vue appropriée en fonction du type de note (texte ou checklist)
         ($note->get_type() == "TextNote" ? new View("edit_text_note") : new View("edit_checklist_note"))->show([
@@ -848,7 +919,9 @@ class ControllerNote extends Controller
             "is_shared_as_reader" => $is_shared_as_reader,
             "content" => $content,
             "pinned" => $pinned,
-            "user_id" => $user_id
+            "user_id" => $user_id,
+            "notes_coded" => $notes_coded,
+            "labels_checked_coded" => $labels_checked_coded
         ]);
     }
 
@@ -917,7 +990,6 @@ class ControllerNote extends Controller
             }
             if (empty($title_error)) {
                 $note->title = Tools::sanitize($_POST['title']);
-                echo ("yo");
                 $note->persist();
             }
         }
@@ -1058,6 +1130,11 @@ class ControllerNote extends Controller
                 }
                 if (empty($errors)) {
                     $item->persist();
+                    // màj date edition
+                    $note = Note::get_note_by_id($item->checklist_note);
+                    $date = new DateTime();
+                    $note->edited_at = $date->format('Y-m-d H:i:s');
+                    $note->persist();
                     echo json_encode($item);
                 }
             }
@@ -1075,6 +1152,11 @@ class ControllerNote extends Controller
                 throw new Exception("Undefined checklist item");
             }
             $item->delete();
+            // màj date édition
+            $note = Note::get_note_by_id($item->checklist_note);
+            $date = new DateTime();
+            $note->edited_at = $date->format('Y-m-d H:i:s');
+            $note->persist();
             echo ($id);
         }
     }
@@ -1083,25 +1165,23 @@ class ControllerNote extends Controller
     public function labels()
     {
         $labels_note = [];
-        $default = ["Priv&eacute;", "Maison", "Loisirs", "Travail"];
         $nvlab = [];
         $user = $this->get_user_or_redirect();
-        $all = [];
-        if (!empty($user->get_labels())) {
-            //on récupere les label des notes de l'utilisateur connecté
-            $user_labels = $user->get_labels();
-            // Fusionner les labels de l'utilisateur et les labels par défaut sans doublon
-            $all = array_unique(array_merge($default, $user_labels));
-        } else {
-            $all = $default;
-        }
+        $all = $user->get_labels();
         $errors = [];
+        $notes_coded = "";
+        $labels_checked_coded = "";
         //vérifier et récupérer l'id en paramètre
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
             // Récupération de la note par son identifiant
             $note = Note::get_note_by_id($note_id);
             $labels_note = $note->get_labels();
+
+            if (isset($_GET["param2"]) && isset($_GET["param3"])) {
+                $notes_coded = $_GET["param2"];
+                $labels_checked_coded = $_GET["param3"];
+            }
 
             //verifier et mis en tableau les labels non utilisé
             foreach ($all as $label) {
@@ -1117,11 +1197,18 @@ class ControllerNote extends Controller
                 $errors = $new_label->validate_label();
                 if (empty($errors)) {
                     $new_label->persist();
-                    $this->redirect("note", "labels", $note->note_id);
+                    $this->redirect("note", "labels", $note->note_id, $notes_coded, $labels_checked_coded);
                 }
             }
         }
-        (new View("labels"))->show(["labels" => $labels_note, "note" => $note, "all" => $nvlab, "errors" => $errors]);
+        (new View("labels"))->show([
+            "labels" => $labels_note,
+            "note" => $note,
+            "all" => $nvlab,
+            "errors" => $errors,
+            "notes_coded" => $notes_coded,
+            "labels_checked_coded" => $labels_checked_coded
+        ]);
     }
 
     public function delete_label()
@@ -1135,6 +1222,44 @@ class ControllerNote extends Controller
             $label = NoteLabel::get_note_label($note->note_id, $content);
             $label->delete();
             $this->redirect("note", "labels", $note->note_id);
+        }
+    }
+
+    public function add_label_service()
+    {
+
+        $this->get_user_or_redirect();
+        $errors = "";
+        if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
+            $note_id = $_GET["param1"];
+            // Récupération de la note par son identifiant
+            $note = Note::get_note_by_id($note_id);
+
+            //rajouter un nouveau label
+            if (isset($_POST["new_label"]) && isset($_POST["new_label"]) !== "") {
+                $content = $_POST["new_label"];
+                $new_label = new NoteLabel($note->note_id, $content);
+                $errors = implode($new_label->validate_label());
+                if (empty($errors)) {
+                    $new_label->persist();
+                }
+            }
+            if (!empty($errors)) {
+                echo json_encode($errors);
+            }
+        }
+    }
+
+    public function delete_label_service()
+    {
+        $user = $this->get_user_or_redirect();
+        if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
+            $note_id = $_GET["param1"];
+            // Récupération de la note par son identifiant
+            $note = Note::get_note_by_id($note_id);
+            $content = $_POST["label"];
+            $label = NoteLabel::get_note_label($note->note_id, $content);
+            $label->delete();
         }
     }
 

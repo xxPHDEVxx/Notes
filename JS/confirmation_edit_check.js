@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+$(document).ready(function () {
     // Récupération des éléments nécessaires
     const checklistItems = document.querySelectorAll('.checklist_elements');
     const backButton = document.querySelector('.back');
@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let originalTitle = document.getElementById('title').value;
     let initialContents = [];
     let changed = false;
-    let numberItems;
+    let numberItems = 0;
 
     saveData();
 
@@ -20,12 +20,18 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    // reset new content input after added the item
+    $('.icone-add').click(function () {
+        $('#new').val('');
+    });
+
 
     // Événement du bouton de sauvegarde 
     saveButton.addEventListener('click', function () {
         numberItems = 0;
         saveData();
         originalTitle = document.getElementById('title').value;
+        initialNewContent = document.getElementById('new').value;
         changed = false;
     });
 
@@ -36,10 +42,10 @@ document.addEventListener('DOMContentLoaded', function () {
         window.location.href = backButton.getAttribute('href');
     });
 
-    // sauvegarde des data avant changement pour afichage modal 
+    // sauvegarde des data avant changement pour affichage modal 
     function saveData() {
         checklistItems.forEach(function (itemContent) {
-            itemContent = document.getElementById('item_content');
+
             // Récupération de l'ID de l'élément
             let name = itemContent.getAttribute('name');
             let itemIdMatch = name.match(/\[(\d+)\]/); // Extraction de l'ID
@@ -55,15 +61,21 @@ document.addEventListener('DOMContentLoaded', function () {
         // Vérification du changement dans le titre
         if (titleChanged(originalTitle)) {
             changed = true;
-
-        } else {
+        } else if (document.getElementById('new').value != '') {
+            changed = true;
+        }
+        else {
             // Parcourir chaque élément de checklist pour comparer les valeurs initiales
             checklistItems.forEach(function (itemContent) {
-                itemContent = document.getElementById('item_content');
                 // Récupération de l'ID de l'élément
                 let name = itemContent.getAttribute('name');
                 let itemIdMatch = name.match(/\[(\d+)\]/); // Extraction de l'ID
                 let itemId = itemIdMatch[1];
+                console.log(initialContents[itemId]);
+                console.log(" vs ");
+                console.log(itemId);
+                console.log(" : ");
+                console.log(itemContent.value);
                 if (initialContents[itemId] !== itemContent.value) {
                     changed = true; // Si une différence est détectée, marquez la variable comme changée
                 }

@@ -1,17 +1,27 @@
 $(document).ready(function () {
 
     const modal = new bootstrap.Modal(document.getElementById('confirmationDelete'));
+    const modalConfirmation = new bootstrap.Modal(document.getElementById('deleted'));
     const confirmExitButton = $('#confirmExitButton');
     const backButton = $('.back');
 
+    // ouverture modal de confirmation de supression
     $('.delete').click(function (event) {
         event.preventDefault(); // Empêche le comportement par défaut du formulaire (soumission)
         modal.show();
     });
 
-    confirmExitButton.click(confirmDelete);
+    // fermeture modal de confirmation de supression après confirmation de suppression
+    confirmExitButton.click(function () {
+        modal.hide();
+        modalConfirmation.show();
+    });
+
+    // Supression de la note
+    $('#closeConfirmation').click(confirmDelete);
 
     function confirmDelete() {
+        var note = $(".note_id").val();
         // Récupération de l'identifiant de la note depuis une variable PHP
         let requestData = {
             delete: 'delete', // Utilisez .attr('id') pour récupérer l'identifiant du bouton
@@ -30,4 +40,4 @@ $(document).ready(function () {
             }
         });
     }
-});
+});     

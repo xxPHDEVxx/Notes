@@ -98,7 +98,7 @@ class User extends Model
         return $errors;
     }
 
-    public static function validateEdit($email, $fullname, $currentUser): array
+    public static function validate_edit($email, $fullname, $currentUser): array
     {
         $errors = [];
         if (!strlen($email) > 0) {
@@ -232,9 +232,12 @@ class User extends Model
     {
         return Note::get_notes_unpinned($this);
     }
+    public function get_notes_search($labels){
+        return Note::get_notes_search($this, $labels);
+    }
 
 
-    public function updateProfile(string $newFullName, string $newMail): void
+    public function update_profile(string $newFullName, string $newMail): void
     {
         $this->mail = $newMail;
         $this->full_name = $newFullName;
