@@ -470,6 +470,7 @@ class ControllerNote extends Controller
                 $title = Tools::sanitize($_POST["title"]);
                 $note = Note::get_note_by_id($note_id);
                 $note->title = $title;
+                $note->persist();
                 $errors["title"] = implode($note->validate_title());
             }
 
