@@ -40,7 +40,7 @@
             <button class="save" type="submit" id="saveButton"><span
                     class="material-symbols-outlined">save</span></button>
         </div>
-        <div class="edit_text_note_date dates">Created
+        <div class="dates">Created
             <?= $created ?><?= ($edited ? " Edited " . $edited : " Not edited yet") ?>
         </div>
         <div>

@@ -69,7 +69,7 @@
                 <?php endforeach; ?>
             <?php endif; ?>
             <!-- options pour la suggestion de label -->
-            <datalist id="new-label-list">
+            <datalist id="new-label-list" class="datalist">
                 <?php foreach ($all as $lab): ?>
                     <option value="<?= $lab ?>"></option>
                 <?php endforeach; ?>

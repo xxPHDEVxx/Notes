@@ -10,8 +10,8 @@ class ControllerSettings extends Controller
     {
         $user = $this->get_user_or_redirect();
         $sharers = $user->shared_by();
-
-        (new View("settings"))->show(["user" => $user, "sharers" => $sharers]);
+        $currentPage = "settings";
+        (new View("settings"))->show(["user" => $user, "sharers" => $sharers, "currentPage" => $currentPage]);
     }
 
     // ajouter error et validations
