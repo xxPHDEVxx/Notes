@@ -23,7 +23,14 @@
 <body>
     <form method="post" action="note/edit_checklist/<?= $note_id ?>">
         <div class="edit">
-            <a class="back" href="note/open_note/<?= $note_id ?>"><span
+            <?php
+            if ($labels_checked_coded != "") {
+                $href = "note/open_note/$note_id/$notes_coded/$labels_checked_coded";
+            } else {
+                $href = "note/open_note/$note_id";
+            }
+            ?>
+            <a class="back" href="<?= $href ?>"><span
                     class="material-symbols-outlined">arrow_back_ios</span></a>
             <button class="save" type="submit" id="saveButton" name="save"><span
                     class="material-symbols-outlined">save</span></button>
@@ -50,7 +57,7 @@
                                 </div>
                                 <input type="text" name="items[<?= $id ?>]"
                                     class="checklist_elements <?= $row["checked"] ? 'check_label' : '' ?>" id="item_content"
-                                    value="<?= isset($_POST["items[<?= $id ?>]"]) ? htmlspecialchars($_POST["items[<?= $id ?>]"]) : $row["content"]  ?>">
+                                    value="<?= isset($_POST["items[<?= $id ?>]"]) ? htmlspecialchars($_POST["items[<?= $id ?>]"]) : $row["content"] ?>">
 
                                 <input type="hidden" name="remove" value="<?= $id ?>">
                                 <button type="submit" id="delete<?= $id ?> " name="delete" value="<?= $id ?>"
@@ -66,7 +73,8 @@
                 </div>
                 <label for="new">New item</label>
                 <div class="edit_checklist_form">
-                    <input type="text" class="form-control-edit" id="new" name="new" value="<?= isset($_POST["new"]) ? htmlspecialchars($_POST["new"]) : "" ?>">
+                    <input type="text" class="form-control-edit" id="new" name="new"
+                        value="<?= isset($_POST["new"]) ? htmlspecialchars($_POST["new"]) : "" ?>">
                     <button type="submit" id="addButton" class="icone-add">+</button>
                     <span id="newContentError" class="text-danger" style="display: none;"></span>
                     <?php if (!empty($errors['items'])): ?>

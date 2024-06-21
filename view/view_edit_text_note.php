@@ -21,12 +21,20 @@
 <body>
     <form method="post" class="edit_text_note_form" action="note/save_edit_text_note/<?= $note_id ?>">
         <div class="edit">
-            <a class="back" href="note/index"><span class="material-symbols-outlined">arrow_back_ios</span></a>
+            <?php
+            if ($labels_checked_coded != "") {
+                $href = "note/open_note/$note_id/$notes_coded/$labels_checked_coded";
+            } else {
+                $href = "note/open_note/$note_id";
+            }
+            ?>
+            <a class="back" href="<?= $href ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
             <button class="save" type="submit" id="saveButton"><span
                     class="material-symbols-outlined">save</span></button>
         </div>
         <div class="edit_text_note_date">Created
-            <?= $created ?><?= ($edited ? " Edited " . $edited : " Not edited yet") ?></div>
+            <?= $created ?><?= ($edited ? " Edited " . $edited : " Not edited yet") ?>
+        </div>
         <div>
             <div class="text_note_form_items">
                 <label for="title">Title</label>

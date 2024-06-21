@@ -80,6 +80,8 @@ class ControllerNote extends Controller
         // Initialisation des variables
         $errors = [];
         $note = "";
+        $notes_coded = "";
+        $labels_checked_coded = "";
         $connected = $this->get_user_or_redirect();
 
         // Vérification de la présence de l'identifiant de la note à partager dans l'URL
@@ -121,6 +123,11 @@ class ControllerNote extends Controller
                 $errors[] = "erreurs";
             }
 
+            if (isset($_GET["param2"]) && isset($_GET["param3"])) {
+                $notes_coded = $_GET["param2"];
+                $labels_checked_coded = $_GET["param3"];
+            }
+
             // Si les données postées sont valides, partager la note
             if (isset($_POST['user'], $_POST['editor']) && empty($errors)) {
                 $nv_us = User::get_user_by_id($_POST['user']);
@@ -128,12 +135,18 @@ class ControllerNote extends Controller
                 ;
                 $note_share = new NoteShare($note_id, $nv_us->id, $editor);
                 $note_share->persist();
-                $this->redirect("note", "shares", $note_id);
+                $this->redirect("note", "shares", $note_id, $notes_coded, $labels_checked_coded);
             }
         }
 
         // Affichage de la vue de partage avec les données récupérées
-        (new View("share"))->show(["sharers" => $sharers, "others" => $others, "note" => $note]);
+        (new View("share"))->show([
+            "sharers" => $sharers,
+            "others" => $others,
+            "note" => $note,
+            "notes_coded" => $notes_coded,
+            "labels_checked_coded" => $labels_checked_coded
+        ]);
     }
 
     public function toggle_permission()
@@ -678,6 +691,8 @@ class ControllerNote extends Controller
 
     public function open_note()
     {
+        $notes_coded = "";
+        $labels_checked_coded = "";
         // Récupération de l'utilisateur connecté
         $this->get_user_or_redirect();
         // Vérification de la présence et de la validité de l'identifiant de la note
@@ -692,6 +707,10 @@ class ControllerNote extends Controller
             $is_shared_as_editor = $note->is_shared_as_editor($user_id);
             $is_shared_as_reader = $note->is_shared_as_reader($user_id);
             $body = $note->get_content();
+            if (isset($_GET["param2"]) && isset($_GET["param3"])) {
+                $notes_coded = $_GET["param2"];
+                $labels_checked_coded = $_GET["param3"];
+            }
         }
         // Affichage de la vue appropriée en fonction du type de note (texte ou checklist)
         ($note->get_type() == "TextNote" ? new View("open_text_note") : new View("open_checklist_note"))->show([
@@ -704,7 +723,9 @@ class ControllerNote extends Controller
             "is_shared_as_reader" => $is_shared_as_reader,
             "note_body" => $body,
             "pinned" => $pinned,
-            "user_id" => $user_id
+            "user_id" => $user_id,
+            "notes_coded" => $notes_coded,
+            "labels_checked_coded" => $labels_checked_coded
         ]);
     }
 
@@ -830,6 +851,9 @@ class ControllerNote extends Controller
 
     public function edit(): void
     {
+        $notes_coded = "";
+        $labels_checked_coded = "";
+
         // Vérifie si l'identifiant de la note est présent et valide dans l'URL
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
@@ -843,6 +867,10 @@ class ControllerNote extends Controller
             $is_shared_as_editor = $note->is_shared_as_editor($user_id);
             $is_shared_as_reader = $note->is_shared_as_reader($user_id);
             $content = $note->get_content();
+            if (isset($_GET["param2"]) && isset($_GET["param3"])) {
+                $notes_coded = $_GET["param2"];
+                $labels_checked_coded = $_GET["param3"];
+            }
         }
         // Affiche la vue appropriée en fonction du type de note (texte ou checklist)
         ($note->get_type() == "TextNote" ? new View("edit_text_note") : new View("edit_checklist_note"))->show([
@@ -855,7 +883,9 @@ class ControllerNote extends Controller
             "is_shared_as_reader" => $is_shared_as_reader,
             "content" => $content,
             "pinned" => $pinned,
-            "user_id" => $user_id
+            "user_id" => $user_id,
+            "notes_coded" => $notes_coded,
+            "labels_checked_coded" => $labels_checked_coded
         ]);
     }
 
@@ -1093,13 +1123,20 @@ class ControllerNote extends Controller
         $nvlab = [];
         $user = $this->get_user_or_redirect();
         $all = $user->get_labels();
-        $errors= [];
+        $errors = [];
+        $notes_coded = "";
+        $labels_checked_coded = "";
         //vérifier et récupérer l'id en paramètre
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
             // Récupération de la note par son identifiant
             $note = Note::get_note_by_id($note_id);
             $labels_note = $note->get_labels();
+
+            if (isset($_GET["param2"]) && isset($_GET["param3"])) {
+                $notes_coded = $_GET["param2"];
+                $labels_checked_coded = $_GET["param3"];
+            }
 
             //verifier et mis en tableau les labels non utilisé
             foreach ($all as $label) {
@@ -1115,11 +1152,18 @@ class ControllerNote extends Controller
                 $errors = $new_label->validate_label();
                 if (empty($errors)) {
                     $new_label->persist();
-                    $this->redirect("note", "labels", $note->note_id);
+                    $this->redirect("note", "labels", $note->note_id, $notes_coded, $labels_checked_coded);
                 }
             }
         }
-        (new View("labels"))->show(["labels" => $labels_note, "note" => $note, "all" => $nvlab, "errors" => $errors]);
+        (new View("labels"))->show([
+            "labels" => $labels_note,
+            "note" => $note,
+            "all" => $nvlab,
+            "errors" => $errors,
+            "notes_coded" => $notes_coded,
+            "labels_checked_coded" => $labels_checked_coded
+        ]);
     }
 
     public function delete_label()
@@ -1136,10 +1180,11 @@ class ControllerNote extends Controller
         }
     }
 
-    public function add_label_service() {
+    public function add_label_service()
+    {
 
         $this->get_user_or_redirect();
-        $errors ="";
+        $errors = "";
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
             // Récupération de la note par son identifiant
@@ -1160,14 +1205,15 @@ class ControllerNote extends Controller
         }
     }
 
-    public function delete_label_service()  {
+    public function delete_label_service()
+    {
         $user = $this->get_user_or_redirect();
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = $_GET["param1"];
             // Récupération de la note par son identifiant
             $note = Note::get_note_by_id($note_id);
             $content = $_POST["label"];
-            $label  = NoteLabel::get_note_label($note->note_id, $content);
+            $label = NoteLabel::get_note_label($note->note_id, $content);
             $label->delete();
         }
     }
