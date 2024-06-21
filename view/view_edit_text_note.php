@@ -19,7 +19,15 @@
 </head>
 
 <body>
-    <form method="post" class="edit_text_note_form" action="note/save_edit_text_note/<?= $note_id ?>">
+    <?php
+    if ($labels_checked_coded != "") {
+        $param = "$note->note_id/$notes_coded/$labels_checked_coded";
+    } else {
+        $param = "$note->note_id";
+    }
+    ?>
+
+    <form method="post" class="edit_text_note_form" action="note/save_edit_text_note/<?= $param ?>">
         <div class="edit">
             <?php
             if ($labels_checked_coded != "") {

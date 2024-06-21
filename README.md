@@ -61,18 +61,12 @@
 ...
 
 ## Notes de version itération 3 -> 2ème session :  
-
-  * itération 1 : 
-    - PRG EditProfile et ChangePassword en cas de succès + Delete_Confirmation
     
+  * ite1 : titre checklistnote ne se modifie plus.
 
   * Gestion partage : ok ( 1 bug mineur -> select ne reaparait pas après supression tant qu'on refresh pas)
   * Check_uncheck : ok -> oublié de l'ajouté sur le dernier commit.
   
-<<<<<<< HEAD
-  *  fonctionnalité search non aboutie.
-=======
   * petit bug affichage css potentiels.
-  *  fonctionnalité search non aboutie.
+  *  search : bug mineur : notes non mis à jour si modification durant navigation pour checklistnote
   * Labels : delete non dynamique à part pour le premier label -> à corriger.
->>>>>>> labels_view

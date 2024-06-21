@@ -21,7 +21,15 @@
 </head>
 
 <body>
-    <form method="post" action="note/edit_checklist/<?= $note_id ?>">
+
+    <?php
+    if ($labels_checked_coded != "") {
+        $param = "$note->note_id/$notes_coded/$labels_checked_coded";
+    } else {
+        $param = "$note->note_id";
+    }
+    ?>
+    <form method="post" action="note/edit_checklist/<?= $param ?>">
         <div class="edit">
             <?php
             if ($labels_checked_coded != "") {
@@ -30,8 +38,7 @@
                 $href = "note/open_note/$note_id";
             }
             ?>
-            <a class="back" href="<?= $href ?>"><span
-                    class="material-symbols-outlined">arrow_back_ios</span></a>
+            <a class="back" href="<?= $href ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
             <button class="save" type="submit" id="saveButton" name="save"><span
                     class="material-symbols-outlined">save</span></button>
         </div>

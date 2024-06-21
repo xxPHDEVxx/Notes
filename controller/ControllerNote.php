@@ -9,6 +9,8 @@ require_once "model/ChecklistNoteItem.php";
 require_once "model/NoteShare.php";
 require_once "model/NoteLabel.php";
 require_once "model/ChecklistNote.php";
+require_once "model/Util.php";
+
 
 // Définition de la classe ControllerNote, héritant de la classe Controller
 class ControllerNote extends Controller
@@ -430,7 +432,8 @@ class ControllerNote extends Controller
         $user = $this->get_user_or_redirect();
         $errors = [];
         $errorsItem = [];
-        $edit_item = [];
+        $notes_coded = "";
+        $labels_checked_coded = "";
 
         if (isset($_GET["param1"]) && isset($_GET["param1"]) !== "") {
             $note_id = Tools::sanitize($_GET["param1"]);
@@ -450,6 +453,11 @@ class ControllerNote extends Controller
             $is_shared_as_reader = $note->is_shared_as_reader($user_id);
             // Récupération du contenu de la note
             $body = $note->get_content();
+
+            if (isset($_GET["param2"]) && isset($_GET["param3"])) {
+                $notes_coded = $_GET["param2"];
+                $labels_checked_coded = $_GET["param3"];
+            }
 
 
 
@@ -477,7 +485,7 @@ class ControllerNote extends Controller
                 $date = new DateTime();
                 $note->edited_at = $date->format('Y-m-d H:i:s');
                 $note->persist();
-                $this->redirect("note", "edit_checklist", $note_id);
+                $this->redirect("note", "edit_checklist", $note_id, $notes_coded, $labels_checked_coded);
             }
 
             // Ajout d'un nouvel élément à la liste de contrôle
@@ -496,7 +504,7 @@ class ControllerNote extends Controller
                 //si item oke -> modif db
                 if (empty($errors['items'])) {
                     $new_item->persist();
-                    $this->redirect("note", "edit_checklist", $note_id);
+                    $this->redirect("note", "edit_checklist", $note_id, $notes_coded, $labels_checked_coded);
                     exit;
                 }
             }
@@ -529,7 +537,7 @@ class ControllerNote extends Controller
             $errors = array_merge($errors, $errorsItem);
             if (empty($errors["title"]) && empty($errorsItem)) {
                 $note->persist();
-                $this->redirect("note", "open_note", $note->note_id);
+                $this->redirect("note", "open_note", $note->note_id, $notes_coded, $labels_checked_coded);
             }
         }
 
@@ -545,7 +553,9 @@ class ControllerNote extends Controller
             "content" => $body,
             "pinned" => $pinned,
             "user_id" => $user_id,
-            "errors" => $errors
+            "errors" => $errors,
+            "notes_coded" => $notes_coded,
+            "labels_checked_coded" => $labels_checked_coded
         ]);
     }
 
@@ -558,6 +568,8 @@ class ControllerNote extends Controller
         $content_errors = [];
         $title_errors = [];
         $errors = [];
+        $notes_coded = "";
+        $labels_checked_coded = "";
 
         // Vérification si le titre est vide
         if (isset($_POST['title']) && $_POST['title'] == "") {
@@ -583,6 +595,11 @@ class ControllerNote extends Controller
                         array_push($title_errors, $note->validate_title()[0]);
                     $content_errors = $note->validate_content();
 
+                    if (isset($_GET["param2"]) && isset($_GET["param3"])) {
+                        $notes_coded = $_GET["param2"];
+                        $labels_checked_coded = $_GET["param3"];
+                    }
+
                     // Si des erreurs sont présentes, affichage de la vue avec les erreurs
                     if (!empty($content_errors) || !empty($title_errors)) {
                         (new View("edit_text_note"))->show([
@@ -594,15 +611,18 @@ class ControllerNote extends Controller
                             "title" => $note->title,
                             'errors' => $errors,
                             'content_errors' => $content_errors,
-                            'title_errors' => $title_errors
+                            'title_errors' => $title_errors,
+                            "notes_coded" => $notes_coded,
+                            "labels_checked_coded" => $labels_checked_coded
                         ]);
                         exit();
                     }
 
                     // Si tout est valide, mise à jour de la note et redirection vers la page de la note
                     $note->update();
-                    $this->redirect("note", "open_note", $note_id);
-                    exit();
+                    // mise à jour notes après modification pour navigation search
+                    $notes_coded = Util::url_safe_encode($user->get_notes_search(Util::url_safe_decode($labels_checked_coded)));
+                    $this->redirect("note", "open_note", $note_id, $notes_coded, $labels_checked_coded);
                 } else {
                     $errors = "Note introuvable ou vous n'avez pas la permission de la modifier.";
                 }
