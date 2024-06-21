@@ -471,6 +471,8 @@ class ControllerNote extends Controller
                 $note = Note::get_note_by_id($note_id);
                 $note->title = $title;
                 $note->persist();
+                // mise à jour notes après modification pour navigation search
+                $notes_coded = Util::url_safe_encode($user->get_notes_search(Util::url_safe_decode($labels_checked_coded)));
                 $errors["title"] = implode($note->validate_title());
             }
 
@@ -486,6 +488,8 @@ class ControllerNote extends Controller
                 $date = new DateTime();
                 $note->edited_at = $date->format('Y-m-d H:i:s');
                 $note->persist();
+                // mise à jour notes après modification pour navigation search
+                $notes_coded = Util::url_safe_encode($user->get_notes_search(Util::url_safe_decode($labels_checked_coded)));
                 $this->redirect("note", "edit_checklist", $note_id, $notes_coded, $labels_checked_coded);
             }
 
@@ -505,6 +509,8 @@ class ControllerNote extends Controller
                 //si item oke -> modif db
                 if (empty($errors['items'])) {
                     $new_item->persist();
+                    // mise à jour notes après modification pour navigation search
+                    $notes_coded = Util::url_safe_encode($user->get_notes_search(Util::url_safe_decode($labels_checked_coded)));
                     $this->redirect("note", "edit_checklist", $note_id, $notes_coded, $labels_checked_coded);
                     exit;
                 }
@@ -534,10 +540,14 @@ class ControllerNote extends Controller
                 $date = new DateTime();
                 $note->edited_at = $date->format('Y-m-d H:i:s');
                 $note->persist();
+                // mise à jour notes après modification pour navigation search
+                $notes_coded = Util::url_safe_encode($user->get_notes_search(Util::url_safe_decode($labels_checked_coded)));
             }
             $errors = array_merge($errors, $errorsItem);
             if (empty($errors["title"]) && empty($errorsItem)) {
                 $note->persist();
+                // mise à jour notes après modification pour navigation search
+                $notes_coded = Util::url_safe_encode($user->get_notes_search(Util::url_safe_decode($labels_checked_coded)));
                 $this->redirect("note", "open_note", $note->note_id, $notes_coded, $labels_checked_coded);
             }
         }

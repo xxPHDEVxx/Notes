@@ -61,12 +61,10 @@
 ...
 
 ## Notes de version itération 3 -> 2ème session :  
-    
-  * ite1 : titre checklistnote ne se modifie plus.
 
   * Gestion partage : ok ( 1 bug mineur -> select ne reaparait pas après supression tant qu'on refresh pas)
   * Check_uncheck : ok -> oublié de l'ajouté sur le dernier commit.
   
   * petit bug affichage css potentiels.
-  *  search : bug mineur : notes non mis à jour si modification durant navigation pour checklistnote
+  *  search : bug mineur : notes non mis à jour si modification durant navigation pour checklistnote en js
   * Labels : delete non dynamique à part pour le premier label -> à corriger.
