@@ -161,7 +161,7 @@ input:focus {
 
 /* My archives + view-shared-note*/
 
-h1 {
+.page-title {
   position: absolute;
   top: 20px;
   right: 30px;
@@ -170,7 +170,7 @@ h1 {
   font-weight: 500;
 }
 
-h2 {
+.page-subtitle {
   color: white;
   position: absolute;
   font-size: 15px;
@@ -190,26 +190,6 @@ h2 {
   margin-left: 0;
 }
 
-h2 {
-  color: white;
-  position: fixed;
-  font-size: 15px;
-  font-weight: 500;
-  top: 70px;
-  left: 20px;
-
-
-}
-
-.my-archives {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 5px;
-  position: absolute;
-  top: 85px;
-  left: 5px;
-  margin-left: 0;
-}
 
 .note-archivee {
   border: 1.5px solid #43464c;
@@ -608,10 +588,10 @@ nav a {
 .edit_form {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  width: 80%;
   /* Centrer horizontalement */
   color: white;
-  margin: 150px auto;
+  margin: 25% auto;
 }
 
 .form-label {
@@ -801,7 +781,7 @@ textarea:focus {
   align-items: center;
   /* Centrer horizontalement */
   margin: auto;
-  max-width: 30%;
+  width: fit-content;
 }
 
 @media screen and (max-width: 600px) {

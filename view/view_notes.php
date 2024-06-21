@@ -29,7 +29,7 @@
 <body>
     <?php include ('view/menu.php'); ?>
     <div class="view_notes_header">
-        <h1>My notes</h1>
+        <h1 class="page-title">My notes</h1>
     </div>
     <p class="title_note_pinned">Pinned</p>
     <div id="pinned" class="view_notes_pinned_unpinned">
