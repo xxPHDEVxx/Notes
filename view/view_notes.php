@@ -149,15 +149,13 @@
             <p class="title-empty">Your notes are empty</p>
         <?php endif; ?>
     </div>
-    <footer>
-        <div class="position-absolute bottom-0 w-100 float-end">
+    <footer class="view_notes_footer">
             <a href="note/add_checklist_note">
 
-                <span class="material-symbols-outlined text-warning text-lg  text-lg-end m-2 float-end">checklist</span>
+                <span class="material-symbols-outlined text-warning">checklist</span>
             </a>
             <a href="note/add_text_note">
-                <span class="material-symbols-outlined text-warning text-lg  text-lg-end m-2 float-end">draft</span>
-            </a>
+                <span class="material-symbols-outlined text-warning">draft</span>
         </div>
     </footer>
     <script src="JS/drag_and_drop.js"></script>
