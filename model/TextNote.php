@@ -63,9 +63,10 @@ class TextNote extends Note {
     public function update()
     {
         // Mettre à jour la note dans la table 'notes'
-        self::execute("UPDATE notes SET title=:title, edited_at=NOW() WHERE id=:id", [
+        self::execute("UPDATE notes SET title=:title, edited_at=:edited WHERE id=:id", [
             'title' => $this->title,
-            'id' => $this->note_id
+            'id' => $this->note_id,
+            'edited' => $this->edited_at
         ]);
 
         // Vérifiez si une entrée existe dans la table 'text_notes'

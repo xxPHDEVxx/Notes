@@ -634,6 +634,8 @@ class ControllerNote extends Controller
                     }
 
                     // Si tout est valide, mise à jour de la note et redirection vers la page de la note
+                    $date = new DateTime();
+                    $note->edited_at = $date->format('Y-m-d H:i:s');
                     $note->update();
                     // mise à jour notes après modification pour navigation search
                     if ($labels_checked_coded != "")
@@ -680,10 +682,9 @@ class ControllerNote extends Controller
                     $title,
                     $user->id,
                     date("Y-m-d H:i:s"),
-                    0,
-                    0,
-                    $user->get_max_weight(),
-                    null
+                    false,
+                    false,
+                    $user->get_max_weight()
                 );
                 $note->set_content($content);
 
@@ -697,7 +698,7 @@ class ControllerNote extends Controller
                     $result = $note->persist();
                     if ($result instanceof TextNote) {
                         $note->update();
-                        $this->redirect("note", "index", $result->note_id);
+                        $this->redirect("note", "open_note", $result->note_id);
                         exit();
                     } else {
                         $errors[] = "Erreur lors de la sauvegarde de la note.";
