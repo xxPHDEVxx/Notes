@@ -633,9 +633,10 @@ class ControllerNote extends Controller
                         exit();
                     }
 
-                    // Si tout est valide, mise à jour de la note et redirection vers la page de la note
+                    // màj date d'édition
                     $date = new DateTime();
                     $note->edited_at = $date->format('Y-m-d H:i:s');
+                    // Si tout est valide, mise à jour de la note et redirection vers la page de la note
                     $note->update();
                     // mise à jour notes après modification pour navigation search
                     if ($labels_checked_coded != "")
