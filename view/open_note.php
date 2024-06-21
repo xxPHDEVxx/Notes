@@ -26,6 +26,8 @@
     <a class="back" href="<?= $backHref; ?>"><span class="material-symbols-outlined">arrow_back_ios</span></a>
     <?php if ($archived == 1): ?>
         <form action="note/delete_note/<?= $note_id ?>" id="deleteForm" method="post">
+            <input type="text" value="<?= $note_id ?>" name="note_id" class="note_id" hidden>
+
             <button class="delete" type="submit" id="delete_icon"><span
                     class="material-symbols-outlined">delete_forever</span></button>
         </form>

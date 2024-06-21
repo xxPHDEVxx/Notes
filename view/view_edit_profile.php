@@ -19,17 +19,12 @@
 </head>
 
 <body>
-    <div class="title">
-        <div>
-            <h1>Settings</h1>
-        </div>
-        <div class="back-icon">
-            <a href="settings/settings"><span class="material-symbols-outlined">arrow_back_ios</span></a>
-        </div>
+    <h1 class="page-title">Settings</h1>
+    <div class="back-icon">
+        <a href="settings/settings"><span class="material-symbols-outlined">arrow_back_ios</span></a>
     </div>
-    <div class="edit_form">
-        <h2>Edit Profile</h2>
-
+    <div class="container edit_form">
+        <h2 class="page-subtitle">Edit Profile</h2>
         <form action="settings/edit_profile" method="post">
             <div>
                 <label for="email" class="form-label">Mail</label>
@@ -37,13 +32,13 @@
                     value="<?= isset($_POST['email']) ? htmlspecialchars($_POST['email']) : htmlspecialchars($user->mail) ?>"
                     required>
             </div>
-            <div>
+            <div class="mt-3">
                 <label for="fullName" class="form-label">Name</label>
                 <input type="text" class="form-control" id="fullName" name="fullName"
                     value="<?= isset($_POST['fullName']) ? htmlspecialchars($_POST['fullName']) : htmlspecialchars($user->full_name) ?>"
                     required>
             </div>
-            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <button type="submit" class="btn btn-primary mt-2" >Save Changes</button>
         </form>
 
     </div>

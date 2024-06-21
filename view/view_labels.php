@@ -39,7 +39,7 @@
             <?php foreach ($labels as $label): ?>
                 <form action="note/delete_label/<?= $note->note_id ?>" class="form_delete" method="post">
                     <div class="box-label">
-                        <input type="text" name="note_id" id="note_id" value="<?= $note->note_id ?>" hidden>
+                        <input type="text" name="note_id" id="note_<?= $note->note_id ?>" value="<?= $note->note_id ?>" hidden>
                         <input type="text" id="label" name="label" value="<?= $label ?>" class="form-control-label my-1"
                             disabled>
                         <button class="btn btn-danger btn-share btn-del" type="submit" name="label" value="<?= $label ?>"><span

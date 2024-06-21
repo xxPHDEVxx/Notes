@@ -21,6 +21,7 @@ $(document).ready(function () {
     $('#closeConfirmation').click(confirmDelete);
 
     function confirmDelete() {
+        var note = $(".note_id").val();
         // Récupération de l'identifiant de la note depuis une variable PHP
         let requestData = {
             delete: 'delete', // Utilisez .attr('id') pour récupérer l'identifiant du bouton
@@ -39,4 +40,4 @@ $(document).ready(function () {
             }
         });
     }
-});
+});     

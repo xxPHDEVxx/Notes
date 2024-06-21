@@ -454,10 +454,10 @@ class ControllerNote extends Controller
             // Récupération du contenu de la note
             $body = $note->get_content();
 
-            if (isset($_GET["param2"]) && isset($_GET["param3"])) {
-                $notes_coded = $_GET["param2"];
-                $labels_checked_coded = $_GET["param3"];
-            }
+            // if (isset($_GET["param2"]) && isset($_GET["param3"])) {
+            //     $notes_coded = $_GET["param2"];
+            //     $labels_checked_coded = $_GET["param3"];
+            // }
 
 
 

@@ -16,10 +16,10 @@
 <?php include("menu.php"); ?>
 
     <div class="title">
-        <h1>Settings</h1>
+        <h1 class="page-title">Settings</h1>
     </div>
     <div>
-        <h2>Hey <?= $user->full_name ?></h2>
+        <h2 class="page-subtitle">Hey <?= $user->full_name ?></h2>
     </div>
     <div class="menu_settings">
         <a href="settings/edit_profile"><i class="fas fa-pen"></i>Edit Profile</a>
