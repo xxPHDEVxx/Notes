@@ -43,17 +43,18 @@
                     class="material-symbols-outlined">save</span></button>
         </div>
         <div class="dates">Created <?= $created ?><?= ($edited ? " Edited " . $edited : " Not edited yet") ?></div>
-        <div class="container_edit">
-            <label for="title">Title</label>
-            <input type="text" class="title_edit_note" id="title" name="title" value="<?= $note->title ?>">
-            <span id="titleError" class="text-danger" style="display: none;"></span>
-            <?php if (!empty($errors['title'])): ?>
-                <p class="text-danger erreur_edit"><?= $errors['title'] ?></p>
-            <?php endif; ?>
-            <span class="note_body_edit">Items</span>
+        <div class="container container_edit">
+            <div class="text-title">
+                <label for="title" class="title_edit_title">Title</label>
+                <input type="text" class="form-control-edit" id="title" name="title" value="<?= $note->title ?>">
+                <span id="titleError" class="text-danger" style="display: none;"></span>
+                <?php if (!empty($errors['title'])): ?>
+                    <p class="text-danger erreur_edit"><?= $errors['title'] ?></p>
+                <?php endif; ?>
+            </div>
             <div class="note_body_checklist_edit">
+                <span class="note_body_edit">Items</span>
                 <div id="container-item">
-
                     <?php foreach ($content as $row):
                         $id = $row['id'] ?>
                         <div class="item">

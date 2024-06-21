@@ -821,8 +821,8 @@ textarea:focus {
   top: 30px;
 }
 .container_edit {
-  margin: 22% auto;
   width: 90%;
+  margin: 15% auto;
 }
 
 /* style edit et add text_note le plus récent */
@@ -870,6 +870,11 @@ textarea:focus {
   color : lightgray;
 }
 
+.text-title {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
 .save {
   position: absolute;
@@ -941,8 +946,8 @@ textarea:focus {
   background-color: transparent;
   border-radius: 5px;
   color: lightgray;
-  border-right: none;
 }
+
 
 .check_square {
   content: '';
