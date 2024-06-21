@@ -471,8 +471,6 @@ class ControllerNote extends Controller
                 $note = Note::get_note_by_id($note_id);
                 $note->title = $title;
                 $note->persist();
-                // mise à jour notes après modification pour navigation search
-                $notes_coded = Util::url_safe_encode($user->get_notes_search(Util::url_safe_decode($labels_checked_coded)));
                 $errors["title"] = implode($note->validate_title());
             }
 
@@ -489,7 +487,8 @@ class ControllerNote extends Controller
                 $note->edited_at = $date->format('Y-m-d H:i:s');
                 $note->persist();
                 // mise à jour notes après modification pour navigation search
-                $notes_coded = Util::url_safe_encode($user->get_notes_search(Util::url_safe_decode($labels_checked_coded)));
+                if ($labels_checked_coded != "")
+                    $notes_coded = Util::url_safe_encode($user->get_notes_search(Util::url_safe_decode($labels_checked_coded)));
                 $this->redirect("note", "edit_checklist", $note_id, $notes_coded, $labels_checked_coded);
             }
 
@@ -510,7 +509,8 @@ class ControllerNote extends Controller
                 if (empty($errors['items'])) {
                     $new_item->persist();
                     // mise à jour notes après modification pour navigation search
-                    $notes_coded = Util::url_safe_encode($user->get_notes_search(Util::url_safe_decode($labels_checked_coded)));
+                    if ($labels_checked_coded != "")
+                        $notes_coded = Util::url_safe_encode($user->get_notes_search(Util::url_safe_decode($labels_checked_coded)));
                     $this->redirect("note", "edit_checklist", $note_id, $notes_coded, $labels_checked_coded);
                     exit;
                 }
@@ -541,17 +541,15 @@ class ControllerNote extends Controller
                 $note->edited_at = $date->format('Y-m-d H:i:s');
                 $note->persist();
                 // mise à jour notes après modification pour navigation search
-                $notes_coded = Util::url_safe_encode($user->get_notes_search(Util::url_safe_decode($labels_checked_coded)));
+                if ($labels_checked_coded != "")
+                    $notes_coded = Util::url_safe_encode($user->get_notes_search(Util::url_safe_decode($labels_checked_coded)));
             }
             $errors = array_merge($errors, $errorsItem);
             if (empty($errors["title"]) && empty($errorsItem)) {
                 $note->persist();
-                // mise à jour notes après modification pour navigation search
-                $notes_coded = Util::url_safe_encode($user->get_notes_search(Util::url_safe_decode($labels_checked_coded)));
                 $this->redirect("note", "open_note", $note->note_id, $notes_coded, $labels_checked_coded);
             }
         }
-
         // Affichage de la vue d'édition de la liste de contrôle
         (new View("edit_checklist_note"))->show([
             "note" => $note,
@@ -632,7 +630,8 @@ class ControllerNote extends Controller
                     // Si tout est valide, mise à jour de la note et redirection vers la page de la note
                     $note->update();
                     // mise à jour notes après modification pour navigation search
-                    $notes_coded = Util::url_safe_encode($user->get_notes_search(Util::url_safe_decode($labels_checked_coded)));
+                    if ($labels_checked_coded != "")
+                        $notes_coded = Util::url_safe_encode($user->get_notes_search(Util::url_safe_decode($labels_checked_coded)));
                     $this->redirect("note", "open_note", $note_id, $notes_coded, $labels_checked_coded);
                 } else {
                     $errors = "Note introuvable ou vous n'avez pas la permission de la modifier.";

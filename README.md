@@ -62,6 +62,7 @@
 
 ## Notes de version itération 3 -> 2ème session :  
 
+
   * Gestion partage : ok ( 1 bug mineur -> select ne reaparait pas après supression tant qu'on refresh pas)
   * Check_uncheck : ok -> oublié de l'ajouté sur le dernier commit.
   
