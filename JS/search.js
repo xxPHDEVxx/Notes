@@ -16,7 +16,7 @@ $(document).ready(function () {
                 // map valeur du label avec checked(true/false)
                 .filter(cb => cb.checked)
                 .map(cb => cb.value);
-                search(selectedLabels);
+            search(selectedLabels);
         });
     });
 
@@ -32,13 +32,13 @@ $(document).ready(function () {
             success: function (data) {
                 // mise à jour affichage des notes
                 notesContainer.innerHTML = "";
-                console.log(data);
+                console.log(JSON.parse(data));
                 if (data.length > 12) {
-                    JSON.parse(data).forEach(note => {
+                    JSON.parse(data).notes.forEach(note => {
                         notesContainer.innerHTML += `
                         <div class="note" id="note_${note.id}">
                             <p class="note-title">${note.title}</p>
-                            <a class="link-note-archivee" href='note/open_note/${note.id}'>
+                            <a class="link-note-archivee" href='note/open_note/${note.id}/${JSON.parse(data).notes_coded}/${JSON.parse(data).labels_checked_coded}'>
                                 <div class="note-content">
                                     ${note.content ? `<div class="content_text">${note.content}</div>` : `
                                     <div class="content_check">

@@ -64,8 +64,16 @@ class ControllerSearch extends Controller
         if (isset($_POST["check"])) {
             $user = $this->get_user_or_redirect();
             $notes = $user->get_notes_search($_POST["check"]);
+            $notes_coded = Util::url_safe_encode($notes);
+            $labels_checked_coded = Util::url_safe_encode($_POST["check"]);
+
+            $data = [
+                'notes' => $notes,
+                'notes_coded' => $notes_coded,
+                'labels_checked_coded' => $labels_checked_coded
+            ];
         }
         // Retourner les notes en JSON
-        echo json_encode($notes);
+        echo json_encode($data);
     }
 }
