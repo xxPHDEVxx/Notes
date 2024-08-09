@@ -4,6 +4,14 @@
 
 **App Notes** est une application web permettant une gestion complète des notes personnelles. Développée avec PHP pour le back-end et utilisant HTML, CSS, et JavaScript pour le front-end, l'application permet aux utilisateurs de créer, modifier, supprimer, trier et partager leurs notes. Elle supporte également l'archivage des notes pour une meilleure organisation. Le projet utilise une base de données MySQL, pré-configurée et accessible via phpMyAdmin, gérée avec XAMPP.
 
+<br>
+
+<div>
+    <img src="https://github.com/xxPHDEVxx/Note-App/blob/master/notes3.png" width="900" height="500">
+    <img src="https://github.com/xxPHDEVxx/Note-App/blob/master/notes2.png" width="900" height="750">
+    <img src="https://github.com/xxPHDEVxx/Note-App/blob/master/notes1.png" width="900" height="750">
+</div>
+
 ## Fonctionnalités
 
 - **Gestion des notes** : Créez, modifiez, et supprimez vos notes.
