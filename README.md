@@ -37,7 +37,7 @@
 
 2. Placez le projet dans le répertoire `htdocs` de votre installation XAMPP (ou tout autre dossier racine de votre serveur web Apache).
 
-3. Démarrez XAMPP et activez Apache et MySQL.
+3. Démarrez XAMPP et activez Apache et MySQL (Ne pas oublier de modifier 'mysql_path' dans le fichier 'dev.ini' selon le path de votre fichier xampp).
 
 4. Créez la base de données MySQL en utilisant phpMyAdmin :
    - Importez le fichier SQL fourni dans le projet (`database.sql`) pour configurer la base de données.
