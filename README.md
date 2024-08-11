@@ -63,8 +63,6 @@
 
 4. **Partage** : Partagez une note avec d'autres utilisateurs en sélectionnant l'option de partage.
 
-## Notes de version
-
 ### Version actuelle : 1.0.0
 
 - **Fonctionnalités de base** : Gestion, partage, tri, et archivage des notes.
