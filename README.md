@@ -7,9 +7,9 @@
 <br>
 
 <div>
-    <img src="https://github.com/xxPHDEVxx/Note-App/blob/master/notes3.png" width="900" height="500">
-    <img src="https://github.com/xxPHDEVxx/Note-App/blob/master/notes2.png" width="900" height="750">
-    <img src="https://github.com/xxPHDEVxx/Note-App/blob/master/notes1.png" width="900" height="750">
+    <img src="https://github.com/xxPHDEVxx/Note-App/blob/master/notes3.png" width="600" height="400">
+    <img src="https://github.com/xxPHDEVxx/Note-App/blob/master/notes2.png" width="600" height="500">
+    <img src="https://github.com/xxPHDEVxx/Note-App/blob/master/notes1.png" width="600" height="500">
 </div>
 
 ## Fonctionnalités
