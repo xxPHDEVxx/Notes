@@ -8,7 +8,6 @@ require_once "controller/ControllerUser.php";
 // Définition de la classe ControllerMain, héritant de la classe Controller
 class ControllerMain extends Controller
 {
-
     // Méthode pour la page d'accueil
     public function index(): void
     {
