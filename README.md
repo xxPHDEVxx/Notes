@@ -50,12 +50,12 @@
 
 ## Utilisation
 
-1. **Connexion** : Connectez-vous à l'application en utilisant l'un des comptes utilisateurs prédéfinis.
+1. **Connexion** : Connectez-vous à l'application en utilisant l'un des comptes utilisateurs prédéfinis ou enregistrez-vous.
     - Liste des utilisateurs et mots de passe :
-      * `boverhaegen@epfc.eu`, mot de passe : `Password1,`
-      * `bepenelle@epfc.eu`, mot de passe : `Password1,`
-      * `xapigeolet@epfc.eu`, mot de passe : `Password1,`
-      * `mamichel@epfc.eu`, mot de passe : `Password1,`
+      * `boverhaegen@gmail.eu`, mot de passe : `Password1,`
+      * `bepenelle@gmail.eu`, mot de passe : `Password1,`
+      * `xapigeolet@gmail.eu`, mot de passe : `Password1,`
+      * `mamichel@gmail.eu`, mot de passe : `Password1,`
 
 2. **Gestion des notes** : Après connexion, commencez à créer et organiser vos notes. Vous pouvez également les partager avec d'autres utilisateurs.
 
@@ -67,13 +67,6 @@
 
 - **Fonctionnalités de base** : Gestion, partage, tri, et archivage des notes.
 - **Interface utilisateur** : Une interface simple et épurée pour une gestion efficace des notes.
-
-### Liste des utilisateurs et mots de passe
-
-- `boverhaegen@epfc.eu`, mot de passe : `Password1,`
-- `bepenelle@epfc.eu`, mot de passe : `Password1,`
-- `xapigeolet@epfc.eu`, mot de passe : `Password1,`
-- `mamichel@epfc.eu`, mot de passe : `Password1,`
 
 ### Liste des bugs connus
 
