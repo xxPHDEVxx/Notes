@@ -204,7 +204,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'boverhaegen@epfc.eu','56ce92d1de4f05017cf03d6cd514d6d1','Boris','user'),(2,'bepenelle@epfc.eu','56ce92d1de4f05017cf03d6cd514d6d1','Benoît','user'),(3,'xapigeolet@epfc.eu','56ce92d1de4f05017cf03d6cd514d6d1','Xavier','user'),(4,'mamichel@epfc.eu','56ce92d1de4f05017cf03d6cd514d6d1','Marc','user');
+INSERT INTO `users` VALUES (1,'boverhaegen@gmail.eu','56ce92d1de4f05017cf03d6cd514d6d1','Boris','user'),(2,'bepenelle@gmail.eu','56ce92d1de4f05017cf03d6cd514d6d1','Benoît','user'),(3,'xapigeolet@gmail.eu','56ce92d1de4f05017cf03d6cd514d6d1','Xavier','user'),(4,'mamichel@gmail.eu','56ce92d1de4f05017cf03d6cd514d6d1','Marc','user');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
