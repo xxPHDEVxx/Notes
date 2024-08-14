@@ -31,7 +31,7 @@
 1. Clonez le dépôt GitHub du projet :
 
     ```bash
-    git clone https://github.com/votre-utilisateur/votre-projet-notes.git
+    git clone https://github.com/xxPHDEVxx/votre-projet-notes.git
     cd votre-projet-notes
     ```
 
